@@ -23,6 +23,7 @@
 % PACKAGES
 %==================================================================================================
 \usepackage{LukeThesis}                             %Import Thesis base style
+\usepackage{pdfpages}
 %input{PhDMacros}                                   %Thesis specific macros
 %
 %==================================================================================================
@@ -59,7 +60,8 @@
 \pagenumbering{roman}                               %Set frontmatter numbering style
 \input{tex/summaryuk}                                   %English summary of Thesis
 \markboth{}{}                                       %Set headings (left)(right)
-\input{tex/summarydk}                                   %Danish summary of Thesis
+\input{tex/summarydk}                      
+             %Danish summary of Thesis
 \markboth{}{}                                       %Set headings (left)(right)
 \input{tex/preface}                                     %Preface
 \markboth{}{}                                       %Set headings (left)(right)
@@ -81,9 +83,14 @@
 % Main content
 %-------------
 \mainmatter
-%\include{Chapter1}                                  %Chapter 1
-%\include{Chapter2}                                 %Chapter 2
+\include{tex/contributionslist}                                  %Chapter 1
+\include{tex/introduction}                                  %Chapter 1
+\include{tex/background}                                  %Chapter 1
+\include{tex/relatedwork}                                  %Chapter 1
+\include{tex/contributions}                                  %Chapter 1
+\include{tex/conclusions}                                  %Chapter 1
 \appendix
+\renewcommand{\thechapter}{\Roman{chapter}}
 \include{tex/appendix}                                 %Appendix A
 %-----------
 % Backmatter
