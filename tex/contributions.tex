@@ -16,7 +16,15 @@ Achieveing fast techniques for photorealisitic rendering important in various fi
 
 
 \section{Defining photorealistic rendering}
-(Figure: Comparisong of photorealistic rendered images, plus analyisis via synthesis)
+\begin{figure}
+\begin{tabular}{@{}c@{}c@{}}
+	 \includegraphics[height=4.3cm]{figures/comparison} & \hspace{2em}
+	 \includegraphics[height=4.3cm]{figures/glass_bowl_analysis_by_synthesis}  \\
+\end{tabular}
+\caption{\fixme{Write me.}} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
+\label{fig:teaser}
+\end{figure}
+
 
 Take home points:
 \begin{itemize}
@@ -31,7 +39,30 @@ Take home points:
 \end{itemize}
 
 \section{Interactive rendering of scattering media}
-(Figure: Results from interactive dirsss and cloudy beverages)
+\begin{figure}
+\begin{tabular}{@{}c@{}c@{}}
+	 \includegraphics[width=0.5\columnwidth]{figures/teaser_render.png} &
+	 \includegraphics[width=0.5\columnwidth]{figures/ref_img.jpg}  \\
+	rendering & photograph \\
+\end{tabular}
+\caption{Cloudy apple juice photographed and rendered using our appearance model. In the model, apple particle concentration (0.8 g/l) and apple storage period (4 days) were selected to match the photograph.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
+\label{fig:teaser}
+\end{figure}
+
+\begin{figure}
+\begin{tabular}{@{}c@{$\,$}c@{}c@{}c@{}}
+& directional dipole, 6 fps & standard dipole and VPLs \\
+\begin{sideways}\hspace*{1.5em}our method\end{sideways} &
+\includegraphics[width=0.48\columnwidth]{figures/candle_holder_directional_6fps.png} &
+\includegraphics[width=0.48\columnwidth]{figures/candle_holder_jensen_converged.png} \\[-4pt]
+\begin{sideways}\hspace*{1.7em}ray tracer\end{sideways} &
+\includegraphics[width=0.48\columnwidth]{figures/scene_comparison_optix_6fps.png} &
+\includegraphics[width=0.48\columnwidth]{figures/scene_comparison_converged.png} \\[-0.5ex]
+& directional dipole, 6 fps & directional dipole, reference \\[-1ex]
+\end{tabular}
+\caption{Equal time comparison (left column) of our method with the reference method and qualitative comparison with diffuse subsurface scattering (upper right) and the converged reference solution (lower right). The scene is lit by a point light in a white grapefruit candle holder.} % Emerging light illuminates a diffuse Stanford Bunny on a tabletop.}
+\label{fig:optixcomparison}
+\end{figure}
 
 Refer to case study again.
 
@@ -52,7 +83,27 @@ Refer to case study again.
 
 
 \section{Interactive stable ray tracing}
-(Figure: Results for GI in interactive stable ray tracing paper.)
+
+\begin{figure}
+\begin{tabular}{@{}c@{}c@{}@{}c@{}}
+	 \includegraphics[width=0.33\textwidth]{figures/ss_2x_rect_370_300_300_300_frame_211.png} &
+		 \includegraphics[width=0.33\textwidth]{figures/ss_2x_taa_rect_370_300_300_300_frame_211.png} &
+		  \includegraphics[width=0.33\textwidth]{figures/ss_32x_rect_370_300_300_300_frame_211.png} \\	 
+Supersampling, 2 spp & Supersampling, 2 spp 	& Supersampling, 32 spp \\
+  					 & + temporal antialiasing 	&  \\
+sharpness: 0.7924 & sharpness: 0.5348 & sharpness: 0.6771  \\
+	 \includegraphics[width=0.33\textwidth]{figures/srt_1_rect_370_300_300_300_frame_211.png} &
+	 	 \includegraphics[width=0.33\textwidth]{figures/srt_1_ti_rect_370_300_300_300_frame_211.png} &
+	  \includegraphics[width=0.33\textwidth]{figures/ss_32x_rect_370_300_300_300_frame_211.png}
+ \\
+Stable ray tracing, 1 spp & Stable ray tracing, 1 spp & Supersampling, 32 spp \\
+ & + temporal integration &  \\
+sharpness: 0.7085 & sharpness: 0.6060 & sharpness: 0.6771 \\[-1.5ex]
+\end{tabular}
+\caption{Including indirect illumination, the different techniques are here applied to a frame in the Sponza video.}
+\label{fig:sponza_video_frame}
+\end{figure}
+
 
 \begin{itemize}
 \item Take home message: recycling information can be useful to improbe temporal stability 
@@ -66,7 +117,15 @@ Refer to case study again.
 \end{itemize}
 
 \section{Applying interactive photorealistic techniques}
-(Figure: Frames from the video?)
+\begin{figure}
+\centering
+\begin{tabular}{@{}c@{}c@{}}
+	 \includegraphics[height = 4.3cm]{figures/screen1_crop} &
+		 \includegraphics[height = 4.3cm]{figures/person} \\[-2.5ex]
+\end{tabular}
+  \caption{Pictures illustrating our VR demo application, with an in-game screenshot (left) and a picture of the setup (right). }
+  \label{fig:teaser}
+\end{figure}
 
 \begin{itemize}
 \item Application to photorealisitic rendering to hard real time constratins
