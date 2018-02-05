@@ -1,2 +1,79 @@
 \chapter{Contributions}
 
+In this section we will tie together the different publications made during the course of the PhD studies. We will focus on the general message of the publications in relation to the goal of the PhD. We remand to the full text of the individual publications in Appendices~ \ref{sec:glass}-\ref{sec:vrbrdf} for the full technical details.
+
+\section{Motivation}
+(Figure: Fields in which we need instant feedback on appearance: 3d printing, artist feedback, quality control, meat)
+Is path tracing good enough?
+
+How can we make interactive appearance prediction
+
+What is photorealistic?
+
+Here cite our preliminary study (Interactive appearance prediction...) as motivation for both photorealism and interactivity.
+
+Achieveing fast techniques for photorealisitic rendering important in various fields.
+
+
+\section{Defining photorealistic rendering}
+(Figure: Comparisong of photorealistic rendered images, plus analyisis via synthesis)
+
+Take home points:
+\begin{itemize}
+\item Preliminary study: appearance prediction is important, interactivity is important.
+\item Realistic reconstruction is hard. 
+\item At the moments, it is not possible to evaluate how good path tracing is.
+\item Tough, we can evaluate and measure parameters from the scene. Being able to compare is what it is all about.
+\item Fine details make the difference, especially in geometry
+\item Identify problems in acquisition, rendering and reconstruction, using the dataset to improve current rendering techniques.
+\item Publicly available dataset?
+
+\end{itemize}
+
+\section{Interactive rendering of scattering media}
+(Figure: Results from interactive dirsss and cloudy beverages)
+
+Refer to case study again.
+
+\begin{itemize}
+\item cloudy apple juice study.
+\item Rouch estimate during production
+\item It is possible to apply complicated rendering models (like directional SSS) in an interactive domain
+\item Working under constraints
+\item Texture-free, deformable model
+\item Leveraging the strength of rasterization
+\item Multiple lights
+\item Global illumination extensions: how you do reuse information that you have already available
+\item Maps of scattered radiosity
+\item Progressive rendering
+\item Interactive transport of emergent light from deformable objects
+\item Transport of light behind translucent objects.
+\end{itemize}
+
+
+\section{Interactive stable ray tracing}
+(Figure: Results for GI in interactive stable ray tracing paper.)
+
+\begin{itemize}
+\item Take home message: recycling information can be useful to improbe temporal stability 
+\item Leveraging ray tracing strengths against rasterization
+\item Reprojection 
+\item Sharp and antialiased
+\item Application to photorealistic rendering in the form of indirect global illumination
+\item Foundation technique to combine with existing ones
+\item Spatial aliasing
+\item Good results with progressive path tracing.
+\end{itemize}
+
+\section{Applying interactive photorealistic techniques}
+(Figure: Frames from the video?)
+
+\begin{itemize}
+\item Application to photorealisitic rendering to hard real time constratins
+\item Hint at future work that can be done
+\item Practical purpose: debug acquired BSRDF models.
+\item Apply real time techniques
+\item More constraints.
+\end{itemize}
+
+\section{Discussion}
