@@ -8,15 +8,31 @@
 
 \section{Photorealistic rendering}
 
-\begin{itemize}
-\item Radiometric quantities. Flux radiance irradiance intensity
-\item Reflectance functions
-\item Scattering, RTE
-\item Absorption, Beer's law
-\item BRDF
-\item BSSRDF
-\item Empirical models (BRDF, BSSRDF)
-\end{itemize}
+\subsection{Radiometry}
+Definitions
+Flux
+Irradiance
+Intensity 
+Radiance
+Why is radiance important
+Discussion about properties of the quantities
+
+\subsection{The BRDF}
+Definition
+Reflectance equation
+Properties
+Analytical model
+Data driven models
+
+\subsection{Scattering media}
+Scattering equation
+Single terms: absorption, in scattering out scattering
+
+\subsection{The BSSRDF}
+Definition
+Dipole configuration
+Diffusion approximation
+Example as the standard dipole
 
 \subsection{Rendering techniques}
 \fixme{Discuss with Jeppe whether to move in Related work?}
@@ -26,11 +42,19 @@
 \item Rendering with reflectance functions
 \end{itemize}
 
-\section{Real time rendering} 
-\begin{itemize}
-\item Modern GPUs
-\item Fast rendering techniques
-\item Raytracing 
-\item Rasterization
-\end{itemize}
-                                                                                                                                                                                                                                         
+\section{Performance of rendering techniques} 
+
+A comparison about rendering techniques. Offline vs realtime
+Gpus vs cpus
+
+
+\subsection{Offline rendering techniques}
+Accuracy, slow rendering times. Focus on performance but mostly on achieving converged frames
+
+\subsection{Real-time rendering techniques}
+Disregard for physically based, but new interest in the lastest years
+
+Squeezing as much as possible from the GPU. 
+
+
+
