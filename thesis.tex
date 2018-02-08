@@ -27,6 +27,10 @@
 \usepackage{tocloft}
 \usepackage{xcolor}
 \usepackage{rotating}
+\usepackage{siunitx}
+\sisetup{inter-unit-product =\ensuremath{{}\cdot{}}}
+\newcommand{\siunit}[1]{\ \ \ [\SI{}{#1}]}
+\newcommand{\siunitnospace}[1]{[\SI{}{#1}]}
 \setlength{\cftchapnumwidth}{2.5em}
 \newcommand{\fixme}[1] { \textcolor{red}{\textbf{FIXME: } #1}}
 %input{PhDMacros}                                   %Thesis specific macros
