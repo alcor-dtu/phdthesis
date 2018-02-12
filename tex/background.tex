@@ -79,14 +79,14 @@ $$
 By the definition of flux, irradiance and the assumption of constant radiance:
 \begin{equation*}
 \begin{split}
-d L_o(\mathbf{x}_o, \vec{\omega}_o) &\approx \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \omega_i  \\ &= L_i(\vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d \omega_i \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o)   d A_i \\ &= d E_i(\vec{\omega}_i) \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o d A_i
+d L_o(\mathbf{x}_o, \vec{\omega}_o) &\approx \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \omega_i  \\ &= L_i(\vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d \omega_i \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o)   d A_i \\ &= d E_i(\vec{\omega}_i) \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d A_i
 \end{split}
 \end{equation*}
 The last integral is a function purely dependent on the two angular vectors $\vec{\omega}_i$ and $\vec{\omega}_o$, and it becomes the proportionality constant between incoming irradiance and outgoing radiance:
 $$
-d L_o(\mathbf{x}, \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_i, \vec{\omega}_o) d E_i(\mathbf{x}, \vec{\omega}_i)
+d L_o(\mathbf{x}_o, \vec{\omega}_o) = f_r(\mathbf{x}_o, \vec{\omega}_i, \vec{\omega}_o) d E_i(\mathbf{x}_o, \vec{\omega}_i)
 $$
-Note that we do not distinguish anymore between outgoing and incoming point, since we condensed the two points together with our assumptions. The new function $f_r$ is called \emph{Bidirectional reflectance distribution function} (BRDF). The BRDF is measured in $\siunitnospace{\per \steradian}$. As before, we can obtain the outgoing radiance from the definition above:
+ The new function $f_r$ is called \emph{Bidirectional reflectance distribution function} (BRDF). The BRDF is measured in $\siunitnospace{\per \steradian}$. As before, we can obtain the outgoing radiance from the definition above:
 $$
 L_o(\mathbf{x}, \vec{\omega}) = \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) L_i(\mathbf{x}, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d\vec{\omega}_i  \siunit{\watt \per \square \metre \per \steradian}
 $$
