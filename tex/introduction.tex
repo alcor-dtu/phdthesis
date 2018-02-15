@@ -7,6 +7,15 @@
 
 \label{sec:intro}
 \section{Scope}
+
+\begin{figure}
+\centering
+	 \includegraphics[draft,width=\textwidth]{figures/main_diagram}  \\
+\caption{Some examples of photorealistic interactive rendering.} 
+\label{fig:main_examples}
+\end{figure}
+
+
 The main goal of this thesis is to describe new techniques to bring movie production quality rendering into interactive applications.  The goal is to achieve photorealistic appearance as close as possible to the real world, while retaining the possibility for the user to interact with the simulation. In this thesis, we name these techniques "hybrid", as they combine techniques from the interactive world with accurate appearance models from physics and movie production pipelines.
 
 Interactive realistic rendering applications are relevant in many fields, including
@@ -39,6 +48,13 @@ In recent years, many advances have been made to achieve photorealistic quality 
 \end{itemize}
 
 In addition to the above motivations, we discuss three more detailed use cases in which there is a demand for improvements in photorealistic rendering techniques. These cases are not meant to be comprehensive of all applications in which interactive photorealistic rendering techniques are needed. However, they provide insights on possible industrial applications of the contributions in this thesis.
+
+\begin{figure}
+\centering
+	 \includegraphics[draft,width=\textwidth]{figures/main_diagram}  \\
+\caption{Applications of photorealistic interactive rendering. Left to right: 3d printing preview, architectural visualization, game prototyping.} 
+\label{fig:applications}
+\end{figure}
 
 \subsection{3D printing}
 
@@ -73,7 +89,7 @@ production times and waste of printing material.
 \item Still convergence is acceptable
 \end{itemize}
 
-As we have discussed in Section TODO, many efforts have been made both in the offline and real time rendering community to achieve photorealistically accurate images. In the former community, more emphasis is put in achieving phisycal accuracy, while in the latter immediate feedback and performance are of foremost importance.
+As we have discussed in Section, many efforts have been made both in the offline and real time rendering community to achieve photorealistically accurate images. In the former community, more emphasis is put in achieving phisycal accuracy, while in the latter immediate feedback and performance are of foremost importance.
 
 \subsection{Computer games and animation}
 \begin{itemize}
@@ -91,12 +107,20 @@ In recent year, we have discussed how recent advantages in GPU power and interac
 
 \section{Outcome}
 
-During the three years period, we achieved a number of academic publications, reported at page TODO. In these publication, we managed to achieve a number of insights in the realm of computer graphics and material appearance. In particular, we created a range of techniques that can be readily applied to existing interactive applications. We believe we pushed the boundary on the degree of realism that can be achieved by modern GPUs on the same strict time constraints. 
+\begin{figure}
+\centering
+	 \includegraphics[draft,width=\textwidth]{figures/main_diagram}  \\
+\caption{Main results from our papers.} 
+\label{fig:main_results}
+\end{figure}
 
-In particular, papers TODO and TODO achieve in this by providing widely applicable caching in the realm of interactive subsurface scattering and global illumination. Some examples of the results achieved in these papers are reported in Figure TODO.
+
+During the three years period, we achieved a number of academic publications, reported at page~\pageref{sec:contributionlist}. In these publication, we managed to achieve a number of insights in the realm of computer graphics and material appearance. In particular, we created a range of techniques that can be readily applied to existing interactive applications. We believe we pushed the boundary on the degree of realism that can be achieved by modern GPUs on the same strict time constraints. 
+
+In particular, papers~\ref{sec:interactivedirsss} and~\ref{sec:srt} achieve in this by providing widely applicable caching in the realm of interactive subsurface scattering and global illumination. Some examples of the results achieved in these papers are reported in Figure~\ref{fig:main_results}.
 
 \section{Outline}
 
-We report a list of all the contributions created during the course of the PhD studies at page TODO, including some unpublished notes, that we will refer mostly from Chapter TODO to provide additional details. All the various publications are available as appendices. 
+We report a list of all the contributions created during the course of the PhD studies at page~\pageref{sec:contributionlist}, including some unpublished notes, that we will refer mostly from Chapter~\ref{sec:background} to provide additional details. All the various publications are available as appendices. 
 
-We divide our thesis into four main chapters. In Chapter TODO, we first provide some background on some of the necessary foundations in radiometry, photorealistic appearance models and interactive rendering techniques. We will then provide in Chapter TODO an overarching literature review on the current efforts of the rendering community to achieve photorealistic interactive rendering, referring to the individual contributions for more detailed related work. In Chapter TODO, most importantly, we will go into more detail about the individual contributions and how each one of them contributes to reaching the outcome of the thesis. We will finally summarize our conclusions in Chapter TODO. 
+We divide our thesis into four main chapters. In Chapter~\ref{sec:background}, we first provide some background on some of the necessary foundations in radiometry, photorealistic appearance models and interactive rendering techniques. We will then provide in Chapter~\ref{sec:related} an overarching literature review on the current efforts of the rendering community to achieve photorealistic interactive rendering, referring to the individual contributions for more detailed related work. In Chapter~\ref{sec:contributions}, most importantly, we will go into more detail about the individual contributions and how each one of them contributes to reaching the outcome of the thesis. We will finally summarize our conclusions in Chapter~\ref{sec:conclusion}. 
