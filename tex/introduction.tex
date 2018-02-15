@@ -1,4 +1,10 @@
 \chapter{Introduction}
+\fixme{Need to include measuring properties as motivation and intro, so that it leads to glass paper}
+
+\fixme{Need to include more about GPUs in motivation}
+
+\fixme{Finish writing motivation}
+
 \label{sec:intro}
 \section{Scope}
 The main goal of this thesis is to describe new techniques to bring movie production quality rendering into interactive applications.  The goal is to achieve photorealistic appearance as close as possible to the real world, while retaining the possibility for the user to interact with the simulation. In this thesis, we name these techniques "hybrid", as they combine techniques from the interactive world with accurate appearance models from physics and movie production pipelines.
@@ -14,12 +20,38 @@ In recent years, many advances have been made to achieve photorealistic quality 
 
 \section{Motivation}
 
-The problem is usually lack of artistic skill (or artist man-hours) and
-a very limited time budget for computing each image. Our overall strategy is to develop
-mathematical models of material appearance in place of artistic skill and to modify rendering
-techniques used in the movie industry so that they can run as a hybrid with real-time techniques
-on a graphics card (GPU).
+\begin{figure}
+\centering
+	 \includegraphics[width=\textwidth]{figures/main_diagram}  \\
+\caption{Showing the continuum between interactive techniques, accurate techniques and photorealistic appearance.} 
+\label{fig:main_diagram}
+\end{figure}
 
+\begin{itemize}
+\item Realistic rendering - mention why it is important
+\item Artistic based pipelines - challenges and why it is important to visualize data quickly
+\item Big part of modern production - movie and games
+\item Need for realistic models and visualization - effort on the modelling part, for phisically based models, and on the interaction part 
+\item Tradeoffs are necessary, depending on the application
+\item Noise versus converged vs simplified - do figure 
+\item Spectrum of techniques
+\item Refer to figure
+\end{itemize}
+
+In addition to the above motivations, we discuss three more detailed use cases in which there is a demand for improvements in photorealistic rendering techniques. These cases are not meant to be comprehensive of all applications in which interactive photorealistic rendering techniques are needed. However, they provide insights on possible industrial applications of the contributions in this thesis.
+
+\subsection{3D printing}
+
+\begin{itemize}
+\item 3d printing: another group of applications where is important appearance
+\item 3d printing; important to represent appearance faithfully
+\item complicated materials
+\item it has to be fast
+\item More iterations, less discarded product
+\item Color transformation during the process
+\item Quality assurance as well
+\item Material prediction 
+\end{itemize}
 
 The focus of the project goes towards a more strict integration of 3D printing processes and
 digital image synthesis as a whole (The Digital-Physical Ecosystem). Our contribution to this
@@ -28,7 +60,32 @@ of the final appearance. This will allow more time for the artists to work faste
 production times and waste of printing material.
 
 
+\subsection{Architectural visualization}
+
+\begin{itemize}
+\item Light field visualization
+\item Need for accurate materials
+\item Also need for accurate visualization
+\item Virtual reality
+\item Accurate light simulation
+\item Still interactive
+\item Materials can be complicated to render accurately
+\item Still convergence is acceptable
+\end{itemize}
+
 As we have discussed in Section TODO, many efforts have been made both in the offline and real time rendering community to achieve photorealistically accurate images. In the former community, more emphasis is put in achieving phisycal accuracy, while in the latter immediate feedback and performance are of foremost importance.
+
+\subsection{Computer games and animation}
+\begin{itemize}
+\item Striving towards more realistic
+\item Various interactive techniques
+\item Volumetric techniques and interactive ray tracing
+\item Rasteriation based usually
+\item Relying on hardware
+\item Relying on GPUs
+\item Stricter requirements for performance
+\item Simplification is more important than accuracy
+\end{itemize}
 
 In recent year, we have discussed how recent advantages in GPU power and interactive ray tracing are bringing phisically based rendering into the interactive domain. 
 
