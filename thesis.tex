@@ -32,13 +32,8 @@
 \newcommand{\siunit}[1]{\ \ \ [\SI{}{#1}]}
 \newcommand{\siunitnospace}[1]{[\SI{}{#1}]}
 \setlength{\cftchapnumwidth}{2.5em}
-\newcommand{\fixme}[1] { \textcolor{red}{\textbf{FIXME: } #1}}
-\let\mainmatterorig\mainmatter
-\renewcommand\mainmatter
- {\edef\temppagenumber{\arabic{page}}%
-  \mainmatterorig
-  \setcounter{page}{\temppagenumber}%
- }
+%\newcommand{\fixme}[1] { \textcolor{red}{\textbf{FIXME: } #1}}
+\newcommand{\fixme}[1] {}
 %input{PhDMacros}                                   %Thesis specific macros
 %
 %==================================================================================================
@@ -48,7 +43,7 @@
 \def\thesistitle{Hybrid techniques for interactive photorealistic rendering}               %Title
 \def\thesishandin{31-March}                       %Submission date (Day-Month}
 \def\thesisdegree{PhD}                              %Degree ('B.Eng', 'B.Sc.', 'M.Sc.' or 'PhD')
-\def\thesisyear{2018}                               %Submission year
+\def\thesisyear{2017}                               %Submission year
 \def\thesisnumber{????}                             %DTU-IMM Serial number (do not include year)
 \def\thesisISSN{0000-0000}                          %ISSN number
 \def\thesiskeywords{rendering, materials}  %PDF keywords
