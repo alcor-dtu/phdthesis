@@ -30,8 +30,11 @@ In recent years, many advances have been made to achieve photorealistic quality 
 
 \begin{figure}
 \centering
-\includegraphics[draft, width=0.9\textwidth]{figures/photorealistic_diagram.png}  \\
-\caption{Comparing diffferent preview techniques. From left to right: converged image, noisy unconverged image, downsampled image, different physical model, diffuse appearance. All images took 5 seconds to render on a GPU ray tracer. Converged result took 4 hours.} 
+\begin{tabular}{@{}c@{}c@{}c@{}c@{}c@{}}
+\includegraphics[width=0.2\textwidth]{figures/thesis_pt}& 	 \includegraphics[width=0.2\textwidth]{figures/thesis_pt_unconverged} &
+\includegraphics[width=0.2\textwidth]{figures/thesis_pt_unconverged2}& 	 	 \includegraphics[width=0.2\textwidth]{figures/thesis_pt_sd}& 	 	 \includegraphics[width=0.2\textwidth]{figures/thesis_pt_lambertian} \\
+\end{tabular}
+\caption{Comparing different preview techniques. From left to right: converged image, noisy unconverged image, downsampled image, different physical model, diffuse appearance. All images took 120 seconds to render on a GPU ray tracer. Converged result took 4 hours.} 
 \label{fig:comparison_convergence}
 \end{figure}
 
