@@ -96,9 +96,38 @@ L_o(\mathbf{x}, \vec{\omega}) = \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \ve
 $$
 Which is the standard form of the rendering equation.
 
-\subsection{Scattering media}
-Scattering equation
-Single terms: absorption, in scattering out scattering
+\subsection{Local solution: the radiative transfer equation}
+
+Of the two solutions on how light propagates into interface bounded volumes, we start with the local solution, i.e. the radiative transfer equation. This is a integro-differential equation that describes the behaviour of radiance $L(\mathbf{x}, \vec{\omega})$ at a point $\mathbf{x}$ in a medium towards direction $\vec{\omega}$. We assume a system that respects linear optics (excluding i.e. flourescent materials), and in the steady state (i.e. the radiance $L$ changes in time at speeds not comparable to the speed of light, $\frac{dL(\mathbf{x}, \vec{\omega})}{c dt} \approx 0$).
+
+Traditionally, light travelling a medium is subject to four processed: absorption, emission, inscattering and outscattering. Each of these effects can be described on how it makes radiance change along the unit direction $\vec{\omega}$. This can be matematically expressed as the directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})$. 
+
+Emission is the most straightforward term. Emission increases the overall radiance of the ray by a term $L_e(\mathbf{x}, \vec{\omega})$:
+$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) $$
+$L_e$ is often called the \emph{source term} as it can be described as a light source within the material. It is often indicated by $Q$ or $q$. 
+
+When light propagates along a ray, a certain portion of the radiance is lost, in a general process called attenuation. Some of the photons composing the light beam are absorbed by the material, and generally transformed into heat. A probability distribution, called absorption cross section $\sigma_a(\mathbf{x}, \vec{\omega})$, describes the probability that a photon is absorbed per unit travelled within the medium. So the overall radiance loss can be described as:
+$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_a(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) $$
+
+Some other photons, due to interaction with the atoms of the material, are deflected from their original path $\vec{\omega}$, in a process called outscattering. This effect can be describes in a similar way as absorption, with a different coefficient, called the scattering coefficient $\sigma_s(\mathbf{x}, \vec{\omega})$. This gives a similar radiance loss as absorption:
+$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_s(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) $$
+The two coefficients can be combined into a unique coefficient, the extinction coefficient $\sigma_t(\mathbf{x}, \vec{\omega}) =\sigma_s(\mathbf{x}, \vec{\omega}) + \sigma_a(\mathbf{x}, \vec{\omega})$ and an unique effect, called attenuation.
+
+The final effect is inscattering, describing the radiance coming towards $\vec{\omega}$ from other scattering events in $\mathbf{x}$. Let us consider another direction $\vec{\omega}'$ from $\mathbf{x}$. Intuitively, we need to find what is the probability for a photon going towards $\vec{\omega}'$ to scatter towards an infinitesimal solid angle $d{\omega}$ around $\vec{\omega}$. This probability distribution is called the \emph{phase function} and usually indicated by $p(\mathbf{x}, \vec{\omega}', \vec{\omega})$. The function respect the normalization property of a probability density:
+$$\frac{1}{4\pi}\int_{4\pi} p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d\vec{\omega} = 1$$
+By integrating te phase function, we obtain the radiometric property $g(\mathbf{x}, \vec{\omega})$, describing the cosine of the mean scattering angle between two vectors:
+$$g(\mathbf{x}, \vec{\omega}) = \int_{4\pi} (\vec{\omega}' \cdot \vec{\omega}) p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d\vec{\omega}'$$
+With the phase function, we can define the effect of inscattering by integrating over all directions:
+$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'$$
+Note the multiplication by $\sigma_s$ to include the fact that photons will in scatter only sometimes, with probability $\sigma_s$. 
+
+We can now combine all terms to obtain the complete form of the radiative transfer equation:
+$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'$$
+
+\subsection{Global solution: the scattering operator}
+We now define a global solution to the scattering process, by defining it in terms of the functional scattering operator S. This allows us to connect the radiative transfer equation with BSSRDF theory, and to justify the BSSRDF as a representation of the scattering process. Most of the derivation in this section was first proposed by REF.
+
+
 
 \subsection{The BSSRDF}
 Definition

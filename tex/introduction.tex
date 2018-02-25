@@ -90,8 +90,29 @@ As games vary for gameplay, environment and style, photorealistic rendering can 
 
 \begin{figure}
 \centering
-	 \includegraphics[draft,width=\textwidth]{figures/main_diagram}  \\
-\caption{Main results from our papers.} 
+\begin{tikzpicture}[      
+        every node/.style={anchor=south west,inner sep=0pt},
+      ]   
+     \node (figmain) at (0,0)
+       {\includegraphics[width=\textwidth]{figures/photorealistic_diagram_bw}};
+      \node (fig0) at (0.6\textwidth,0.45\textwidth)
+       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/ao17_reassembly}};
+      \node (fig1) at (0.27\textwidth,0.32\textwidth)
+       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/dirsss_tvcj16}};
+      \node (fig2) at (0.5\textwidth,0.4\textwidth)
+       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/mam}};
+      \node (fig3) at (0.25\textwidth,0.2\textwidth)
+       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/srt}};
+      \node (fig4) at (0.1\textwidth,0.3\textwidth)
+       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/vr_showcase_brdf}};
+\node[above = -0.25cm of fig0] {\colorbox{white}{\ref{sec:glass}}};
+\node[above = -0.25cm of fig1] {\colorbox{white}{\ref{sec:interactivedirsss}}};
+\node[above = -0.25cm of fig2] {\colorbox{white}{\ref{sec:juice}}};
+\node[above = -0.25cm of fig3] {\colorbox{white}{\ref{sec:srt}}};
+\node[above = -0.25cm of fig4] {\colorbox{white}{\ref{sec:vrbrdf}}};
+
+\end{tikzpicture}
+\caption{The main contributions from this thesis in the time-accuracy graph. The roman number on each contribution links to the original published text.} 
 \label{fig:main_results}
 \end{figure}
 
