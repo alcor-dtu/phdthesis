@@ -124,9 +124,32 @@ Note the multiplication by $\sigma_s$ to include the fact that photons will in s
 We can now combine all terms to obtain the complete form of the radiative transfer equation:
 $$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'$$
 
-\subsection{Global solution: the scattering operator}
-We now define a global solution to the scattering process, by defining it in terms of the functional scattering operator S. This allows us to connect the radiative transfer equation with BSSRDF theory, and to justify the BSSRDF as a representation of the scattering process. Most of the derivation in this section was first proposed by REF.
+\subsection{Connecting BSSRDFs and the radiative transfer equation}
+%We now define a global solution to the scattering process, by defining it in terms of the functional scattering operator S. This allows us to connect the radiative transfer equation with BSSRDF theory, and to justify the BSSRDF as a representation of the scattering process. Most of the derivation in this section was first proposed by REF.
 
+
+To define a global solution to the scattering process, we need some additional constructs. We will use functionals extensively to simplify notation. A functional in this case is a operator that associates a function to another function. For example, let us define the functional $Q$ to integrate over an hemisphere:
+$$
+Q = \int_\Omega [\ \ ] d\omega
+$$
+We can for example write $E = LQ$, that corresponds to write the equation:
+$$
+E(\mathbf{x}) = \int_\Omega L(\mathbf{x}, \vec{\omega}) d\omega
+$$
+When obvious, we will drop the dependencies on $\mathbf{x}$ and $\omega$ from the functional form for clarity's sake. Now, we can start defining the standard $\opa$-operator:
+$$
+\opa(a,b) = \int_a \int_{\Omega_i^-} [\ \ ] S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega_i}) d \omega_i d A_i
+$$
+Where $a$ and $b$ are small parts of the surface of the medium containing $\mathbf{x}_i$ and $\mathbf{x}_o$, respectively and $\Omega_i^-$ is the hemisphere oriented towards $-\vec{n}_i$. Generically, we can write $L_o = L_i \opa(a,b)$ for equation TODO, simplifying notation greatly.
+
+Let us consider the configuration of figure TODO. In this figure, we have a path $P_r(\mathbf{x}_i,\vec{\omega})$ going between two points $\mathbf{x}_i$ and $\mathbf{x}_o$, distant $r$ with direction $\vec{\omega}$. Let us consider a  cylindrical medium $C$, composed of three parts: a top circle $a$ on $\mathbf{x}_i$, a bottom circle $b$ on $\mathbf{x}_o$ and a side $c$. We orient the path towards $\vec{n}_i = -\vec{\omega}$. This defines a direction for the hemispheres, e.g. $\Omega_i^+$ and $\Omega_i^-$ are the hemispheres centered in $\mathbf{x}_i$  and oriented towards or against $\vec{n}_i$, respectively. 
+
+At the steady state, the total radiance going in and out of the system is the same:
+$$
+L_o = L_i \opa(a,b)
+$$
+
+We want now to find the behavior of the system at equilibrium, when the cylinder becomes thinner and thinner ($C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})$).
 
 
 \subsection{The BSSRDF}
