@@ -142,21 +142,131 @@ $$
 $$
 Where $a$ and $b$ are small parts of the surface of the medium containing $\mathbf{x}_i$ and $\mathbf{x}_o$, respectively and $\Omega_i^-$ is the hemisphere oriented towards $-\vec{n}_i$. Generically, we can write $L_o = L_i \opa(a,b)$ for equation TODO, simplifying notation greatly.
 
-Let us consider the configuration of figure TODO. In this figure, we have a path $P_r(\mathbf{x}_i,\vec{\omega})$ going between two points $\mathbf{x}_i$ and $\mathbf{x}_o$, distant $r$ with direction $\vec{\omega}$. Let us consider a  cylindrical medium $C$, composed of three parts: a top circle $a$ on $\mathbf{x}_i$, a bottom circle $b$ on $\mathbf{x}_o$ and a side $c$. We orient the path towards $\vec{n}_i = -\vec{\omega}$. This defines a direction for the hemispheres, e.g. $\Omega_i^+$ and $\Omega_i^-$ are the hemispheres centered in $\mathbf{x}_i$  and oriented towards or against $\vec{n}_i$, respectively. 
+Let us consider the configuration of figure TODO. In this figure, we have a path $P_r(\mathbf{x}_i,\vec{\omega})$ going between two points $\mathbf{x}_i$ and $\mathbf{x}_o$, distant $r$ with direction $\vec{\omega}$. Let us consider a  cylindrical medium $C$, composed of three parts: a top circle $a$ on $\mathbf{x}_i$, a bottom circle $b$ on $\mathbf{x}_o$ and a side $c$. We orient the path towards $\vec{n}_i = -\vec{\omega}$. This defines a direction for the hemispheres, e.g. $\Omega_i^+$ and $\Omega_i^-$ are the hemispheres centered in $\mathbf{x}_i$  and oriented towards or against $\vec{n}_i$, respectively. We indicate with $L^+(a)$ some radiance $L(\mathbf{x}, \vec{\omega})$ where $\mathbf{x} \in a$ and $\vec{\omega} \in \Omega^+$.
 
 At the steady state, the total radiance going in and out of the system is the same:
 $$
-L_o = L_i \opa(a,b)
+L^-(b) = L^+(b)\opa(b,b) + L^-(a)\opa(a,b)  + L^-(c)\opa(c,b)
 $$
+We want now to find the behavior of the system at equilibrium, when the cylinder becomes thinner and thinner ($C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})$). We will analyize each one of the terms in equation TODO independently. 
 
-We want now to find the behavior of the system at equilibrium, when the cylinder becomes thinner and thinner ($C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})$).
+The first term, representing the radiance coming out from rays reflecting internally on $b$. Can be shown to tend to zero as the cylinder shrinks, since the support of the integral becomes infinitesimal:
+$$
+\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} L^+(b)\opa(b,b) = 0
+$$
+The second term defines the radiance transmitted inbetween $a$ and $b$, as the cylinder shrink, the photons have less and less room to scatter within the cylinder, so only the photons staying directly on $\omega$ will be considered at the end. Let us consider the limit:
+$$
+L_r^0(\mathbf{x}, \vec{\omega}) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [L^-(a)\opa(a,b)] (\mathbf{x}_o, \vec{\omega})
+$$
+At the limit $a \rightarrow \mathbf{x}_i$, so we can bring the radiance at the beginning of the ray, $L^0(\mathbf{x}_i, \vec{\omega})$ out. 
+$$
+L_r^0(\mathbf{x}, \vec{\omega}) = L^0(\mathbf{x}_i, \vec{\omega})\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [\opa(a,b)] (\mathbf{x}_o, \vec{\omega}) = L^0(\mathbf{x}_i, \vec{\omega}) T_r(\mathbf{x}_i, \vec{\omega})
+$$
+Where the last term is called \emph{beam transmittance}. For a single-parameter optical medium, we can define an optical parameter, $\sigma_t$ that defines the rate of change of attenuation across the medium per unit length:
+$$
+\sigma_t(\mathbf{x}, \vec{\omega}) = \lim_{r\rightarrow 0} \frac{1 - T_r(\mathbf{x}, \vec{\omega})}{r}
+$$
+Which leads to a natural definition for the beam transmittance:
+$$
+T_r(\mathbf{x}, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t(\mathbf{x} + r' \vec{\omega}, \vec{\omega}) dr'\right)
+$$
+We now miss to calculate the last term in the summation, that we call $L^*$:
+$$
+L_r^*(\mathbf{x}, \vec{\omega}) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [L^-(c)\opa(c,b)] (\mathbf{x}_o, \vec{\omega})
+$$
+We won't include the full derivation, but it is possbile by subdividing the cylinder into infinitesimal tiny slices, each with its own transmittance, to obtain a integral form for $L_r^*$:
+$$
+L_r^*(\mathbf{x}, \vec{\omega}) = \int_0^r L_*(\mathbf{x}', \vec{\omega}) T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
+$$
+Where $L^*$ is the radiance per unit length:
+$$
+L_*(\mathbf{x}, \vec{\omega}) = \lim_{r \rightarrow 0} \frac{L_r^*(\mathbf{x}, \vec{\omega})}{r}
+$$
+By putting it all together, we obtain the integral form of the radiative transfer equation:
+$$
+L_r(\mathbf{x}, \vec{\omega}) = L_r^0(\mathbf{x}, \vec{\omega}) + L_r^*(\mathbf{x}, \vec{\omega})
+$$
+$$
+L_r(\mathbf{x}, \vec{\omega}) =  L^0(\mathbf{x}_i, \vec{\omega}) T_r(\mathbf{x}_i, \vec{\omega}) + \int_0^r L_*(\mathbf{x}', \vec{\omega}) T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
+$$
+To finish our definition, we need to properly define $L_*$ in terms of $L$. For this derivation, let us still consider the configuration of figure TODO, where we have a point $\mathbf{x}'$ and vector $\vec{\omega}'$ on the surface of the flanking cylinder. We can then approximate $S$ as:
+$$
+S(\mathbf{x}', \vec{\omega}', \mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{r}{A_i'} + o(r)
+$$
+$\mathbf{x}', \mathbf{x}$ are two points on the cylinder, $r$ is the length of the shortest path between the two points with direction $-\vec{\omega}$, and $A_i'$ is the area of part of the cylinder that would be lit by a light shined from direction $-\vec{\omega}'$. The term $\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})$ is the unnormalized phase function.
 
-
-\subsection{The BSSRDF}
-Definition
-Dipole configuration
-Diffusion approximation
-Example as the standard dipole
+We can now recalculate $L_r^*$ using the approximation:
+$$
+L_r^*(\mathbf{x}, \vec{\omega}) = \int_{d} \int_{\Omega^-_i} L(\mathbf{x}', \vec{\omega}')  S(\mathbf{x}', \vec{\omega}', \mathbf{x}, \vec{\omega}) (\vec{n}' \cdot \vec{\omega}') d\omega' dA_i'
+$$
+Where we are considering a small sphere $d$ around $\mathbf{x}$ as a medium for this particular case.The integral becomes:
+\begin{equation}
+\begin{split}
+L_r^*(\mathbf{x}, \vec{\omega}) &= \int_{A_i'} \int_{\Omega^-_i} L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{r}{A_i'} + o(r)] (\vec{n}' \cdot \vec{\omega}') d\omega' dA_i'  \\
+&= \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) r + A_i' o(r)] (\vec{n}' \cdot \vec{\omega}') d\omega'\\
+&= r \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) d\omega' + o(r) \int_{4\pi}  L(\mathbf{x}', \vec{\omega}') A_i'   d\omega'
+\end{split}
+\end{equation}
+Taking the limit for $r\rightarrow 0$, we obtain the desired quantity:
+$$
+L_*(\mathbf{x}, \vec{\omega}) = \lim_{r\rightarrow 0} \frac{L_r^*(\mathbf{x}, \vec{\omega})}{r} = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}') p(\mathbf{x}, \vec{\omega}', \vec{\omega})   d\omega' 
+$$
+And the final form of the radiative transfer equation:
+$$
+L_r(\mathbf{x}, \vec{\omega}) =  L^0(\mathbf{x}_i, \vec{\omega}) T_r(\mathbf{x}_i, \vec{\omega}) + \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}) \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
+$$
+To finish our calculation, we derive the integro-differential form TODO from the equation above. We derive the above across $r$, which is the same as a directional derivative. Of the two terms on the right hand side of the equation above, the first becomes:
+\begin{equation}
+\begin{split}
+\frac{d}{dr} L^0(\mathbf{x}, \vec{\omega}) T_r(\mathbf{x}, \vec{\omega}) &= L^0(\mathbf{x}, \vec{\omega}) \frac{d}{dr}  T_r(\mathbf{x}, \vec{\omega}) \\
+&= L^0(\mathbf{x}, \vec{\omega}) (-\sigma_t(\mathbf{x}, \vec{\omega}) T_r(\mathbf{x}, \vec{\omega})) = -\sigma_t(\mathbf{x}, \vec{\omega}) L_r^0(\mathbf{x}, \vec{\omega})
+\end{split}
+\end{equation}
+As for the second term:
+\begin{equation}
+\begin{split}
+\frac{d}{dr} L^*_r(\mathbf{x}, \vec{\omega}) &= \frac{d}{dr} \int_0^r L_*(\mathbf{x}', \vec{\omega}) T_{r-r'}(\mathbf{x}', \vec{\omega})  dr' \\
+&= \int_0^r L_*(\mathbf{x}', \vec{\omega}) \frac{d}{dr} T_{r-r'}(\mathbf{x}', \vec{\omega})  dr' + L_*(\mathbf{x}', \vec{\omega})
+ \\
+ &= -\sigma_t(\mathbf{x}, \vec{\omega})  \int_0^r L_*(\mathbf{x}', \vec{\omega}) T_{r-r'}(\mathbf{x}', \vec{\omega})  dr' + L_*(\mathbf{x}', \vec{\omega}) \\
+ &= -\sigma_t(\mathbf{x}, \vec{\omega}) L^*_r(\mathbf{x}, \vec{\omega}) + L_*(\mathbf{x}', \vec{\omega})
+\end{split}
+\end{equation}
+By putting it all together:
+\begin{equation}
+\begin{split}
+\frac{d}{dr} L_r(\mathbf{x}, \vec{\omega}) &= -\sigma_t(\mathbf{x}, \vec{\omega}) [L^0_r(\mathbf{x}, \vec{\omega}) L^*_r(\mathbf{x}, \vec{\omega})] + L_*(\mathbf{x}', \vec{\omega}) \\
+&=  -\sigma_t(\mathbf{x}, \vec{\omega}) L_r(\mathbf{x}, \vec{\omega}) +  L_*(\mathbf{x}', \vec{\omega}) 
+\end{split}
+\end{equation}
+By dropping the dependency on $r$, introducting the definition for $L_*$ TODO and the directional derivative symbol, we obtain the integro-differential form of the radiative  transfer equation, without the emission term:
+$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'$$
+\subsection{Global solution to the BSSRDF}
+Equation TODO only gives a recursive local solution to the radiative transfer problem. We will now derive a new solution that considers the global effects of the BSSRDF for a surface.  To achieve this, we define the operator $S^1$:
+$$
+S^1 = \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}) \int_{4\pi} [\ \ ] p(\mathbf{x}', \vec{\omega}', \vec{\omega})  (\vec{n} \cdot \vec{\omega}')  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
+$$
+Now, we can define a starting radiance $L_0(\mathbf{x}_o, \vec{\omega})$ at a boundary point $\mathbf{x}_o$. We can extend this initial radiance to any point $\mathbf{x} = \mathbf{x}_o + r \vec{\omega}$ of the medium :
+$$
+L^0(\mathbf{x}, \vec{\omega}) = L^0(\mathbf{x}_o, \vec{\omega}) T_r(\mathbf{x}_o, \vec{\omega})
+$$
+Since we defined $L^0$, we can define a n-ary radiance function $L^{n+1}$ recursively:
+$$
+L^{n+1} = L^n S^1
+$$
+Then, the n-ary radiance can be easily be calculated to be the continuous application of the $S$ operator. If we define $S^{n+1} = S^1 S^n$, we get that 
+$$
+L^n = L^0 S^n
+$$
+For every scattering order $n$.
+We can bring this process to infinity by defining the two quantities:
+$$
+L = \sum_{j=0}^\infty L^j\ \ \ \ S = \sum_{j=0}^\infty S^j
+$$
+That leads to the formulation:
+$$
+L =  \sum_{j=0}^\infty L^j = \sum_{j=0}^\infty L^0 S^j = N^0 S
+$$
 
 \subsection{Rendering techniques}
 \fixme{Discuss with Jeppe whether to move in Related work?}
