@@ -44,7 +44,8 @@ $$
 Where $\cos \theta = \vec{n} \cdot \vec{\omega}$ is the cosine of the angle between the normal and the direction of evaluation. $d A \cos\theta$ is also called the \emph{projected area element}. As irradiance, radiance can be incoming or outgoing from a specific point. We indicate these quantities with $L_i$ and $L_o$, respectively. In graphics, radiance is usually the most useful quantity for two main reasons. First, the other quantities can be easily computed from radiance through radiometric integrals:
 \begin{figure}
 \centering
-	 \includegraphics[scale=0.8]{figures/etendue}  \\
+   \def\svgwidth{0.8\textwidth}
+   \input{figures/etendue.pdf_tex} \\
 \caption{Configuration to prove the equality of radiance across a ray.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
 \label{fig:etendue}
 \end{figure}
@@ -127,6 +128,13 @@ $$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\
 \subsection{Connecting BSSRDFs and the radiative transfer equation}
 %We now define a global solution to the scattering process, by defining it in terms of the functional scattering operator S. This allows us to connect the radiative transfer equation with BSSRDF theory, and to justify the BSSRDF as a representation of the scattering process. Most of the derivation in this section was first proposed by REF.
 
+\begin{figure}
+\centering
+   \def\svgwidth{0.8\textwidth}
+   \input{figures/cylinder_geometry.pdf_tex} \\
+\caption{Cylinder configuration to prove the radiance solution.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
+\label{fig:cylinder}
+\end{figure}
 
 To define a global solution to the scattering process, we need some additional constructs. We will use functionals extensively to simplify notation. A functional in this case is a operator that associates a function to another function. For example, let us define the functional $Q$ to integrate over an hemisphere:
 $$
@@ -235,7 +243,7 @@ As for the second term:
 By putting it all together:
 \begin{equation}
 \begin{split}
-\frac{d}{dr} L_r(\mathbf{x}, \vec{\omega}) &= -\sigma_t(\mathbf{x}, \vec{\omega}) [L^0_r(\mathbf{x}, \vec{\omega}) L^*_r(\mathbf{x}, \vec{\omega})] + L_*(\mathbf{x}', \vec{\omega}) \\
+\frac{d}{dr} L_r(\mathbf{x}, \vec{\omega}) &= -\sigma_t(\mathbf{x}, \vec{\omega}) [L^0_r(\mathbf{x}, \vec{\omega}) + L^*_r(\mathbf{x}, \vec{\omega})] + L_*(\mathbf{x}', \vec{\omega}) \\
 &=  -\sigma_t(\mathbf{x}, \vec{\omega}) L_r(\mathbf{x}, \vec{\omega}) +  L_*(\mathbf{x}', \vec{\omega}) 
 \end{split}
 \end{equation}
