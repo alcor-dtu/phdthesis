@@ -14,6 +14,13 @@
 \section{Photorealistic rendering}
 
 \subsection{Radiometry}
+\begin{figure}
+\centering
+   \def\svgwidth{0.4\textwidth}
+   \input{figures/radiance.pdf_tex} \\
+\caption{Configuration to define radiance.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
+\label{fig:radiance}
+\end{figure}
 Radiometry is that branch of science that measures electromagnetic radiation. We will define the basic radiometric quantities, in order to then introduce the two main reflectance functions of interest in this thesis, namely the BRDF and the BSSRDF. In particular, we want to give a definition of radiance, the most useful quantity in describing light transport along rays.
 
 First, we consider an ideal point light source in space. The source emits a certain amount of energy $U$, measured in Joules $[J]$. The first quantity we derive is radiant flux or radiant power $\Phi$, defined as the amount of energy per second emitted by the light:
@@ -202,6 +209,14 @@ $$
 S(\mathbf{x}', \vec{\omega}', \mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{r}{A_i'} + o(r)
 $$
 $\mathbf{x}', \mathbf{x}$ are two points on the cylinder, $r$ is the length of the shortest path between the two points with direction $-\vec{\omega}$, and $A_i'$ is the area of part of the cylinder that would be lit by a light shined from direction $-\vec{\omega}'$. The term $\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})$ is the unnormalized phase function.
+
+\begin{figure}
+\centering
+   \def\svgwidth{0.8\textwidth}
+   \input{figures/sphere_geometry.pdf_tex} \\
+\caption{Sphere configuration to prove the radiance solution.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
+\label{fig:sphere}
+\end{figure}
 
 We can now recalculate $L_r^*$ using the approximation:
 $$
