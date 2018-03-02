@@ -268,27 +268,13 @@ $$
 L =  \sum_{j=0}^\infty L^j = \sum_{j=0}^\infty L^0 S^j = N^0 S
 $$
 
-\subsection{Rendering techniques}
-\fixme{Discuss with Jeppe whether to move in Related work?}
-\begin{itemize}
-\item The rendering equation
-\item Path tracing
-\item Rendering with reflectance functions
-\end{itemize}
+\section{Monte Carlo path tracing}
 
-\section{Performance of rendering techniques} 
+\section{Fast rendering techniques} 
 
-A comparison about rendering techniques. Offline vs realtime
-Gpus vs cpus
+\subsection{Rasterization}
+The first of the two techniques is rasterization. In this technique, the rendering primitives, usually triangles, are scanned one by one and then drawn in the corresponding occupied area of the screen. This process can be highly parallelized, since every primitive can be drawn in parallel. On modern graphic cards, the rasterizations is usually executed in parallel by a specified hardware unit. For each pixel hit by a triangle, a fragment is generated, that is then processed by another hardware unity, the Render Output Unit. This piece of hardware has the job of combining the fragments into the final image, allowing effects such as blending or depth testing. In modern GPU pipelines, some programmable parts are introduced in the pipeline, usually called shaders. The main two programmable stages introduced are usually the vertex shader, that processes every single part of the input primitives independently before assembling and rendering them. The second one is the fragment shader, that processes each fragment independently before they are processed by the ROU. More stages are available, for more particular and fine tuned tasks, such has geometry manipulation (geometry shader) or tessellation (domain and hull shaders). The code in this programmable part is usually aggressively compiled, is written in specific languages, and has many constraints on which data it can access, to respect the performance constraints. 
 
 
-\subsection{Offline rendering techniques}
-Accuracy, slow rendering times. Focus on performance but mostly on achieving converged frames
-
-\subsection{Real-time rendering techniques}
-Disregard for physically based, but new interest in the lastest years
-
-Squeezing as much as possible from the GPU. 
-
-
+\subsection{Ray tracing}
 
