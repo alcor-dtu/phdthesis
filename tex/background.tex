@@ -63,7 +63,7 @@ I(\vec{\omega}) &= \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\om
 E(\mathbf{x}) &= \int_{\Omega} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ d \vec{\omega} 
 \end{split}
 \end{equation*}
-Where $\Omega$ and $A$ are the hemisphere around $\vec{n}$ and the total surface, respectively. Second, radiance carried by a ray \emph{in vacuo} is constant. We can prove this quite easily, with the aid of Figure\~ref{fig:etendue}. Note that for point $\mathbf{x}_o$, we have $d \omega_o = \frac{d A_i \cos\theta_i}{r^2}$, and dually the same for $\mathbf{x}_i$. Then:
+Where $\Omega$ and $A$ are the hemisphere around $\vec{n}$ and the total surface, respectively. Second, radiance carried by a ray \emph{in vacuo} is constant. We can prove this quite easily, with the aid of Figure~\ref{fig:etendue}. Note that for point $\mathbf{x}_o$, we have $d \omega_o = \frac{d A_i \cos\theta_i}{r^2}$, and dually the same for $\mathbf{x}_i$. Then:
 \begin{equation*}
 \begin{split}
 L_i(\mathbf{x}_i, \vec{\omega}_i) = \frac{d^2 \Phi}{d A_i \cos\theta_i d \omega_i} &= 
@@ -77,13 +77,15 @@ Note that we assume that the flux does not varies across the path, that is gener
 
 \subsection{The BSSRDF and the BRDF}
 So far, we have defined radiometric quantities, without worrying about the interaction at the surface. We will now describe how this radiometric quantities change once they encounter a surface. Let us first consider a surface illuminated by a light. Let us consider the portion of the flux $d \Phi_i$ arriving from direction $\vec{\omega}_i$ on a surface element $d A_i$ centered on a point $\mathbf{x}_i$. Due to surface interaction, part of the incoming light will emerge on a point $\mathbf{x}_o$, in direction $\vec{\omega}_o$. We consider the proportionality factor between the emitted radiance and the incoming flux:
-$$
+\begin{equation}
+\label{eq:bssrdf}
 d L_o(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i)  \siunit{\watt \per \square \metre \per \steradian}
-$$
+\end{equation}
 The factor $S$, dependent on the surface materials, is called \emph{Bidirectional scattering-surface reflectance distribution function} (BSSRDF). The units for the BSSRDF are $\siunitnospace{\per \square \metre \per \steradian}$. From the definition of BSSRDF and flux, we obtain the extended form of the rendering equation:
-$$
+\begin{equation}
+\label{eq:bssrdfintegral}
 L_o(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i  \siunit{\watt \per \square \metre \per \steradian}
-$$
+\end{equation}
 Note that we did not assume anything about the material, deriving the BSSRDF from purely radiometric quantities. Some simplifications can then be introduced to obtain more tractable functions. We assume that the BSSRDF is limited across a small area around the emergence point $\mathbf{x}_o$, and zero everywhere else. This is the case for a particular set of materials, such as plastic or metals. In this configuration, we can assume that the radiance is constant across the plane ($L_i(\mathbf{x}_i, \vec{\omega}_i) \approx L_i(\vec{\omega}_i)$). We also need to assume the material to be locally isotropic, i.e. its properties do not change across the surface. In this case, we can approximate the outgoing radiance as:
 $$
 d L_o(\mathbf{x}_o, \vec{\omega}_o) \approx \int_A d L_o(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i) 
@@ -110,9 +112,8 @@ Of the two solutions on how light propagates into interface bounded volumes, we 
 
 Traditionally, light travelling a medium is subject to four processed: absorption, emission, inscattering and outscattering. Each of these effects can be described on how it makes radiance change along the unit direction $\vec{\omega}$. This can be matematically expressed as the directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})$. 
 
-Emission is the most straightforward term. Emission increases the overall radiance of the ray by a term $L_e(\mathbf{x}, \vec{\omega})$:
-$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) $$
-$L_e$ is often called the \emph{source term} as it can be described as a light source within the material. It is often indicated by $Q$ or $q$. 
+Emission is the most straightforward term. Emission increases the overall radiance of the ray by a term $\epsilon(\mathbf{x}, \vec{\omega})$:
+$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \epsilon(\mathbf{x}, \vec{\omega})$$
 
 When light propagates along a ray, a certain portion of the radiance is lost, in a general process called attenuation. Some of the photons composing the light beam are absorbed by the material, and generally transformed into heat. A probability distribution, called absorption cross section $\sigma_a(\mathbf{x}, \vec{\omega})$, describes the probability that a photon is absorbed per unit travelled within the medium. So the overall radiance loss can be described as:
 $$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_a(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) $$
@@ -130,8 +131,10 @@ $$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}, \
 Note the multiplication by $\sigma_s$ to include the fact that photons will in scatter only sometimes, with probability $\sigma_s$. 
 
 We can now combine all terms to obtain the complete form of the radiative transfer equation:
-$$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'$$
-
+\begin{equation}
+\label{eq:rte}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \epsilon(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'
+\end{equation}
 \subsection{Connecting BSSRDFs and the radiative transfer equation}
 %We now define a global solution to the scattering process, by defining it in terms of the functional scattering operator S. This allows us to connect the radiative transfer equation with BSSRDF theory, and to justify the BSSRDF as a representation of the scattering process. Most of the derivation in this section was first proposed by REF.
 
@@ -143,53 +146,56 @@ $$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\
 \label{fig:cylinder}
 \end{figure}
 
-To define a global solution to the scattering process, we need some additional constructs. We will use functionals extensively to simplify notation. A functional in this case is a operator that associates a function to another function. For example, let us define the functional $Q$ to integrate over an hemisphere:
+Given the above definition of BSSRDF (Equation~\ref{eq:bssrdf}), one may wonder on how the BSSRDF is related to any scattering process at all, since it simply describe a relationship between an incoming and one outgoing radiometric quantity. In this section, starting from the definition of BSSRDF, we will derive the local integro-differential form of the radiative transfer Equation~\ref{eq:rte}, to show how the BSSRDF fits nicely as a mathematical description of an underlying scattering process. 
+
+To show this relationship, we need some additional mathematical construct to simplify notation, namely \emph{functionals}. A functional in this case is a operator that associates a function to another function. For example, let us define the functional $Q$ to integrate over an hemisphere:
 $$
-Q = \int_\Omega [\ \ ] d\omega
+Q = \int_\Omega [\ \ ] d\omega.
 $$
-We can for example write $E = LQ$, that corresponds to write the equation:
+So, if we for example write $E = LQ$, it corresponds to the equation
 $$
-E(\mathbf{x}) = \int_\Omega L(\mathbf{x}, \vec{\omega}) d\omega
+E(\mathbf{x}) = \int_\Omega L(\mathbf{x}, \vec{\omega}) d\omega.
 $$
-When obvious, we will drop the dependencies on $\mathbf{x}$ and $\omega$ from the functional form for clarity's sake. Now, we can start defining the standard $\opa$-operator:
+When obvious, we will drop the dependencies on $\mathbf{x}$ and $\omega$ from the functional form for clarity's sake. We can now define a new functional operator $\opa$, also calle the \emph{interaction operator}:
 $$
 \opa(a,b) = \int_a \int_{\Omega_i^-} [\ \ ] S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega_i}) d \omega_i d A_i
 $$
-Where $a$ and $b$ are small parts of the surface of the medium containing $\mathbf{x}_i$ and $\mathbf{x}_o$, respectively and $\Omega_i^-$ is the hemisphere oriented towards $-\vec{n}_i$. Generically, we can write $L_o = L_i \opa(a,b)$ for equation TODO, simplifying notation greatly.
+Where $a$ and $b$ are parts of the surface of the medium containing $\mathbf{x}_i$ and $\mathbf{x}_o$, respectively. $\Omega_i^-$ is the hemisphere oriented towards $-\vec{n}_i$. This allows us to write $L_o = L_i \opa(a,b)$ for equation~\ref{eq:bssrdfintegral}, greatly simplifying notation.
 
-Let us consider the configuration of figure TODO. In this figure, we have a path $P_r(\mathbf{x}_i,\vec{\omega})$ going between two points $\mathbf{x}_i$ and $\mathbf{x}_o$, distant $r$ with direction $\vec{\omega}$. Let us consider a  cylindrical medium $C$, composed of three parts: a top circle $a$ on $\mathbf{x}_i$, a bottom circle $b$ on $\mathbf{x}_o$ and a side $c$. We orient the path towards $\vec{n}_i = -\vec{\omega}$. This defines a direction for the hemispheres, e.g. $\Omega_i^+$ and $\Omega_i^-$ are the hemispheres centered in $\mathbf{x}_i$  and oriented towards or against $\vec{n}_i$, respectively. We indicate with $L^+(a)$ some radiance $L(\mathbf{x}, \vec{\omega})$ where $\mathbf{x} \in a$ and $\vec{\omega} \in \Omega^+$.
+Let us consider the configuration of Figure~\ref{fig:cylinder}. In this figure, we have a path $P_r(\mathbf{x}_i,\vec{\omega})$ starting at $\mathbf{x}_i$, with direction $\vec{\omega}$ for $r$ units, terminating in $\mathbf{x}_o$ (so that $\mathbf{x}_o = \mathbf{x}_i + r \vec{\omega}$). Let us now consider a cylindrical medium $C$, composed of three parts: a top circle $a$ on $\mathbf{x}_i$, a bottom circle $b$ on $\mathbf{x}_o$ and a flank surface $c$. We orient the cylinder towards $\vec{n}_i = -\vec{\omega}$. This defines a direction for the hemispheres, e.g. $\Omega_i^+$ and $\Omega_i^-$ are the hemispheres centered in $\mathbf{x}_i$  and oriented towards or against $\vec{n}_i$, respectively. As final bit of notation, we indicate with $L^+(a)$ some radiance $L(\mathbf{x}, \vec{\omega})$ where $\mathbf{x} \in a$ and $\vec{\omega} \in \Omega^+$.
 
-At the steady state, the total radiance going in and out of the system is the same:
-$$
+At the steady state, the total radiance going out of the cylinder through the surface $b$ is:
+\begin{equation}
+\label{eq:steadystate}
 L^-(b) = L^+(b)\opa(b,b) + L^-(a)\opa(a,b)  + L^-(c)\opa(c,b)
-$$
-We want now to find the behavior of the system at equilibrium, when the cylinder becomes thinner and thinner ($C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})$). We will analyize each one of the terms in equation TODO independently. 
+\end{equation}
+Intuitively, the first term on the right of the summation represent the radiance not going out due to reflection, while the second and third term represent the radiance entering in $a$ and $c$ scattering out of $C$ through $b$, respectively. We want now to find the behavior of the system at equilibrium, when the cylinder becomes thinner and thinner ($C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})$). We will analyze each one of the terms in Equation~\ref{eq:steadystate} independently. 
 
-The first term, representing the radiance coming out from rays reflecting internally on $b$. Can be shown to tend to zero as the cylinder shrinks, since the support of the integral becomes infinitesimal:
+The first term of Equation~\ref{eq:steadystate} can be shown to tend to zero as the cylinder shrinks. This comes from the fact that the reflectance of a transparent plane is zero, as all the radiance contribution passes through. In formulas
 $$
-\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} L^+(b)\opa(b,b) = 0
+\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [L^+(b)\opa(b,b)] (\mathbf{x}_o, \vec{\omega}) = 0.
 $$
-The second term defines the radiance transmitted inbetween $a$ and $b$, as the cylinder shrink, the photons have less and less room to scatter within the cylinder, so only the photons staying directly on $\omega$ will be considered at the end. Let us consider the limit:
+The second term defines the radiance transmitted inbetween $a$ and $b$, as the cylinder shrink, the photons have less and less room to scatter within the cylinder, so only the photons staying directly on $\vec{\omega}$ (even if they scatter back and forth) will be considered at the end. Let us consider the limit:
 $$
-L_r^0(\mathbf{x}, \vec{\omega}) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [L^-(a)\opa(a,b)] (\mathbf{x}_o, \vec{\omega})
+L_r^0(\mathbf{x}_o, \vec{\omega}) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [L^-(a)\opa(a,b)] (\mathbf{x}_o, \vec{\omega})
 $$
-At the limit $a \rightarrow \mathbf{x}_i$, so we can bring the radiance at the beginning of the ray, $L^0(\mathbf{x}_i, \vec{\omega})$ out. 
+At the limit $a \rightarrow \mathbf{x}_i$, we have $L^-(a) = L^0(\mathbf{x}_i, \vec{\omega})$, that can be brought out: 
 $$
-L_r^0(\mathbf{x}, \vec{\omega}) = L^0(\mathbf{x}_i, \vec{\omega})\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [\opa(a,b)] (\mathbf{x}_o, \vec{\omega}) = L^0(\mathbf{x}_i, \vec{\omega}) T_r(\mathbf{x}_i, \vec{\omega})
+L_r^0(\mathbf{x}_o, \vec{\omega}) = L^0(\mathbf{x}_i, \vec{\omega})\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [\opa(a,b)] (\mathbf{x}_o, \vec{\omega}) = L^0(\mathbf{x}_i, \vec{\omega}) T_r(\mathbf{x}_i, \vec{\omega})
 $$
-Where the last term is called \emph{beam transmittance}. For a single-parameter optical medium, we can define an optical parameter, $\sigma_t$ that defines the rate of change of attenuation across the medium per unit length:
+Where the last term is called \emph{beam transmittance}, i.e. the amount of light blocked on the direct path. A dual term $1 -  T_r(\mathbf{x}_i, \vec{\omega})$ can be defined, called \emph{beam attenuation}. The rate of change of beam attenuation per unit length at $\mathbf{x}_i$ on $\vec{\omega}$ is called \emph{extinction coefficient}:
 $$
-\sigma_t(\mathbf{x}, \vec{\omega}) = \lim_{r\rightarrow 0} \frac{1 - T_r(\mathbf{x}, \vec{\omega})}{r}
+\sigma_t(\mathbf{x}_i, \vec{\omega}) = \lim_{r\rightarrow 0} \frac{1 - T_r(\mathbf{x}_i, \vec{\omega})}{r}
 $$
 Which leads to a natural definition for the beam transmittance:
 $$
-T_r(\mathbf{x}, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t(\mathbf{x} + r' \vec{\omega}, \vec{\omega}) dr'\right)
+T_r(\mathbf{x}_i, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t(\mathbf{x}_i + r' \vec{\omega}, \vec{\omega}) dr'\right)
 $$
 We now miss to calculate the last term in the summation, that we call $L^*$:
 $$
-L_r^*(\mathbf{x}, \vec{\omega}) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [L^-(c)\opa(c,b)] (\mathbf{x}_o, \vec{\omega})
+L_r^*(\mathbf{x}_o, \vec{\omega}) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega})} [L^-(c)\opa(c,b)] (\mathbf{x}_o, \vec{\omega})
 $$
-We won't include the full derivation, but it is possbile by subdividing the cylinder into infinitesimal tiny slices, each with its own transmittance, to obtain a integral form for $L_r^*$:
+We won't include the full derivation, but by subdividing the cylinder into infinitesimal tiny slices, each with its own transmittance, and then taking the limit, to obtain a integral form for $L_r^*$:
 $$
 L_r^*(\mathbf{x}, \vec{\omega}) = \int_0^r L_*(\mathbf{x}', \vec{\omega}) T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
 $$
@@ -197,18 +203,18 @@ Where $L^*$ is the radiance per unit length:
 $$
 L_*(\mathbf{x}, \vec{\omega}) = \lim_{r \rightarrow 0} \frac{L_r^*(\mathbf{x}, \vec{\omega})}{r}
 $$
-By putting it all together, we obtain the integral form of the radiative transfer equation:
+By putting it all together, we obtain this form of the radiative transfer equation:
 $$
 L_r(\mathbf{x}, \vec{\omega}) = L_r^0(\mathbf{x}, \vec{\omega}) + L_r^*(\mathbf{x}, \vec{\omega})
 $$
 $$
 L_r(\mathbf{x}, \vec{\omega}) =  L^0(\mathbf{x}_i, \vec{\omega}) T_r(\mathbf{x}_i, \vec{\omega}) + \int_0^r L_*(\mathbf{x}', \vec{\omega}) T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
 $$
-To finish our definition, we need to properly define $L_*$ in terms of $L$. For this derivation, let us still consider the configuration of figure TODO, where we have a point $\mathbf{x}'$ and vector $\vec{\omega}'$ on the surface of the flanking cylinder. We can then approximate $S$ as:
+We only need now to define $L_*$ in terms of $L$. For this derivation, let us still consider the configuration of Figure \ref{fig:sphere}, where we have a point $\mathbf{x}'$ and vector $\vec{\omega}'$ on the surface of a sphere $d$ surrounding a point $\mathbf{x}$ on path $P_r(\mathbf{x}_i,r)$. We can then define an approximation of $S$ as
 $$
-S(\mathbf{x}', \vec{\omega}', \mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{r}{A_i'} + o(r)
+S(\mathbf{x}', \vec{\omega}', \mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{s}{A_i'} + o(s).
 $$
-$\mathbf{x}', \mathbf{x}$ are two points on the cylinder, $r$ is the length of the shortest path between the two points with direction $-\vec{\omega}$, and $A_i'$ is the area of part of the cylinder that would be lit by a light shined from direction $-\vec{\omega}'$. The term $\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})$ is the unnormalized phase function.
+$\mathbf{x}', \mathbf{x}$ are two points on the sphere, $s$ is the sphere radius, and $A_i'$ is the area of the sphere that would be lit by a light shined from direction $-\vec{\omega}'$. The term $\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) = \sigma_s(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})$ is the non-normalized phase function. $o(s)$ is an error such as $\lim_{s\rightarrow 0} \frac{o(s)}{s} = 0$.
 
 \begin{figure}
 \centering
@@ -218,27 +224,24 @@ $\mathbf{x}', \mathbf{x}$ are two points on the cylinder, $r$ is the length of t
 \label{fig:sphere}
 \end{figure}
 
-We can now recalculate $L_r^*$ using the approximation:
-$$
-L_r^*(\mathbf{x}, \vec{\omega}) = \int_{d} \int_{\Omega^-_i} L(\mathbf{x}', \vec{\omega}')  S(\mathbf{x}', \vec{\omega}', \mathbf{x}, \vec{\omega}) (\vec{n}' \cdot \vec{\omega}') d\omega' dA_i'
-$$
-Where we are considering a small sphere $d$ around $\mathbf{x}$ as a medium for this particular case.The integral becomes:
+We can now recalculate $L_s^*$ \emph{for the sphere configuration} using the approximation:
 \begin{equation}
 \begin{split}
-L_r^*(\mathbf{x}, \vec{\omega}) &= \int_{A_i'} \int_{\Omega^-_i} L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{r}{A_i'} + o(r)] (\vec{n}' \cdot \vec{\omega}') d\omega' dA_i'  \\
-&= \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) r + A_i' o(r)] (\vec{n}' \cdot \vec{\omega}') d\omega'\\
-&= r \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) d\omega' + o(r) \int_{4\pi}  L(\mathbf{x}', \vec{\omega}') A_i'   d\omega'
+L_s^*(\mathbf{x}, \vec{\omega}) &= \int_{A_i'} \int_{\Omega^-_i} L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{s}{A_i'} + o(s)] (\vec{n}' \cdot \vec{\omega}') d\omega' dA_i'  \\
+&= \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) s + A_i' o(s)] (\vec{n}' \cdot \vec{\omega}') d\omega'\\
+&= s \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) d\omega' + o(s) \int_{4\pi}  L(\mathbf{x}', \vec{\omega}') A_i'   d\omega'
 \end{split}
 \end{equation}
-Taking the limit for $r\rightarrow 0$, we obtain the desired quantity:
-$$
-L_*(\mathbf{x}, \vec{\omega}) = \lim_{r\rightarrow 0} \frac{L_r^*(\mathbf{x}, \vec{\omega})}{r} = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}') p(\mathbf{x}, \vec{\omega}', \vec{\omega})   d\omega' 
-$$
-And the final form of the radiative transfer equation:
+Taking the limit for $s\rightarrow 0$, the second term disappears with the $o(s)$, so that we obtain the desired quantity:
+\begin{equation}
+\label{eq:lstar}
+L_*(\mathbf{x}, \vec{\omega}) = \lim_{s\rightarrow 0} \frac{L_s^*(\mathbf{x}, \vec{\omega})}{s} = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}') p(\mathbf{x}, \vec{\omega}', \vec{\omega})   d\omega' 
+\end{equation}
+Putting it all together, we obtain the \emph{integral form} of the radiative transfer equation:
 $$
 L_r(\mathbf{x}, \vec{\omega}) =  L^0(\mathbf{x}_i, \vec{\omega}) T_r(\mathbf{x}_i, \vec{\omega}) + \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}) \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
 $$
-To finish our calculation, we derive the integro-differential form TODO from the equation above. We derive the above across $r$, which is the same as a directional derivative. Of the two terms on the right hand side of the equation above, the first becomes:
+To finish our calculation, we derive the integro-differential form~\ref{eq:rte} from the equation above. We derive the above across $r$, which is the same as a directional derivative $ \vec{\omega} \cdot \nabla$. Of the two terms on the right hand side of the equation above, the first becomes:
 \begin{equation}
 \begin{split}
 \frac{d}{dr} L^0(\mathbf{x}, \vec{\omega}) T_r(\mathbf{x}, \vec{\omega}) &= L^0(\mathbf{x}, \vec{\omega}) \frac{d}{dr}  T_r(\mathbf{x}, \vec{\omega}) \\
@@ -262,10 +265,11 @@ By putting it all together:
 &=  -\sigma_t(\mathbf{x}, \vec{\omega}) L_r(\mathbf{x}, \vec{\omega}) +  L_*(\mathbf{x}', \vec{\omega}) 
 \end{split}
 \end{equation}
-By dropping the dependency on $r$, introducting the definition for $L_*$ TODO and the directional derivative symbol, we obtain the integro-differential form of the radiative  transfer equation, without the emission term:
+By dropping the dependency on $r$, introducing the definition for $L_*$ (Equation~\ref{eq:lstar}) and the directional derivative symbol, we obtain the integro-differential form of the radiative  transfer equation
 $$\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'$$
+We can then add an additional term to account for emission, obtaining the form in Equation~\ref{eq:rte}.
 \subsection{Global solution to the BSSRDF}
-Equation TODO only gives a recursive local solution to the radiative transfer problem. We will now derive a new solution that considers the global effects of the BSSRDF for a surface.  To achieve this, we define the operator $S^1$:
+Equation~\ref{eq:rte} only gives a recursive local solution to the radiative transfer problem. We will now derive a new solution that considers the global effects of the BSSRDF for a surface.  To achieve this, we define the operator $S^1$:
 $$
 S^1 = \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}) \int_{4\pi} [\ \ ] p(\mathbf{x}', \vec{\omega}', \vec{\omega})  (\vec{n} \cdot \vec{\omega}')  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
 $$
@@ -294,9 +298,24 @@ $$
 \section{Monte Carlo path tracing} 
 \section{Fast rendering techniques} 
 \subsection{Rasterization}
-The first of the two techniques is rasterization. In this technique, the rendering primitives, usually triangles, are scanned one by one and then drawn in the corresponding occupied area of the screen. This process can be highly parallelized, since every primitive can be drawn in parallel. On modern graphic cards, the rasterizations is usually executed in parallel by a specified hardware unit. For each pixel hit by a triangle, a fragment is generated, that is then processed by another hardware unity, the Render Output Unit. This piece of hardware has the job of combining the fragments into the final image, allowing effects such as blending or depth testing. In modern GPU pipelines, some programmable parts are introduced in the pipeline, usually called shaders. The main two programmable stages introduced are usually the vertex shader, that processes every single part of the input primitives independently before assembling and rendering them. The second one is the fragment shader, that processes each fragment independently before they are processed by the ROU. More stages are available, for more particular and fine tuned tasks, such has geometry manipulation (geometry shader) or tessellation (domain and hull shaders). The code in this programmable part is usually aggressively compiled, is written in specific languages, and has many constraints on which data it can access, to respect the performance constraints. 
- 
- 
+The first of the two techniques is rasterization. In this technique, the rendering primitives, usually triangles, are scanned one by one and then drawn in the corresponding occupied area of the screen. Scanline rendering can then be used to transform each triangle into multiple pixel-size elements, also called \emph{fragments}. 
 
+By its nature, rasterization can be highly parallelized, since every primitive can be drawn in parallel. On modern graphics cards, the rasterization process is part of the graphics pipeline, a highly fine tuned process to render triangles efficiently. A full version of the pipeline is illustrated in Figure TODO. The pipeline is composed of programmable parts (called \emph{shaders}) and hardware parts, that are only controllable through state flags. The core rasterization process, transforming primitives into pixels, is executed in parallel by a specified hardware unit. 
+
+Let us describe the life of a single triangle through the pipeline. We first take a triangle, that is composed by three vertices. For each vertex, we execute a programmable part, called the \emph{vertex shader}, that allows operation such as model and perspective transformation. Once the vertices have been processed, the primitive is assembled and then processed by the hardware rasterizer, generating a certain number of fragments. For each fragment, we execute another programmable shader, the \emph{fragment shader}. This stage outputs the final color of the fragment, so in this stage we usually execute the proper shading of the fragment, including light interaction. Multiple attributes can be passed inbetween vertex and fragment shader, that will be interpolated using the triangle's barycentric coordinates. This allows to interpolate attributes, such as normal and texture coordinates, across the triangle, leading to a more accurate appearance. 
+
+Once the fragments are generated, they need to be stored on the image plane. Note that multiple fragments can land on the same pixel, and that the order of landing of the fragments can be different, since the full pipeline is entirely asynchronous. So, modern GPUs use another hardware unit, the Render OutPut unit (ROP) to decide how to store the fragments in the final image. This unit usually can perform depth testing or blending of the fragments, allowing us to obtain a consistent result across frame invocations.
+
+The full graphics pipeline is more complicated, allowing tessellation (domain and hull shaders), geometry manipulation (geometry manipulation) or writing back into a vertex stream (transform feedback). More recently, we can use shaders that are completely detached from the graphics pipeline (compute shaders), that allows us to perform tasks in parallel that are not directly related to the graphics pipeline. 
+
+Rasterization is extensively used in game development pipelines, given its high speed and predictability. However, it is not particularly well suited to propagate light across a scene, making it difficult to achieve complex optical effects, that often require solutions on a case by case basis.
+
+\subsection{Ray tracing}
+Ray tracing can be considered the dual technique to rasterization. In rasterization, we match each triangle to its final position on the screen. In ray tracing, we do the opposite: for each pixel on the screen, we find the corresponding triangles that land within that pixel. This equates to \emph{shooting} a ray through the pixel, and intersecting it though the scene geometry. Once the hitpoint is found, attributes can be generated and the point shaded as in a fragment shader. Generically, the rays can be further traced down the scene, allowing this technique to simulate complex optical phenomena, such as light propagation. 
+Modern GPU ray tracers build a tree data structure to efficiently lookup intersections. The most commonly used data structure is a bounding volume hierarchy, or BVH. In a BVH, each of the primitives (usually triangles, but custom primitives such as spheres, cubes or quadrilaterals are possible) is enclosed in a bounding box. The various bounding boxes are then arranged in a tree data structure for fast lookup. Once a ray is traced, it is first inexpensively tested against the bounding boxes. For the bounding boxes that are hit, a expensive intersection test is performed to check for a hit. Depending on the shading algorithm, a callback can be issued at every intersection (\emph{any hit}), or at the intersection closest to the camera (\emph{closest hit}). 
+
+Many challenges need to be solved by an efficient GPU ray tracer. The first challenge is recursion. In the case of an algorithm such as path tracing, a recursive ray tracing operation is performed at the closest hit. So, an efficient ray traced needs to keep track of the state at each intersection, generically though a recursion stack. The second challenge is on how to manage the data structure if the geometry of the material changes, through deformation or animation. Simple rigid tranformations can be handled relatively inexpensiley by the BVH, tough more complicated operation need to be done if the change is at the primitive level. Modern ray tracing techniques such as the TrBVH can rebuild part of the BVH on the fly without excessive memory consumption. 
+
+Given its state as a "natural" solution to light transport and its ability to model complex optical effects, ray tracing is commonly employed in the movie industry. Moreover, ray tracing scales better to scenes with a huge amount of triangle, such as animated movies or VFX scenes. On the other hand, ray tracing is limited in the game developers community, due to smaller scenes and increased memory and lookup footprint. Moreover, algorithms such as path tracing tend to give a noisier result, that is not acceptable in game applications. 
 
 
