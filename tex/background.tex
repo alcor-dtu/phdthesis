@@ -295,6 +295,42 @@ $$
 L =  \sum_{j=0}^\infty L^j = \sum_{j=0}^\infty L^0 S^j = N^0 S
 $$
 
+\subsection{BRDF Models}
+
+\subsection{BSSRDF Models}
+As we did in the previous section, we distinguish between two cases: analytic and discrete models. In the case of analytical models, Nicodemus was the first to give a modern definition of BSSRDF, with Jensen et al. to give the first BSSRDF model, also called the standard dipole. We will outline the major points of the dipole derivation here, referencing to our note TODO for more details on derivation. 
+
+Generically, the light exiting at a point $\mathbf{x}_o$ on a direction $\vec{\omega}_o$ on a scattering medium comes from three contributions: direct transmission, single and multiple scattering. Direct transmission is the contribution of the light coming from direction $-\vec{\omega}_{21}$ that does not scatter along the path. The single scattering term comes from light that enters at any point of the medium, scatters once, then aligns with $\vec{\omega}_{21}$ to refract out in direction $\vec{\omega}_o$. The multiple scattering term is similar, but it includes light that has scattered more than once before exiting the medium. 
+
+The standard dipole models multiple scattering only, so single scattering needs to be handled separately to achieve a proper result. With some approximations, the multiple scattering process can be modeled as a diffusion process. This allows to write the so called diffusion approximation:
+
+
+Where ....
+In the diffusion approximation, all points in the medium are considered source emitters. This source emission term, $q(x)$, changes depending on the approximation used. Jensen used a point light approximation. Once we defined the source term, TODO can be treated as a screened poisson differential equation, leading to a solution for the fluence TODO. Once we derive the fluence, with some assumptions of regularity we obtain the following formulation of the BSSRDF:
+
+BSSRDF formula with Md and Csigma
+
+Where Md is the diffusive radiant exitance. By the means of Fick law of diffusion, we obtain the following formulation:
+
+Md formulation with fluence
+
+So, the recipe to construct a diffuse BSSRDF is at follows. We first solve the diffusion approximation for the fluence, then we plug the approximation in TODO and TODO to obtain the diffuse BSSRDF. For the standard dipole, we get:
+
+TODO
+
+Then, plugging it into the other equations, we obtain this formulation for the BSSRDF.
+
+In the case of the standard dipole, we need to further assume bla bla bla...
+
+
+Something about boundary conditions. 
+
+Bla bla bla...
+
+Directional dipole.
+
+ 
+
 \section{Monte Carlo path tracing} 
 \section{Fast rendering techniques} 
 \subsection{Rasterization}
