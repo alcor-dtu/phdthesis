@@ -28,6 +28,7 @@
 \usepackage{tocloft}
 \usepackage{xcolor}
 \usepackage{rotating}
+\usepackage{mathrsfs}
 \usepackage{siunitx}
 \sisetup{inter-unit-product =\ensuremath{{}\cdot{}}}
 \newcommand{\siunit}[1]{\ \ \ [\SI{}{#1}]}
@@ -36,7 +37,8 @@
 %\newcommand{\fixme}[1] { \textcolor{red}{\textbf{FIXME: } #1}}
 \newcommand{\fixme}[1] {}
 \usetikzlibrary{positioning}
-\newcommand{\opa} {\textit{\text{\&}}}
+\newcommand{\operator}[1] {\mathbf{#1}}
+\newcommand{\opa} {\mathscr{S}}
 %input{PhDMacros}                                   %Thesis specific macros
 %
 %==================================================================================================
