@@ -5,8 +5,13 @@
 \usepackage{amssymb}
 \usepackage{xifthen}
 \usepackage{hyperref}
+\title{Point cloud method for rendering BSSRDFs}
+\date{March 2018}
+\author{Jeppe Revall Frisvad \\ Technical University of Denmark
+\and Alessandro Dal Corso \\ Technical University of Denmark}
 
-\begin{document} 
+\begin{document}
+\maketitle
 \newcommand{\vecfunc}[2] {\vec{#1}(\mathbf{#2})}
 \newcommand{\func}[2] {{#1}(\mathbf{#2})}
 \newcommand{\omegafunc}[2] {{#1}(\mathbf{#2}, \vec{\omega})}
@@ -38,7 +43,6 @@
 \newcommand{\cphi}{C_{\phi}}
 \newcommand{\cE}{C_{\mathbf{E}}}
 
-\section*{Point cloud method for rendering BSSRDF}
 
 This is a short note on rendering a triangular mesh onto which we apply a BSSRDF model. The method works on arbitrary static triangular meshes and is unbiased.
 
