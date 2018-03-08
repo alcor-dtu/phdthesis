@@ -67,7 +67,7 @@ Note that we assume that the flux does not varies across the path, that is gener
 
 \begin{figure}
 \centering
-   \def\svgwidth{0.4\textwidth}
+   \def\svgwidth{0.8\textwidth}
    \input{figures/bssrdf_geometry.pdf_tex} \\
 \caption{Configuration in which we define the BSSRDF for a generic surface.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
 \label{fig:bssrdf_configuration}
@@ -79,16 +79,27 @@ So far, we have defined radiometric quantities, without worrying about the inter
 \label{eq:bssrdf}
 d L(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i)  \siunit{\watt \per \square \metre \per \steradian}
 \end{equation}
-The factor $S$, dependent on the surface materials, is called \emph{Bidirectional scattering-surface reflectance distribution function} (BSSRDF). The units for the BSSRDF are $\siunitnospace{\per \square \metre \per \steradian}$. From the definition of BSSRDF and flux, we obtain the extended form of the rendering equation:
+The factor $S$, dependent on the surface materials, is called \emph{bidirectional scattering-surface reflectance distribution function} (BSSRDF). The units for the BSSRDF are $\siunitnospace{\per \square \metre \per \steradian}$. From the definition of BSSRDF and flux, we obtain the extended form of the rendering equation:
 \begin{equation}
 \label{eq:bssrdfintegral}
-L(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i  \siunit{\watt \per \square \metre \per \steradian}
+L(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d {\omega}_i  \siunit{\watt \per \square \metre \per \steradian}
 \end{equation}
 Note that we did not assume anything about the material, deriving the BSSRDF from purely radiometric quantities. 
 Which is the standard form of the rendering equation. To get the complete outgoing radiance distribution, we sum over the radiance emitted by the body:
 \begin{equation*}
 L_o(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) + L(\mathbf{x}, \vec{\omega}) 
 \end{equation*}
+Given the physical nature of the BSSRDF, conservation of energy imposes that:
+\begin{equation}
+\label{eq:bssrdfconservation}
+0 \leq \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i \leq 1 \siunit{-}
+\end{equation}
+Moreover, the BSSRDF respects the Stokes-Helmholtz reciprocity principle:
+\begin{equation}
+\label{eq:bssrdfreciprocity}
+S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = 
+S(\mathbf{x}_o, \vec{\omega}_o, \mathbf{x}_i, \vec{\omega}_i)  \siunit{\per \square \metre \per \steradian}
+\end{equation}
 
 \subsection{Local solution: the radiative transfer equation}
 \begin{figure}
@@ -301,7 +312,7 @@ L =  \sum_{j=0}^\infty L^j = \sum_{j=0}^\infty L^0 \operator{S}^j = L^0 \operato
 It is simple to prove that this formulation satisfies the integral form of the radiative transfer equation:
 \begin{equation*}
 \begin{split}
-L &= L^0 S \\
+L &= L^0 \operator{S} \\
 &= L^0 \left(\operator{I} + \operator{S}^1 + \sum_{j=2}^\infty \operator{S}^j \right) \\
 &= L^0 \left( \operator{I} + \operator{S}^1 + \sum_{l=1}^\infty \operator{S}^{l+1} \right) \\
 &= L^0 \left( \operator{I} + \left( \operator{I} + \sum_{l=1}^\infty \operator{S}^l \right) \operator{S}^1 \right)  \\
@@ -313,6 +324,8 @@ L &= L^0 + L \operator{S}^1   \\
 Where the last equation corresponds to the integral form of the radiative transfer equation in TODO.
 
 \subsection{Rendering scattering media}
+
+
 Now, we want to use our formulas to derive a way to render scattering materials. The usual technique used in rendering to solve the rendering equation is Monte Carlo integration with importance sampling. Let us assume we need to solve the integral
 $$
 I = \int_X f(x) dx
@@ -333,11 +346,19 @@ Where the $x_i$ follow the distribution $\text{pdf}(x)$. As before, $\hat{I} \ri
 
 Now let us apply importance sampling to obtain a first technique to render scattering materials,  \emph{volume path tracing}. We start by using the integral form of the radiative transfer equation TODO. For the sake of this example, we assume a non emissive homogenous medium, so that the coefficients to not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
 
+\begin{figure}
+\centering
+   \def\svgwidth{0.7\textwidth}
+   \input{figures/vpt.pdf_tex} \\
+\caption{Volumetric path tracing, with various paths going through the medium from camera $\mathbf{x}_c$ to light $\mathbf{x}_l$. Path (a) represents direct transmission to calculate $L^0(\mathbf{x}_t, \vec{\omega})$. Path (b) represents a path killed through absorption, while path (c) successfully exits the volume and connects to the light.} 
+\label{fig:vpt}
+\end{figure}
+
 The algorithm, traces a ray $-\vec{\omega}$ from the camera, hitting the surface at some point $\mathbf{x}_o$. We need to evaluate $L_r(\mathbf{x}_o, \vec{\omega})$. We first evaluate $r$ as the distance to the other side of the medium, hitting a point $\mathbf{x}_t = \mathbf{x}_o - r \vec{\omega}$. The transmittance is easily evaluated:
 $$
 T_r(\mathbf{x}_t, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t dr'\right) = e^{-\sigma_t r}
 $$
-While $L^0$ can be evaluate by recursively evaluating path tracing in direction $-\vec{\omega}$. Now we want to evaluate the second part of equation TODO. For this, we use Monte Carlo integration with importance sampling. We first reparameterize the integral by imposing $s = r - r'$:
+While $L^0(\mathbf{x}_t, \vec{\omega})$ can be evaluate by recursively evaluating path tracing in direction $-\vec{\omega}$. Now we want to evaluate the second part of equation TODO. For this, we use Monte Carlo integration with importance sampling. We first reparameterize the integral by imposing $s = r - r'$:
 $$
 L_r^*(\mathbf{x}_o, \vec{\omega}) = \int_0^r \sigma_s \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', -\vec{\omega})  d\omega' T_{s}(\mathbf{x}', -\vec{\omega})  ds
 $$
@@ -416,33 +437,88 @@ To achieve a solution for a point $\mathbf{x}_o$ on a semi infinite plane with n
 \end{equation*}
 Where $A$ is a term that accounts for mismatched index of refraction boundaries. This condition can be satisfied by introducing two light sources, called the \emph{real} and \emph{virtual} sources, that together form a \emph{dipole configuration}. Standard and better dipole use the configuration in Figure TODO, with a real point source above and one virtual point source below the surface. The directional and forward dipoles use a real ray source on the surface, and a virtual ray source above the surface. The infinite solution dipole is then evaluated for real and virtual source, then the results are subtracted to satisfy the boundary condition and obtain the final BSSRDF value for rendering. 
 
-
 \subsection{BRDF Models}
 
-Some simplifications can then be introduced to obtain more tractable functions. We assume that the BSSRDF is limited across a small area around the emergence point $\mathbf{x}_o$, and zero everywhere else. This is the case for a particular set of materials, such as plastic or metals. In this configuration, we can assume that the radiance is constant across the plane ($L_i(\mathbf{x}_i, \vec{\omega}_i) \approx L_i(\vec{\omega}_i)$). We also need to assume the material to be locally isotropic, i.e. its properties do not change across the surface. In this case, we can approximate the outgoing radiance as:
+\begin{figure}
+\centering
+   \def\svgwidth{0.8\textwidth}
+   \input{figures/bsrdf_geometry.pdf_tex} \\
+\caption{Configuration in which we define the BRDF for a generic surface.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
+\label{fig:brdf_configuration}
+\end{figure}
+
+As we have shown, the BSSRDF is a quite complex function to render. For many materials, we can introduce some simplification to obtain more tractable functions. We assume that the BSSRDF is limited across a small area around the emergence point $\mathbf{x}_o$, and zero everywhere else. This is the case for a particular set of materials, such as plastics or metals. In this configuration, we can assume that the radiance is constant across the plane ($L_i(\mathbf{x}_i, \vec{\omega}_i) \approx L_i(\vec{\omega}_i)$). We also need to assume the material to be locally isotropic, i.e. its properties do not change across the surface. In this case, we can approximate the outgoing radiance as:
 \begin{equation*}
-d L_r(\mathbf{x}_o, \vec{\omega}_o) \approx \int_A d L_o(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i) 
+d L(\mathbf{x}_o, \vec{\omega}_o) \approx \int_A d L(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i) 
 \end{equation*}
 By the definition of flux, irradiance and the assumption of constant radiance:
 \begin{equation*}
 \begin{split}
-d L_r(\mathbf{x}_o, \vec{\omega}_o) &\approx \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \omega_i  \\ &= L_i(\vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d \omega_i \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o)   d A_i \\ &= d E_i(\vec{\omega}_i) \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d A_i
+d L(\mathbf{x}_o, \vec{\omega}_o) &\approx \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \omega_i  \\ &= L_i(\vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d \omega_i \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o)   d A_i \\ &= d E_i(\vec{\omega}_i) \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d A_i
 \end{split}
 \end{equation*}
 The last integral is a function purely dependent on the two angular vectors $\vec{\omega}_i$ and $\vec{\omega}_o$, and it becomes the proportionality constant between incoming irradiance and outgoing radiance:
 \begin{equation*}
-d L_r(\mathbf{x}_o, \vec{\omega}_o) = f_r(\mathbf{x}_o, \vec{\omega}_i, \vec{\omega}_o) d E_i(\mathbf{x}_o, \vec{\omega}_i)
+d L(\mathbf{x}_o, \vec{\omega}_o) = f_r(\mathbf{x}_o, \vec{\omega}_i, \vec{\omega}_o) d E_i(\mathbf{x}_o, \vec{\omega}_i)
 \end{equation*}
- The new function $f_r$ is called \emph{Bidirectional reflectance distribution function} (BRDF). The BRDF is measured in $\siunitnospace{\per \steradian}$. As before, we can obtain the outgoing radiance from the definition above:
+ The new function $f_r$ is called \emph{bidirectional reflectance distribution function} (BRDF). The BRDF is measured in $\siunitnospace{\per \steradian}$. As before, we can obtain the outgoing radiance from the definition above:
 \begin{equation*}
-L_r(\mathbf{x}, \vec{\omega}) = \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) L_i(\mathbf{x}, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d\vec{\omega}_i  \siunit{\watt \per \square \metre \per \steradian}
+L(\mathbf{x}, \vec{\omega}) = \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) L_i(\mathbf{x}, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d{\omega}_i  \siunit{\watt \per \square \metre \per \steradian}
+\end{equation*}
+We can easily extend the two properties of the BSSRDF in Equations~\ref{eq:bssrdfconservation} and~\ref{eq:bssrdfreciprocity}. Conservation of energy imposes
+\begin{equation*}
+0 \leq \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o)  (\vec{n} \cdot \vec{\omega}_i) d\vec{\omega}_i \leq 1
+\end{equation*}
+and reciprocity gives
+\begin{equation*}
+f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_o,  \vec{\omega}_i)
 \end{equation*}
 
 \subsection{Empirical BRDFs}
-TODO
+\begin{figure}
+\centering
+\begin{tabular}{@{}c@{\hskip 1em}c@{}}
+\def\svgwidth{0.45\textwidth}\input{figures/brdf_representation_simple.pdf_tex} &  \def\svgwidth{0.45\textwidth}\input{figures/brdf_representation_merl.pdf_tex} \\
+Polar representation &  Rusinkiewicz representation \\
+$f_r(\theta_i, \phi_i, \theta_o, \phi_o)$ &  $f_r(\theta_h, \phi_h, \theta_d, \phi_d)$ \\
+\end{tabular}
+\caption{Different representations for BRDFs. To the right, standard representation using polar coordinates. To the right, the representation from REF. } 
+\label{fig:brdfrepr}
+\end{figure}
+
+Given the low dimensionality of the BRDF, it is possible to actually measure it in acceptable times. If we assume a homogenous BRDF and we express each vector $\vec{\omega}$ in terms of its polar angles $\theta, \phi$, we obtain a four dimensional function:
+\begin{equation*}
+f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_i, \phi_i, \theta_o, \phi_o)
+\end{equation*}
+Moreover, from mow on we assume the BRDF to be \emph{isotropic}, so that it depends only on the relative angle $\phi_\text{diff} = \phi_o - \phi_i$:
+\begin{equation*}
+f_r^\text{iso}(\theta_i, \phi_i, \theta_o, \phi_o) = f_r^\text{iso}(\theta_i, \theta_o, \phi_\text{diff})
+\end{equation*}
+Anisotropic materials (e.g. brushed metal) are rarer in nature and are usually created using some sort of manifacturing process.
+This representation, presented in figure TODO, can be used as a storage system for BRDFs. However, it has some issues. Generally, BRDFs tend to have a highly peaked region around the half vector:
+\begin{equation*}\vec{\omega}_h = \frac{\vec{\omega}_i + \vec{\omega}_o}{\|\vec{\omega}_i + \vec{\omega}_o\|}
+\end{equation*}
+that is usually named \emph{specular highlight}. To avoid loss of precision, it is important to represent BRDF more accurately. So for measured datasets such as the MERL dataset REF, the Rusinkiewicz half vector parameterization is used (see Figure TODO). This representation measures angles relative to the half vector instead of the surface normal:
+\begin{equation*}
+f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_h, \phi_h, \theta_d, \phi_d)
+\end{equation*}
+In this case,  isotropic materials can be described by dropping the dependency on $\phi_d$, i.e. the overall rotation of the system around the normal.
+
+After we have chosen our representation, we can pack our isotropic BRDF in a 3D data structure. Note that similar packing reprensetations exist also for BSSRDFs REF, but the high dimensionality of the BSSRDF (5 up to 14 dimensions) renders these representations less practical.
 
 \section{Fast rendering techniques} 
+TODO
+
 \subsection{Rasterization}
+
+\begin{figure}
+\centering
+	 \includegraphics[width=0.85\textwidth]{figures/rasterization_pipeline.pdf} 
+\caption{Rasterization pipeline. Following the arrow: bottom left, vertices in local coordinates are fetched from memory; top left, vertices are disposed by the vertex shader, then the triangle is assembled; top right, fragments (gray) are generated; bottom right, framents are shaded; bottom, fragments are combined by a depth test to form the final image. } 
+\label{fig:rasterpipeline}
+\end{figure}
+
+
 The first of the two techniques is rasterization. In this technique, the rendering primitives, usually triangles, are scanned one by one and then drawn in the corresponding occupied area of the screen. Scanline rendering can then be used to transform each triangle into multiple pixel-size elements, also called \emph{fragments}. 
 
 By its nature, rasterization can be highly parallelized, since every primitive can be drawn in parallel. On modern graphics cards, the rasterization process is part of the graphics pipeline, a highly fine tuned process to render triangles efficiently. A full version of the pipeline is illustrated in Figure TODO. The pipeline is composed of programmable parts (called \emph{shaders}) and hardware parts, that are only controllable through state flags. The core rasterization process, transforming primitives into pixels, is executed in parallel by a specified hardware unit. 
@@ -456,6 +532,15 @@ The full graphics pipeline is more complicated, allowing tessellation (domain an
 Rasterization is extensively used in game development pipelines, given its high speed and predictability. However, it is not particularly well suited to propagate light across a scene, making it difficult to achieve complex optical effects, that often require solutions on a case by case basis.
 
 \subsection{Ray tracing}
+
+\begin{figure}
+\centering
+   \def\svgwidth{\textwidth}
+   \input{figures/ray_tracing.pdf_tex} \\
+\caption{Ray tracing four triangles in two dimensions. The thicker line corresponds to the ray (a). At each step, we consider a different bounding box (thick red border). We illustrate different cases progressively: hitting bounding box without hitting primitive (b), hitting primitive (c), hitting bounding box but not hitting primitive because triangle is behind tmax (d), updating tmax to closest primitive hit (d). The last figure (f) shows all four any hit invocation (black dots) plus the closest hit (black dot with tmax).} 
+\label{fig:ray_tracing}
+\end{figure}
+
 Ray tracing can be considered the dual technique to rasterization. In rasterization, we match each triangle to its final position on the screen. In ray tracing, we do the opposite: for each pixel on the screen, we find the corresponding triangles that land within that pixel. This equates to \emph{shooting} a ray through the pixel, and intersecting it though the scene geometry. Once the hitpoint is found, attributes can be generated and the point shaded as in a fragment shader. Generically, the rays can be further traced down the scene, allowing this technique to simulate complex optical phenomena, such as light propagation. 
 Modern GPU ray tracers build a tree data structure to efficiently lookup intersections. The most commonly used data structure is a bounding volume hierarchy, or BVH. In a BVH, each of the primitives (usually triangles, but custom primitives such as spheres, cubes or quadrilaterals are possible) is enclosed in a bounding box. The various bounding boxes are then arranged in a tree data structure for fast lookup. Once a ray is traced, it is first inexpensively tested against the bounding boxes. For the bounding boxes that are hit, a expensive intersection test is performed to check for a hit. Depending on the shading algorithm, a callback can be issued at every intersection (\emph{any hit}), or at the intersection closest to the camera (\emph{closest hit}). 
 
