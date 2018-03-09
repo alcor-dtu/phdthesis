@@ -1,7 +1,10 @@
 \chapter{Background}
 \label{sec:background}
 
+In this section, we will introduce the theorectical elements necessary to complete the related work and the contributions illustrated in Chapters~\ref{sec:related} and~\ref{sec:contributions}. Our contributions range a wide range of physically based materials, including both scattering and non scattering media. We will describe both in this chapter (Sections~\ref{sec:scatteringtheory}~and~\ref{sec:brdftheory} respectively), with a brief introduction to basic radiometric concept (Section~\ref{sec:radiometry}). We will finally conclude (Section~\ref{sec:renderingparadigms}) with a more detailed description of the two main rendering paradigms we used to achieve our results, rasterization and ray tracing.
+
 \section{Radiometry}
+\label{sec:radiometry}
 \begin{figure}
 \centering
    \def\svgwidth{0.4\textwidth}
@@ -9,34 +12,34 @@
 \caption{Configuration to define radiance.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
 \label{fig:radiance}
 \end{figure}
-Radiometry is that branch of science that measures electromagnetic radiation. We will define the basic radiometric quantities, in order to then introduce the two main reflectance functions of interest in this thesis, namely the BRDF and the BSSRDF. In particular, we want to give a definition of radiance, the most useful quantity in describing light transport along rays.
+Radiometry is that branch of physics that describes and measures electromagnetic radiation. In this section, we will define some basic radiometric quantities. In particular, we want to give a definition of radiance, the most useful quantity in describing light transport along rays.
 
-First, we consider an ideal point light source in space. The source emits a certain amount of energy $U$, measured in Joules $[J]$. The first quantity we derive is radiant flux or radiant power $\Phi$, defined as the amount of energy per second emitted by the light:
+First, let us consider an ideal point source of photons in space. This source emits a certain amount of energy $U$, measured in Joules $[J]$. The first quantity we derive is radiant flux or radiant power $\Phi$, defined as the amount of energy per second emitted by the light:
 \begin{equation*}
 \Phi = \frac{d U}{d t}  \siunit{\watt}.
 \end{equation*}
-The radiant flux represents the overall power the light emits in all directions overall. We usually want to be more descriptive on how a light or a surface is emitting light, since not all the sources we consider are ideal. First, we are interested on how the light emission changes  We then define $I$ as radiant intensity, i.e. the amount of flux the light emits towards a specific direction $\vec{\omega}$:
+The total flux represents the power the light emits in all directions. We usually want to be more descriptive on how a light or a surface is emitting light, since not all the sources we consider are ideal. First, we are interested on how light emission changes across directions.  We  define as \emph{radiant intensity} $I$ the amount of flux the light emits towards a specific direction $\vec{\omega}$:
 \begin{equation*}
 I(\vec{\omega}) = \frac{d \Phi}{d \omega}  \siunit{\watt \per \steradian}.
 \end{equation*}   
-Where $d \omega$ is an infinitesimal solid angle around direction $\vec{\omega}$. An isotropic point light, by definition, as constant intensity across all directions.
+Where $d \omega$ is an infinitesimal solid angle centered on direction $\vec{\omega}$. An isotropic point light, by definition, as constant intensity across all directions.
 
-We now consider a surface that receives light. In particular, we consider an infinitesimal oriented element of this surface $d \vec{A}$ around a point $\mathbf{x}$. The orientation of the surface is usually called the \emph{normal} and indicated by $\vec{n}$ We can now define irradiance as the amount of incoming flux received per unit area:
+We now consider an infinitesimal surface area element $dA$ that receives light, with center a point $\mathbf{x}$. We now define \emph{irradiance} as the amount of incoming flux received per unit area:
 \begin{equation*}
 E(\mathbf{x}) = \frac{d \Phi}{d A}  \siunit{\watt \per \square \metre}
 \end{equation*}
-Similarly, we have a dual quantity for the flux \emph{emitted} by a unit element surface. We call this quantity \emph{radiosity} and we define it with the symbol $B$.
+If the flux is emitted by the surface, we use the name \emph{radiosity} and define it with the symbol $B$.
 The most simple irradiance is the one emitted by an isotropic point light. In this case, the irradiance at a distance $R$ from the point light is 
 \begin{equation*}
 E = \frac{\Phi}{4 \pi R} \siunit{\watt \per \square \metre}
 \end{equation*}
-So, the father we go from a point light, the less irradiance we receive, because the power $\Phi$ has to spread across a larger area.
+So, the farther we go from a point light, the less irradiance we receive, because the power $\Phi$ is spread across a larger area.
 
-Finally, we combine the definitions above into one, to define the last important basic radiometric quantity, \emph{radiance}:
+Finally, we combine the definitions of intensity and irradiance above into one, to define our last important basic radiometric quantity, \emph{radiance}:
 \begin{equation*}
-L(\mathbf{x}, \vec{\omega}) = \frac{d^2 \Phi}{d A \cos\theta d \omega}  \siunit{\watt \per \square \metre \per \steradian}
+L(\mathbf{x}, \vec{\omega}) = \frac{d^2 \Phi}{dA \cos\theta d \omega}  \siunit{\watt \per \square \metre \per \steradian}
 \end{equation*}
-Where $\cos \theta = \vec{n} \cdot \vec{\omega}$ is the cosine of the angle between the normal and the direction of evaluation. $d A \cos\theta$ is also called the \emph{projected area element}. As irradiance, radiance can be incoming or outgoing from a specific point. We indicate these quantities with $L_i$ and $L_o$, respectively. In graphics, radiance is usually the most useful quantity for two main reasons. First, the other quantities can be easily computed from radiance through radiometric integrals:
+Where $\cos \theta = \vec{n} \cdot \vec{\omega}$ is the cosine of the angle between the normal at $\mathbf{x}$ and the direction of evaluation. $dA \cos\theta$ is called the \emph{projected area element}. As irradiance, radiance can be incoming or outgoing from a specific point. We indicate these quantities with $L_i$ and $L_o$, respectively. In graphics, radiance is usually the most useful quantity for two main reasons. First, the other quantities can be easily computed from radiance through radiometric integrals:
 \begin{figure}
 \centering
    \def\svgwidth{0.8\textwidth}
@@ -46,12 +49,12 @@ Where $\cos \theta = \vec{n} \cdot \vec{\omega}$ is the cosine of the angle betw
 \end{figure}
 \begin{equation*}
 \begin{split}
-\Phi &= \int_{\Omega} \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ dA \ d \vec{\omega} \\
+\Phi &= \int_{\Omega^+} \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ dA \ d \vec{\omega} \\
 I(\vec{\omega}) &= \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ dA  \\
-E(\mathbf{x}) &= \int_{\Omega} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ d \vec{\omega} 
+E(\mathbf{x}) &= \int_{\Omega^+} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ d \vec{\omega} 
 \end{split}
 \end{equation*}
-Where $\Omega$ and $A$ are the hemisphere around $\vec{n}$ and the total surface, respectively. Second, radiance carried by a ray \emph{in vacuo} is constant. We can prove this quite easily, with the aid of Figure~\ref{fig:etendue}. Note that for point $\mathbf{x}_o$, we have $d \omega_o = \frac{d A_i \cos\theta_i}{r^2}$, and dually the same for $\mathbf{x}_i$. Then:
+Where $\Omega^+$ and $A$ are the hemisphere around $\vec{n}$ and the total surface, respectively. Second, radiance carried by a ray \emph{in vacuo} is constant. We can prove this quite easily, with the aid of Figure~\ref{fig:etendue}. Note that for point $\mathbf{x}_o$, we have by definition $d \omega_o = \frac{d A_i \cos\theta_i}{r^2}$, and similarly  for $d \omega_i$. Then:
 \begin{equation*}
 \begin{split}
 L_i(\mathbf{x}_i, \vec{\omega}_i) = \frac{d^2 \Phi}{d A_i \cos\theta_i d \omega_i} &= 
@@ -60,11 +63,61 @@ L_i(\mathbf{x}_i, \vec{\omega}_i) = \frac{d^2 \Phi}{d A_i \cos\theta_i d \omega_
 = \frac{d^2 \Phi}{d A_o \cos\theta_o d \omega_o} = L_o(\mathbf{x}_o, \vec{\omega}_o)
 \end{split}
 \end{equation*}
-
 Note that we assume that the flux does not varies across the path, that is generally true if no objects are in the way and there is not medium in between the two points causing scattering events. 
 
-\subsection{The BSSRDF}
+\section{Scattering Media}
+\label{sec:scatteringtheory}
+The first group of physically based materials we tackle is scattering media. Scattering is the process photons go once they hit a optically dense media. Photons are deflected from their current path by electromagnetic forces, due to atom nuclei and atomic bonds. It is possible to model this process mathematically. We start by discussing one of such models, the radiative transfer equation, which is a local solution for a point in the media of the scattering process. Then, we will provide a more global formulation of the scattering process as a function of light propagating between two surface points, the BSSRDF. We will then proceed to prove that the BSSRDF indeed respects the radiative transfer equation. We will then describe two ways to render materials, one using the radiative transfer equation, one using BSSRDF. Finally, we will introduce three BSSRDF analytical models that can used in rendering.
 
+\subsection{The radiative transfer equation}
+\begin{figure}
+\centering
+\begin{tabular}{@{}c@{\hskip 1em}c@{}}
+\def\svgwidth{0.45\textwidth}\input{figures/rte_absorption.pdf_tex} & 	 \def\svgwidth{0.45\textwidth}\input{figures/rte_emission.pdf_tex} \\
+Absorption & Emission \\[1em]
+\def\svgwidth{0.45\textwidth}\input{figures/rte_inscatter.pdf_tex} & 	 	 \def\svgwidth{0.45\textwidth}\input{figures/rte_outscatter.pdf_tex} \\
+In-scattering &  Out-scattering \\
+\end{tabular}
+\caption{Individual processes in the local form of the radiative transfer equation: absorption, emission, in-scattering and out-scattering. The directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})$ corresponds on the variation over an infinitesimal length element $\text{d}r$ in direction $\vec{\omega}$. } 
+\label{fig:rte_elements}
+\end{figure}
+Of the two solutions on how light propagates into interface bounded volumes, we start with the local solution, i.e. the radiative transfer equation. This is a integro-differential equation that describes the behaviour of radiance $L(\mathbf{x}, \vec{\omega})$ at a point $\mathbf{x}$ in a medium towards direction $\vec{\omega}$. We assume a system that respects linear optics (excluding i.e. flourescent materials), and in the steady state (i.e. the radiance $L$ changes in time at speeds not comparable to the speed of light, $\frac{dL(\mathbf{x}, \vec{\omega})}{c dt} \approx 0$).
+
+Traditionally, light travelling a medium is subject to four processed: absorption, emission, inscattering and outscattering. Each of these effects can be described on how it makes radiance change along the unit direction $\vec{\omega}$. This can be matematically expressed as the directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})$, expressed in $\siunitnospace{\watt \per \cubic \metre \per \steradian}$. 
+
+\textbf{Emission} increases the overall radiance of the ray by a term $q(\mathbf{x}, \vec{\omega})$:
+\begin{equation*}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) \siunit{\watt \per \cubic \metre \per \steradian}
+\end{equation*} 
+\textbf{Absorption} is the dual effect of emission, where photons are absorbed by the material, and generally being transformed into heat. A probability distribution, called absorption cross section $\sigma_a(\mathbf{x}, \vec{\omega})  \siunitnospace{\per \metre} $, describes the probability that a photon is absorbed per unit travelled within the medium. In formulas,
+\begin{equation*}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_a(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega})  \siunit{\watt \per \cubic \metre \per \steradian}
+ \end{equation*}
+\textbf{Out-scattering} describes photons that are deflected from their original path $\vec{\omega}$  due to interaction with the atoms of the material. The process is similar to absorption, with a different coefficient named scattering cross section $\sigma_s(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$. This gives a similar radiance loss as absorption:
+\begin{equation*}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_s(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega})
+ \siunit{\watt \per \cubic \metre \per \steradian}
+\end{equation*}
+Absorption and out-scattering, given their similarities, are often combined into an unique effect, \emph{attenuation}, described by a unique value called the extinction coefficient $\sigma_t(\mathbf{x}, \vec{\omega}) =\sigma_s(\mathbf{x}, \vec{\omega}) + \sigma_a(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$.
+
+\textbf{In-scattering}, finally, describes the radiance aligning towards $\vec{\omega}$ from other scattering events. Let us consider another direction $\vec{\omega}'$ from $\mathbf{x}$. We define a probability distribution for a photon to scatter from $\vec{\omega}'$ towards an infinitesimal solid angle $d{\omega}$ around $\vec{\omega}$. This probability distribution is called the \emph{phase function}  $p(\mathbf{x}, \vec{\omega}', \vec{\omega}) \siunitnospace{ \per \steradian}$. From the phase function, we can calculate the dimensionless radiometric property $g(\mathbf{x}, \vec{\omega})$, describing the mean of the cosine of the angle between $\vec{\omega}$ and $\vec{\omega}'$:
+\begin{equation*}
+g(\mathbf{x}, \vec{\omega}) = \int_{4\pi} (\vec{\omega}' \cdot \vec{\omega}) p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d\vec{\omega}'
+\siunit{-}
+\end{equation*}
+With the phase function, and integrating over all directions, we get the effect of in-scattering.
+\begin{equation*}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'\siunit{\watt \per \cubic \metre \per \steradian}
+\end{equation*}
+Note the multiplication by $\sigma_s$ to include the fact that photons will in-scatter with probability $\sigma_s$. 
+
+We can now combine all terms to obtain the complete form of the radiative transfer equation:
+\begin{equation}
+\label{eq:rte}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'
+\end{equation}
+
+\subsection{The BSSRDF}
 \begin{figure}
 \centering
    \def\svgwidth{0.8\textwidth}
@@ -72,7 +125,6 @@ Note that we assume that the flux does not varies across the path, that is gener
 \caption{Configuration in which we define the BSSRDF for a generic surface.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
 \label{fig:bssrdf_configuration}
 \end{figure}
-
 
 So far, we have defined radiometric quantities, without worrying about the interaction at the surface. We will now describe how this radiometric quantities change once they encounter a surface. Let us first consider a surface illuminated by a light. Let us consider the portion of the flux $d \Phi_i$ arriving from direction $\vec{\omega}_i$ on a surface element $d A_i$ centered on a point $\mathbf{x}_i$. Due to surface interaction, part of the incoming light will emerge on a point $\mathbf{x}_o$, in direction $\vec{\omega}_o$. We consider the proportionality factor between the emitted radiance and the incoming flux:
 \begin{equation}
@@ -101,55 +153,6 @@ S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) =
 S(\mathbf{x}_o, \vec{\omega}_o, \mathbf{x}_i, \vec{\omega}_i)  \siunit{\per \square \metre \per \steradian}
 \end{equation}
 
-\subsection{Local solution: the radiative transfer equation}
-\begin{figure}
-\centering
-\begin{tabular}{@{}c@{}c@{}}
-\def\svgwidth{0.45\textwidth}\input{figures/rte_absorption.pdf_tex} & 	 \def\svgwidth{0.45\textwidth}\input{figures/rte_emission.pdf_tex} \\
-Absorption & Emission \\[1em]
-\def\svgwidth{0.45\textwidth}\input{figures/rte_inscatter.pdf_tex} & 	 	 \def\svgwidth{0.45\textwidth}\input{figures/rte_outscatter.pdf_tex} \\
-In-scattering &  Out-scattering \\
-\end{tabular}
-\caption{Individual processes in the local form of the radiative transfer equation: absorption, emission, in-scattering and out-scattering. The directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})$ corresponds on the variation over an infinitesimal length element $\text{d}r$ in direction $\vec{\omega}$. } 
-\label{fig:rte_elements}
-\end{figure}
-Of the two solutions on how light propagates into interface bounded volumes, we start with the local solution, i.e. the radiative transfer equation. This is a integro-differential equation that describes the behaviour of radiance $L(\mathbf{x}, \vec{\omega})$ at a point $\mathbf{x}$ in a medium towards direction $\vec{\omega}$. We assume a system that respects linear optics (excluding i.e. flourescent materials), and in the steady state (i.e. the radiance $L$ changes in time at speeds not comparable to the speed of light, $\frac{dL(\mathbf{x}, \vec{\omega})}{c dt} \approx 0$).
-
-Traditionally, light travelling a medium is subject to four processed: absorption, emission, inscattering and outscattering. Each of these effects can be described on how it makes radiance change along the unit direction $\vec{\omega}$. This can be matematically expressed as the directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})$, expressed in $\siunitnospace{\watt \per \cubic \metre \per \steradian}$. 
-
-\textbf{Emission} increases the overall radiance of the ray by a term $q(\mathbf{x}, \vec{\omega})$:
-\begin{equation*}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) \siunit{\watt \per \cubic \metre \per \steradian}
-\end{equation*} 
-
-\textbf{Absorption} is the dual effect of emission, where photons are absorbed by the material, and generally being transformed into heat. A probability distribution, called absorption cross section $\sigma_a(\mathbf{x}, \vec{\omega})  \siunitnospace{\per \metre} $, describes the probability that a photon is absorbed per unit travelled within the medium. In formulas,
-\begin{equation*}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_a(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega})  \siunit{\watt \per \cubic \metre \per \steradian}
- \end{equation*}
-
-\textbf{Out-scattering} describes photons that are deflected from their original path $\vec{\omega}$  due to interaction with the atoms of the material. The process is similar to absorption, with a different coefficient named scattering cross section $\sigma_s(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$. This gives a similar radiance loss as absorption:
-\begin{equation*}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_s(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega})
- \siunit{\watt \per \cubic \metre \per \steradian}
-\end{equation*}
-Absorption and out-scattering, given their similarities, are often combined into an unique effect, \emph{attenuation}, described by a unique value called the extinction coefficient $\sigma_t(\mathbf{x}, \vec{\omega}) =\sigma_s(\mathbf{x}, \vec{\omega}) + \sigma_a(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$.
-
-\textbf{In-scattering}, finally, describes the radiance aligning towards $\vec{\omega}$ from other scattering events. Let us consider another direction $\vec{\omega}'$ from $\mathbf{x}$. We define a probability distribution for a photon to scatter from $\vec{\omega}'$ towards an infinitesimal solid angle $d{\omega}$ around $\vec{\omega}$. This probability distribution is called the \emph{phase function}  $p(\mathbf{x}, \vec{\omega}', \vec{\omega}) \siunitnospace{ \per \steradian}$. From the phase function, we can calculate the dimensionless radiometric property $g(\mathbf{x}, \vec{\omega})$, describing the mean of the cosine of the angle between $\vec{\omega}$ and $\vec{\omega}'$:
-\begin{equation*}
-g(\mathbf{x}, \vec{\omega}) = \int_{4\pi} (\vec{\omega}' \cdot \vec{\omega}) p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d\vec{\omega}'
-\siunit{-}
-\end{equation*}
-With the phase function, and integrating over all directions, we get the effect of in-scattering.
-\begin{equation*}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'\siunit{\watt \per \cubic \metre \per \steradian}
-\end{equation*}
-Note the multiplication by $\sigma_s$ to include the fact that photons will in-scatter with probability $\sigma_s$. 
-
-We can now combine all terms to obtain the complete form of the radiative transfer equation:
-\begin{equation}
-\label{eq:rte}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'
-\end{equation}
 \subsection{Connecting BSSRDFs and the radiative transfer equation}
 
 Given the above definition of BSSRDF (Equation~\ref{eq:bssrdf}), one may wonder on how the BSSRDF is related to any scattering process at all, since it simply describe a relationship between an incoming and one outgoing radiometric quantity. In this section, starting from the definition of BSSRDF, we will derive the local integro-differential form of the radiative transfer Equation~\ref{eq:rte}, to show how the BSSRDF fits nicely as a mathematical description of an underlying scattering process. 
@@ -380,7 +383,7 @@ L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \alpha \frac{L(\mathbf{x}', \ve
 $$
 Which means, we just need to recursively evaluate radiance to get the final result. At the next recursive step, we will evaluate a new $s$ and $\vec{\omega}'$, interrupt the process with probability $\alpha$ and so on. This creates a random walk within the medium, that does not terminate for $s < r$. If $s > r$, it means that we are exiting the medium. In this case, we continue path tracing from the exit point in the last evaluated direction $\vec{\omega}'$.
 
-\subsection{BSSRDF Models}
+\subsection{Analytical BSSRDF Models}
 As we did in the previous section, we distinguish between two cases: analytic and discrete models. In the case of analytical models, Nicodemus was the first to give a modern definition of BSSRDF, with Jensen et al. to give the first BSSRDF model, also called the standard dipole. We will outline the main points in deriving an analytical BSSRDF here, referencing to our note TODO for more details on derivation. We will derive three models based on the diffusion approximation: the standard dipole, the better dipole and the directional dipole.
 
 Generically, the light exiting at a point $\mathbf{x}_o$ on a direction $\vec{\omega}_o$ on a scattering medium comes from three contributions: direct transmission, single and multiple scattering. Direct transmission is the contribution of the light coming from direction $-\vec{\omega}_{21}$ that does not scatter along the path. The single scattering term comes from light that enters at any point of the medium, scatters once, then aligns with $\vec{\omega}_{21}$ to refract out in direction $\vec{\omega}_o$. The multiple scattering term is similar, but it includes light that has scattered more than once before exiting the medium. 
@@ -388,6 +391,16 @@ Generically, the light exiting at a point $\mathbf{x}_o$ on a direction $\vec{\o
 The standard and better dipole model multiple scattering only, while the directional dipole includes also part of the single scattering contribution. In the first two cases, single scattering needs to be handled separately to achieve a proper result. 
 
 At the core, these dipoles model the scattering of light as a diffusion process. Diffusion is a way to approximate a highly complicated stochastic process (such as a light transport simulation) with a structured mathematical description. 
+
+\begin{figure}
+\centering
+\begin{tabular}{@{}c@{\hskip 1em}c@{}}
+\def\svgwidth{0.5\textwidth}\input{figures/jensen_dipole.pdf_tex} &  \def\svgwidth{0.5\textwidth}\input{figures/dir_dipole.pdf_tex} \\
+Standard and better dipole &  Directional dipole \\
+\end{tabular}
+\caption{Placement of virtual (red) and real (blue) sources for the dipoles described in the text.} 
+\label{fig:bssrdfsources}
+\end{figure}
 
 As before, we define a couple of functionals to simplify notation:
 \begin{equation*}
@@ -431,14 +444,19 @@ S_d(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o)  = \frac{1}{4\pi C_\phi(1/\eta)}
 \end{multline*}
 All these solutions are suitable only for an infinite medium with coefficients $\sigma_s$, $\sigma_a$ and $g$. To get a full BSSRDF, we need to introduce a boundary. For the vast majority of analytical BSSRDFs, we derive a solution for a semi infinite plane configuration, then correcting the formulas for non planar geometry. 
 
+
+
 To achieve a solution for a point $\mathbf{x}_o$ on a semi infinite plane with normal $\vec{n}_o$, we set the net inward flux on point $\mathbf{x}_o$ zero. This leads for the following boundary condition for the diffusion approximation: 
 \begin{equation*}
 \phi(\mathbf{x}_o) - 2 A D (\vec{n}_o \cdot \nabla) \phi(\mathbf{x}_o) = 0
 \end{equation*}
 Where $A$ is a term that accounts for mismatched index of refraction boundaries. This condition can be satisfied by introducing two light sources, called the \emph{real} and \emph{virtual} sources, that together form a \emph{dipole configuration}. Standard and better dipole use the configuration in Figure TODO, with a real point source above and one virtual point source below the surface. The directional and forward dipoles use a real ray source on the surface, and a virtual ray source above the surface. The infinite solution dipole is then evaluated for real and virtual source, then the results are subtracted to satisfy the boundary condition and obtain the final BSSRDF value for rendering. 
 
-\subsection{BRDF Models}
+\section{Non-scattering media}
+\label{sec:brdftheory}
+In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application that the BSSRDF.   
 
+\subsection{The BRDF}
 \begin{figure}
 \centering
    \def\svgwidth{0.8\textwidth}
@@ -506,18 +524,19 @@ In this case,  isotropic materials can be described by dropping the dependency o
 
 After we have chosen our representation, we can pack our isotropic BRDF in a 3D data structure. Note that similar packing reprensetations exist also for BSSRDFs REF, but the high dimensionality of the BSSRDF (5 up to 14 dimensions) renders these representations less practical.
 
-\section{Fast rendering techniques} 
-TODO
+\section{Rendering techniques} 
+\label{sec:renderingparadigms}
+
+In the previous sections, we introduced theory and algorithms to render physically based materials, without going into details on how the different algorithms are implemented. To conclude our background section, we introduce two of the main paradigms used to render physically based materials on GPUs, namely rasterization and ray tracing. 
 
 \subsection{Rasterization}
 
 \begin{figure}
 \centering
 	 \includegraphics[width=0.85\textwidth]{figures/rasterization_pipeline.pdf} 
-\caption{Rasterization pipeline. Following the arrow: bottom left, vertices in local coordinates are fetched from memory; top left, vertices are disposed by the vertex shader, then the triangle is assembled; top right, fragments (gray) are generated; bottom right, framents are shaded; bottom, fragments are combined by a depth test to form the final image. } 
+\caption{The rasterization pipeline. Following the arrow: bottom left, vertices in local coordinates are fetched from memory; top left, vertices are disposed by the vertex shader, then the triangle is assembled; top right, fragments (gray) are generated; bottom right, framents are shaded; bottom, fragments are combined by a depth test to form the final image. } 
 \label{fig:rasterpipeline}
 \end{figure}
-
 
 The first of the two techniques is rasterization. In this technique, the rendering primitives, usually triangles, are scanned one by one and then drawn in the corresponding occupied area of the screen. Scanline rendering can then be used to transform each triangle into multiple pixel-size elements, also called \emph{fragments}. 
 

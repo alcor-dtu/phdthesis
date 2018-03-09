@@ -1,0 +1,65 @@
+%% Creator: Inkscape inkscape 0.91, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'dir_dipole.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{256.11866628bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.65120874)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{figures/dir_dipole.pdf}}%
+    \put(0.7854383,0.42608414){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vec{\omega}_o$}}}%
+    \put(0.18707672,0.40582948){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vec{\omega}_i$}}}%
+    \put(0.36972318,0.44510323){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vec{n}_i$}}}%
+    \put(0.72340221,0.25827194){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{x}_o$}}}%
+    \put(0.26772544,0.26425404){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{x}_i$}}}%
+    \put(0.37171496,0.53712106){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vec{\omega}_v$}}}%
+    \put(0.2590912,0.48203756){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{x}_v$}}}%
+    \put(0.64005641,0.45192895){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vec{n}_o$}}}%
+    \put(0.5052087,0.30678652){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{x}$}}}%
+    \put(0.41439281,0.17496074){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vec{\omega}_{12}$}}}%
+    \put(0.71455935,0.11815971){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vec{\omega}_{21}$}}}%
+  \end{picture}%
+\endgroup%
