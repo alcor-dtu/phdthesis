@@ -1,7 +1,7 @@
 \chapter{Background}
 \label{sec:background}
 
-In this section, we will introduce the theorectical elements necessary to complete the related work and the contributions illustrated in Chapters~\ref{sec:related} and~\ref{sec:contributions}. Our contributions range a wide range of physically based materials, including both scattering and non scattering media. We will describe both in this chapter (Sections~\ref{sec:scatteringtheory}~and~\ref{sec:brdftheory} respectively), with a brief introduction to basic radiometric concept (Section~\ref{sec:radiometry}). We will finally conclude (Section~\ref{sec:renderingparadigms}) with a more detailed description of the two main rendering paradigms we used to achieve our results, rasterization and ray tracing.
+In this section, we will introduce the theorectical elements necessary to complete the related work and the contributions illustrated in Chapters~\ref{sec:related} and~\ref{sec:contributions}. Our contributions range a wide span of physically based materials, including both scattering and non scattering media. We will describe both in this chapter (Sections~\ref{sec:scatteringtheory}~and~\ref{sec:brdftheory} respectively), with a brief introduction to basic radiometric concept (Section~\ref{sec:radiometry}). We will finally conclude (Section~\ref{sec:renderingparadigms}) with a more detailed description of the two main rendering paradigms we used to achieve our results, rasterization and ray tracing.
 
 \section{Radiometry}
 \label{sec:radiometry}
@@ -12,7 +12,7 @@ In this section, we will introduce the theorectical elements necessary to comple
 \caption{Configuration to define radiance.} %The red rectangle shows where we estimated RMSE in Table \ref{table:quant}.}
 \label{fig:radiance}
 \end{figure}
-Radiometry is that branch of physics that describes and measures electromagnetic radiation. In this section, we will define some basic radiometric quantities. In particular, we want to give a definition of radiance, the most useful quantity in describing light transport along rays.
+Radiometry is a branch of physics that describes and measures electromagnetic radiation. In this section, we will define some basic radiometric quantities. In particular, we want to give a definition of radiance, the most useful quantity in describing light transport along rays.
 
 First, let us consider an ideal point source of photons in space. This source emits a certain amount of energy $U$, measured in Joules $[J]$. The first quantity we derive is radiant flux or radiant power $\Phi$, defined as the amount of energy per second emitted by the light:
 \begin{equation*}
@@ -20,26 +20,26 @@ First, let us consider an ideal point source of photons in space. This source em
 \end{equation*}
 The total flux represents the power the light emits in all directions. We usually want to be more descriptive on how a light or a surface is emitting light, since not all the sources we consider are ideal. First, we are interested on how light emission changes across directions.  We  define as \emph{radiant intensity} $I$ the amount of flux the light emits towards a specific direction $\vec{\omega}$:
 \begin{equation*}
-I(\vec{\omega}) = \frac{d \Phi}{d \omega}  \siunit{\watt \per \steradian}.
+I(\vec{\omega}) = \frac{d \Phi}{d \omega}  \siunit{\watt \per \steradian},
 \end{equation*}   
-Where $d \omega$ is an infinitesimal solid angle centered on direction $\vec{\omega}$. An isotropic point light, by definition, as constant intensity across all directions.
+where $d \omega$ is an infinitesimal solid angle centered on direction $\vec{\omega}$. An isotropic point light, by definition, has constant intensity across all directions.
 
-We now consider an infinitesimal surface area element $dA$ that receives light, with center a point $\mathbf{x}$. We now define \emph{irradiance} as the amount of incoming flux received per unit area:
+We now consider an infinitesimal surface area element $dA$ that receives light, with center point $\mathbf{x}$. We now define \emph{irradiance} as the amount of incoming flux received per unit area:
 \begin{equation*}
-E(\mathbf{x}) = \frac{d \Phi}{d A}  \siunit{\watt \per \square \metre}
+E(\mathbf{x}) = \frac{d \Phi}{d A}  \siunit{\watt \per \square \metre}.
 \end{equation*}
 If the flux is emitted by the surface, we use the name \emph{radiosity} and define it with the symbol $B$.
 The most simple irradiance is the one emitted by an isotropic point light. In this case, the irradiance at a distance $R$ from the point light is 
 \begin{equation*}
-E = \frac{\Phi}{4 \pi R} \siunit{\watt \per \square \metre}
+E = \frac{\Phi}{4 \pi R^2} \siunit{\watt \per \square \metre}.
 \end{equation*}
 So, the farther we go from a point light, the less irradiance we receive, because the power $\Phi$ is spread across a larger area.
 
 Finally, we combine the definitions of intensity and irradiance above into one, to define our last important basic radiometric quantity, \emph{radiance}:
 \begin{equation*}
-L(\mathbf{x}, \vec{\omega}) = \frac{d^2 \Phi}{dA \cos\theta d \omega}  \siunit{\watt \per \square \metre \per \steradian}
+L(\mathbf{x}, \vec{\omega}) = \frac{d^2 \Phi}{dA \cos\theta d \omega}  \siunit{\watt \per \square \metre \per \steradian},
 \end{equation*}
-Where $\cos \theta = \vec{n} \cdot \vec{\omega}$ is the cosine of the angle between the normal at $\mathbf{x}$ and the direction of evaluation. $dA \cos\theta$ is called the \emph{projected area element}. As irradiance, radiance can be incoming or outgoing from a specific point. We indicate these quantities with $L_i$ and $L_o$, respectively. In graphics, radiance is usually the most useful quantity for two main reasons. First, the other quantities can be easily computed from radiance through radiometric integrals:
+where $\cos \theta = \vec{n} \cdot \vec{\omega}$ is the cosine of the angle between the normal at $\mathbf{x}$ and the direction of evaluation. $dA \cos\theta$ is called the \emph{projected area element}. As irradiance, radiance can be incoming or outgoing from a specific point. We indicate these quantities with $L_i$ and $L_o$, respectively. In graphics, radiance is usually the most useful quantity for two main reasons. First, the other quantities can be easily computed from radiance through radiometric integrals:
 \begin{figure}
 \centering
    \def\svgwidth{0.8\textwidth}
@@ -49,25 +49,25 @@ Where $\cos \theta = \vec{n} \cdot \vec{\omega}$ is the cosine of the angle betw
 \end{figure}
 \begin{equation*}
 \begin{split}
-\Phi &= \int_{\Omega^+} \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ dA \ d \vec{\omega} \\
-I(\vec{\omega}) &= \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ dA  \\
-E(\mathbf{x}) &= \int_{\Omega^+} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ d \vec{\omega} 
+\Phi &= \int_{\Omega^+} \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ dA \ d {\omega}, \\
+I(\vec{\omega}) &= \int_{A} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ dA,  \\
+E(\mathbf{x}) &= \int_{\Omega^+} L(\mathbf{x}, \vec{\omega})  (\vec{n} \cdot \vec{\omega}) \ d {\omega}, 
 \end{split}
 \end{equation*}
-Where $\Omega^+$ and $A$ are the hemisphere around $\vec{n}$ and the total surface, respectively. Second, radiance carried by a ray \emph{in vacuo} is constant. We can prove this quite easily, with the aid of Figure~\ref{fig:etendue}. Note that for point $\mathbf{x}_o$, we have by definition $d \omega_o = \frac{d A_i \cos\theta_i}{r^2}$, and similarly  for $d \omega_i$. Then:
+where $\Omega^+$ and $A$ are the hemisphere around $\vec{n}$ and the total surface, respectively. Second, radiance carried by a ray \emph{in vacuo} is constant. We can prove this quite easily, with the aid of Figure~\ref{fig:etendue}. Note that for point $\mathbf{x}_o$, we have by definition $d \omega_o = \frac{d A_i \cos\theta_i}{r^2}$, and similarly  for $d \omega_i$. Then:
 \begin{equation*}
 \begin{split}
 L_i(\mathbf{x}_i, \vec{\omega}_i) = \frac{d^2 \Phi}{d A_i \cos\theta_i d \omega_i} &= 
 \frac{d^2 \Phi}{d A_i \cos\theta_i \frac{d A_o \cos\theta_o}{r^2}}  
 \\ &= \frac{d^2 \Phi}{\frac{d A_i \cos\theta_i}{r^2} d A_o \cos\theta_o } 
-= \frac{d^2 \Phi}{d A_o \cos\theta_o d \omega_o} = L_o(\mathbf{x}_o, \vec{\omega}_o)
+= \frac{d^2 \Phi}{d A_o \cos\theta_o d \omega_o} = L_o(\mathbf{x}_o, \vec{\omega}_o).
 \end{split}
 \end{equation*}
-Note that we assume that the flux does not varies across the path, that is generally true if no objects are in the way and there is not medium in between the two points causing scattering events. 
+Note that we assume that the flux does not vary across the path, which is generally true if no objects are in the way and there is no medium in between the two points causing scattering events. 
 
 \section{Scattering Media}
 \label{sec:scatteringtheory}
-The first group of physically based materials we tackle is scattering media. Scattering is the process photons go once they hit a optically dense media. Photons are deflected from their current path by electromagnetic forces, due to atom nuclei and atomic bonds. It is possible to model this process mathematically. We start by discussing one of such models, the radiative transfer equation, which is a local solution for a point in the media of the scattering process. Then, we will provide a more global formulation of the scattering process as a function of light propagating between two surface points, the BSSRDF. We will then proceed to prove that the BSSRDF indeed respects the radiative transfer equation. We will then describe two ways to render materials, one using the radiative transfer equation, one using BSSRDF. Finally, we will introduce three BSSRDF analytical models that can used in rendering.
+The first group of physically based materials we tackle is scattering media. Scattering is the process photons go through once they hit an optically dense medium. Photons are deflected from their current path by electromagnetic forces, due to atom nuclei and atomic bonds. It is possible to model this process mathematically. We start by discussing one of such models, the radiative transfer equation, which is a local solution of the scattering process for a point in the medium. Then, we will provide a more global formulation of the scattering process as a function of light propagating between two surface points, the BSSRDF. We will then proceed to prove that the BSSRDF indeed respects the radiative transfer equation, and then describe two ways to render materials: one using the radiative transfer equation, one using BSSRDF. Finally, we will introduce three BSSRDF analytical models that can be used in rendering.
 
 \subsection{The radiative transfer equation}
 \label{sec:radiativetransfer}
@@ -82,43 +82,42 @@ In-scattering &  Out-scattering \\
 \caption{Individual processes in the local form of the radiative transfer equation: absorption, emission, in-scattering and out-scattering. The directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})$ corresponds on the variation over an infinitesimal length element $\text{d}r$ in direction $\vec{\omega}$. } 
 \label{fig:rte_elements}
 \end{figure}
-The radiative transfer equation describe light propagation in scattering media. It is a particular form of Boltzmann transport equation from thermodynamic system. In this section, we describe its integro-differential form, that describes how radiance $L(\mathbf{x}, \vec{\omega})$ varies at a point $\mathbf{x}$ in a scattering medium towards direction $\vec{\omega}$. For the sake of simplicity, from now on we assume a scattering media that respects linear optics (excluding i.e. flourescent materials), and in the steady state (i.e. the radiance $L$ is not changing in time). 
+The radiative transfer equation describes light propagation in scattering media. It is a particular form of the Boltzmann transport equation from thermodynamic system. In this section, we describe its integro-differential form, that describes how radiance $L(\mathbf{x}, \vec{\omega})$ varies at a point $\mathbf{x}$ in a scattering medium towards direction $\vec{\omega}$. For the sake of simplicity, from now on we assume a scattering media that respects linear optics (excluding i.e. fluorescent materials), and in the stationary state (i.e. the radiance $L$ is not changing in time). 
 
-Traditionally, light travelling a medium is subject to four processes: absorption, emission, in-scattering and out-scattering. Each of these processes can be expressed in terms the directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})  \ \siunitnospace{\watt \per \cubic \metre \per \steradian}$. All effects are illustrated in Figure~\ref{fig:rte_elements}.
+Traditionally, light traveling a medium is subject to four processes: absorption, emission, in-scattering and out-scattering. Each of these processes can be expressed in terms the directional derivative $\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega})  \ \siunitnospace{\watt \per \cubic \metre \per \steradian}$. All effects are illustrated in Figure~\ref{fig:rte_elements}.
 
 \textbf{Emission} increases the overall radiance of the ray by a term $q(\mathbf{x}, \vec{\omega})$:
 \begin{equation*}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) \siunit{\watt \per \cubic \metre \per \steradian}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) \siunit{\watt \per \cubic \metre \per \steradian}.
 \end{equation*} 
 Emission describes how some form of energy (like heat) is becoming radiant energy.
 
-\textbf{Absorption} is the dual effect of emission, where photons are absorbed by the material, and generally being transformed from radiant energy into heat energy. On the opposite hand of emission, the loss due to absorption is proportional to the radiance at the point $L$. A probability distribution, called \emph{absorption cross section} $\sigma_a(\mathbf{x}, \vec{\omega})  \siunitnospace{\per \metre} $, describes the probability that a photon is absorbed per unit travelled within the medium. In formulas,
+\textbf{Absorption} is the dual effect of emission, where photons are absorbed by the material, and generally being transformed from radiant energy into heat energy. On the opposite hand of emission, the loss due to absorption is proportional to the radiance at the point $L$. The \emph{absorption coefficient} $\sigma_a(\mathbf{x}, \vec{\omega})  \siunitnospace{\per \metre} $ describes the amount of photons absorbed per unit traveled within the medium. In formulas,
 \begin{equation*}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_a(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega})  \siunit{\watt \per \cubic \metre \per \steradian}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_a(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) \siunit{\watt \per \cubic \metre \per \steradian}.
  \end{equation*}
-\textbf{Out-scattering} describes photons that are deflected from their original path $\vec{\omega}$  due to interaction with the atoms of the material. The process is similar to absorption, with a different coefficient named \emph{scattering cross section} $\sigma_s(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$. This gives a similar radiance loss as absorption:
+\textbf{Out-scattering} describes photons that are deflected from their original path $\vec{\omega}$  due to interaction with the atoms of the material. The effect is similar to absorption, with a different coefficient named \emph{scattering coefficient} $\sigma_s(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$. This gives a loss of radiance that is similar to absorption:
 \begin{equation*}
 \vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_s(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega})
- \siunit{\watt \per \cubic \metre \per \steradian}
+ \siunit{\watt \per \cubic \metre \per \steradian}.
 \end{equation*}
-Absorption and out-scattering, given their similarities, are often combined into an unique effect, \emph{attenuation}, described by a unique value called the extinction coefficient $\sigma_t(\mathbf{x}, \vec{\omega}) =\sigma_s(\mathbf{x}, \vec{\omega}) + \sigma_a(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$.
+Absorption and out-scattering, given their similarities, are often combined into one effect, \emph{attenuation}, described by a value called the extinction coefficient $\sigma_t(\mathbf{x}, \vec{\omega}) =\sigma_s(\mathbf{x}, \vec{\omega}) + \sigma_a(\mathbf{x}, \vec{\omega}) \siunitnospace{\per \metre}$.
 
 \textbf{In-scattering}, finally, describes the radiance aligning towards $\vec{\omega}$ from other scattering events. Let us consider another direction $\vec{\omega}'$ from $\mathbf{x}$. We define a probability distribution for a photon to scatter from $\vec{\omega}'$ towards an infinitesimal solid angle $d{\omega}$ around $\vec{\omega}$. This probability distribution is called the \emph{phase function}  $p(\mathbf{x}, \vec{\omega}', \vec{\omega}) \siunitnospace{ \per \steradian}$. With the phase function, and integrating over all directions, we get the effect of in-scattering.
 \begin{equation*}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'\siunit{\watt \per \cubic \metre \per \steradian}
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d {\omega}'\siunit{\watt \per \cubic \metre \per \steradian}.
 \end{equation*}
-Note the multiplication by $\sigma_s$ to include the fact that photons will in-scatter with probability $\sigma_s$. 
-From the phase function, we can calculate the dimensionless radiometric property $g(\mathbf{x}, \vec{\omega})$, describing the mean of the cosine of the angle between $\vec{\omega}$ and $\vec{\omega}'$:
+Note the multiplication by $\sigma_s$so that we account for the right amount of scattering as we move along the ray. From the phase function, we can calculate the dimensionless radiometric property $g(\mathbf{x}, \vec{\omega})$, describing the mean cosine of the scattering angle between $\vec{\omega}$ and $\vec{\omega}'$ as
 \begin{equation*}
-g(\mathbf{x}, \vec{\omega}) = \int_{4\pi} (\vec{\omega}' \cdot \vec{\omega}) p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d\vec{\omega}'
-\siunit{-}
+g(\mathbf{x}, \vec{\omega}) = \int_{4\pi} (\vec{\omega}' \cdot \vec{\omega}) p(\mathbf{x}, \vec{\omega}', {\omega}) d{\omega}'
+\siunit{-}.
 \end{equation*}
-As we will see, most analytical model use describe a scattering medium in terms of the three coefficients $\sigma_s$, $\sigma_a$ and $g$, plus the relative index of refraction $\eta$.
+As we will see, most analytical models describe a scattering medium in terms of the three coefficients $\sigma_s$, $\sigma_a$ and $g$, plus the ratio of the index of refraction inside the medium and the one outside the medium $\eta$.
 
 We can now combine all terms to obtain the complete integro-differential form of the radiative transfer equation:
 \begin{equation}
 \label{eq:rte}
-\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'
+\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = q(\mathbf{x}, \vec{\omega}) - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d {\omega}'.
 \end{equation}
 %
 \subsection{The BSSRDF}
@@ -130,51 +129,52 @@ We can now combine all terms to obtain the complete integro-differential form of
 \label{fig:bssrdf_configuration}
 \end{figure}
 %
-In Section~\ref{sec:radiometry}, we have defined radiometric quantities as either incoming or outgoing. We will now describe how outgoing radiometric quantities change between incoming and outgoing. This gives a way to describe light interaction due to a surface.
+In Section~\ref{sec:radiometry}, we have defined radiometric quantities as either incoming or outgoing. We will now describe how radiometric quantities change between incoming and outgoing. This gives a way to describe light interaction due to a surface.
 
-Let us first consider a surface $A$ illuminated by a light, as in Figure~\ref{fig:brdf_configuration}. Let us consider the portion of the flux $d\Phi_i$ arriving from direction $\vec{\omega}_i$ on a surface element $d A_i$ centered on a point $\mathbf{x}_i$. Due to surface interaction, part of the incoming light will emerge on a point $\mathbf{x}_o$, in direction $\vec{\omega}_o$. We consider the proportionality factor between the emitted radiance and the incoming flux:
+Let us first consider a surface $A$ illuminated by a light, as in Figure~\ref{fig:brdf_configuration}. Let us consider the element of flux $d\Phi_i$ arriving from direction $\vec{\omega}_i$ on a surface element $d A_i$ centered at a point $\mathbf{x}_i$. Due to surface interaction, part of the incoming light will emerge at a point $\mathbf{x}_o$, in direction $\vec{\omega}_o$. We consider the proportionality factor between the emitted radiance and the incoming flux:
 \begin{equation}
 \label{eq:bssrdf}
-d L(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i)  \siunit{\watt \per \square \metre \per \steradian}
+d L(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i)  \siunit{\watt \per \square \metre \per \steradian}.
 \end{equation}
-The factor $S$, dependent on the surface, is called \emph{bidirectional scattering-surface reflectance distribution function}, or BSSRDF for short. The units for the BSSRDF are $\siunitnospace{\per \square \metre \per \steradian}$. From the definition of BSSRDF and flux, we obtain right away the extended form of the rendering equation REF:
+The factor $S$, dependent on the surface, is called \emph{bidirectional scattering-surface reflectance distribution function}, or BSSRDF for short. The units for the BSSRDF are $\siunitnospace{\per \square \metre \per \steradian}$. From the definition of BSSRDF and flux, we obtain right away the reflected radiance equation REF:
 \begin{equation}
 \label{eq:bssrdfintegral}
-L(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega^+ S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d {\omega}_i  \siunit{\watt \per \square \metre \per \steradian}
+L(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_{\Omega^+} S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d {\omega}_i  \siunit{\watt \per \square \metre \per \steradian}.
 \end{equation}
 Note that we did not assume anything about the material, deriving the BSSRDF from purely radiometric quantities. The BSSRDF can be seen as a global formulation of scattering processes within the material.
 
-Note that Equation~\ref{eq:bssrdfintegral} does not give the full outgoing radiance distribution $L_o$, since we need to sum over the radiance emitted by the body:
+Note that Equation~\ref{eq:bssrdfintegral} does not give the full outgoing radiance distribution $L_o$, since we need to add the radiance emitted by the body:
 \begin{equation*}
-L_o(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) + L(\mathbf{x}, \vec{\omega}) 
+L_o(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) + L(\mathbf{x}, \vec{\omega}) .
 \end{equation*}
-Given the physical nature of the BSSRDF, we can impose conservation of energy, so that the material never increases radiance:
+This equation gives the so called extended form of the rendering equation REF. Given the physical nature of the BSSRDF, we can impose conservation of energy, so that the reflected light never increases:
 \begin{equation}
 \label{eq:bssrdfconservation}
-0 \leq \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i \leq 1 \siunit{-}
+0 \leq \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i \leq 1 \siunit{-}.
 \end{equation}
 Moreover, the BSSRDF respects the Stokes-Helmholtz reciprocity principle REF:
 \begin{equation}
 \label{eq:bssrdfreciprocity}
 S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = 
-S(\mathbf{x}_o, \vec{\omega}_o, \mathbf{x}_i, \vec{\omega}_i)  \siunit{\per \square \metre \per \steradian}
+S(\mathbf{x}_o, \vec{\omega}_o, \mathbf{x}_i, \vec{\omega}_i)  \siunit{\per \square \metre \per \steradian}.
 \end{equation}
 
 \subsection{Connecting BSSRDFs and the radiative transfer equation}
 
-Given the above definition of BSSRDF (Equation~\ref{eq:bssrdf}), one may wonder on how the BSSRDF is related to any scattering process at all, since it simply describe a relationship between an incoming and one outgoing radiometric quantity. In this section, starting from the definition of BSSRDF, we will derive the local integro-differential form of the radiative transfer Equation~\ref{eq:rte}, to show how the BSSRDF fits nicely as a mathematical description of an underlying scattering process. Most of this derivation comes from REF, where the BSSRDF was defined as \emph{scattering function}.
+Given the above definition of BSSRDF (Equation~\ref{eq:bssrdf}), one may wonder how the BSSRDF is related to any scattering process at all, since it simply describes a relationship between an incoming and an outgoing radiometric quantity. In this section, starting from the definition of the BSSRDF, we will derive the local integro-differential form of the radiative transfer Equation~\ref{eq:rte}, to show how the BSSRDF fits nicely as a mathematical description of an underlying scattering process. Most of this derivation comes from REF, where the BSSRDF was defined \emph{scattering function}.
 
-To show this relationship, we need some additional mathematical construct to simplify notation, namely \emph{functionals}. A functional in this case is a operator that associates a function to another function. For example, let us define the functional $\operator{Q}$ to integrate over an hemisphere:
+To show this relationship, we to define some mathematical operators. A operator in our context maps a function into another function, as does this  $\operator{Q}$ to integrate over an hemisphere:
 \begin{equation*}
 \operator{Q} = \int_\Omega [\ \ ] d\omega.
 \end{equation*}
-So, if we for example write $E = L\operator{Q}$, it corresponds to the equation
+So, using the operator left associativity, $E = L\operator{Q}$ denotes the equation
 \begin{equation*}
 E(\mathbf{x}) = \int_\Omega L(\mathbf{x}, \vec{\omega}) d\omega.
 \end{equation*}
-When obvious, we will drop the dependencies on $\mathbf{x}$ and $\omega$ from the functional form for clarity's sake. We can now define a new functional operator $\opa$, also called the \emph{standard operator}:
+Note that in this case operator $\operator{Q}$ maps the functional $L$ into functional $E$.
+Where obvious, we drop the dependencies on $\mathbf{x}$ and $\omega$ from the operator for the sake of clarity. We can now define a new functional operator $\opa$, also called the \emph{standard operator}:
 \begin{equation*}
-\opa(a,b) = \int_a \int_{\Omega_i^+} [\ \ ] S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega_i}) d \omega_i d A_i
+\opa(a,b) = \int_a \int_{\Omega_i^+} [\ \ ] S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega_i}) d \omega_i d A_i.
 \end{equation*}
 Where $S$ is the BSSRDF, $a$ and $b$ are parts of the surface of the medium containing $\mathbf{x}_i$ and $\mathbf{x}_o$, respectively, and $\Omega_i^+$ is the hemisphere oriented towards $\vec{n}_i$. This allows us to write $L = L_i \opa(a,b)$ for equation~\ref{eq:bssrdfintegral}, greatly simplifying notation.
 %
@@ -186,56 +186,56 @@ Where $S$ is the BSSRDF, $a$ and $b$ are parts of the surface of the medium cont
 \label{fig:cylinder}
 \end{figure}
 %
-We want now to describe how radiance varies across a path. Let us consider the configuration of Figure~\ref{fig:cylinder}. In this figure, we have a path $P_r(\mathbf{x}_i,\vec{\omega})$ starting at $\mathbf{x}_i$, with direction $\vec{\omega}_o$ for $r$ units, terminating in $\mathbf{x}_o$ (so that $\mathbf{x}_o = \mathbf{x}_i + r \vec{\omega}_o$). Let us now consider a cylindrical medium $C$ with the same index of refraction as the surroundings, composed of three parts: a top circle $a$ on $\mathbf{x}_i$, a bottom circle $b$ on $\mathbf{x}_o$ and a flank surface $c$. We orient the cylinder so that the top $a$  points towards $-\vec{\omega}_o$, and the center of the cylinder is aligned with $P_r(\mathbf{x}_i,\vec{\omega}_o)$. This defines a direction for the hemispheres, e.g. $\Omega_i^+$ and $\Omega_i^-$ are the hemispheres centered in $\mathbf{x}_i$  and oriented towards or against $\vec{n}_i$, respectively. As final bit of notation, we indicate with $L^+(a)$ some radiance $L(\mathbf{x}, \vec{\omega})$ where $\mathbf{x} \in a$ and $\vec{\omega} \in \Omega^+$.
+We want now to describe how radiance varies across a path. Let us consider the configuration of Figure~\ref{fig:cylinder}. In this figure, we have a path $P_r(\mathbf{x}_i,\vec{\omega})$ starting at $\mathbf{x}_i$, with direction $\vec{\omega}_o$ for $r$ units, terminating in $\mathbf{x}_o$ (so that $\mathbf{x}_o = \mathbf{x}_i + r \vec{\omega}_o$). Let us now consider a cylindrical medium $C$ with the same index of refraction as the surroundings, composed of three parts: a top circle $a$ on $\mathbf{x}_i$, a bottom circle $b$ on $\mathbf{x}_o$ and a flank surface $c$. We orient the cylinder so that the top $a$  points towards $-\vec{\omega}_o$, and the center of the cylinder is aligned with $P_r(\mathbf{x}_i,\vec{\omega}_o)$. This defines a direction for the hemispheres, e.g. $\Omega_i^+$ and $\Omega_i^-$ are the hemispheres centered in $\mathbf{x}_i$  and oriented towards or against $\vec{n}_i$, respectively. As a final bit of notation, we indicate with $L^+(a)$ some radiance $L(\mathbf{x}, \vec{\omega})$ where $\mathbf{x} \in a$ and $\vec{\omega} \in \Omega^+$.
 
 At the steady state and by conservation of energy, the total radiance going out of the cylinder through the surface $b$ is:
 \begin{equation}
 \label{eq:steadystate}
-L^-(b) = L^+(b)\opa(b,b) + L^-(a)\opa(a,b)  + L^-(c)\opa(c,b)
+L^-(b) = L^+(b)\opa(b,b) + L^-(a)\opa(a,b)  + L^-(c)\opa(c,b).
 \end{equation}
 We want now to find the behavior of the system at equilibrium, when the cylinder becomes thinner and thinner ($C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)$). We will analyze each one of the terms in Equation~\ref{eq:steadystate} independently. 
 
-The first term to the right of Equation~\ref{eq:steadystate} describes the part of $L^-(b)$ that stays inside due to reflection on $b$. This can be shown to tend to zero as the cylinder shrinks. This comes from the fact that for a transparent plane, all the radiance contribution passes through so none is reflected back. In formulas,
+The first term on the right hand side of Equation~\ref{eq:steadystate} describes the part of $L^-(b)$ that stays inside due to reflection on $b$. This can be shown to tend to zero as the cylinder shrinks. This comes from the fact that for a transparent plane, all the radiance contribution passes through so none is reflected back. In formulas,
 \begin{equation}
 \label{eq:zerolimit}
 \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)} [L^+(b)\opa(b,b)] (\mathbf{x}_o, \vec{\omega}_o) = 0.
 \end{equation}
 The second term defines the radiance transmitted inbetween $a$ and $b$. As the cylinder shrink, the photons have less and less room to scatter within the cylinder, so only the photons staying directly on $\vec{\omega}$ (even if they scatter back and forth) will be considered at the end. Let us consider the limit:
 \begin{equation*}
-L_r^0(\mathbf{x}_o, \vec{\omega}_o) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)} [L^-(a)\opa(a,b)] (\mathbf{x}_o, \vec{\omega}_o)
+L_r^0(\mathbf{x}_o, \vec{\omega}_o) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)} [L^-(a)\opa(a,b)] (\mathbf{x}_o, \vec{\omega}_o).
 \end{equation*}
 At the limit $a \rightarrow \mathbf{x}_i$, we have $L^-(a) = L^0(\mathbf{x}_i, \vec{\omega}_o)$, that can be brought out: 
 \begin{equation}
 \label{eq:l0r}
-L_r^0(\mathbf{x}_o, \vec{\omega}_o) = L^0(\mathbf{x}_i, \vec{\omega}_o)\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)} [\opa(a,b)] (\mathbf{x}_o, \vec{\omega}_o) = L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o)
+L_r^0(\mathbf{x}_o, \vec{\omega}_o) = L^0(\mathbf{x}_i, \vec{\omega}_o)\lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)} [\opa(a,b)] (\mathbf{x}_o, \vec{\omega}_o) = L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o),
 \end{equation}
-Where the last term is called \emph{beam transmittance}, i.e. the amount of light blocked on the direct path. We define a dual term $1 -  T_r(\mathbf{x}_i, \vec{\omega})$, called \emph{beam attenuation}. The rate of change of beam attenuation per unit length at $\mathbf{x}_i$ on $\vec{\omega}$ is the extinction coefficient defined in \ref{sec:radiativetransfer}:
+where the last term is called \emph{beam transmittance}, i.e. the amount of light blocked on the direct path. We define a dual term $1 -  T_r(\mathbf{x}_i, \vec{\omega})$, called \emph{beam attenuation}. The rate of change of beam attenuation per unit length at $\mathbf{x}_i$ on $\vec{\omega}$ is the extinction coefficient defined in Section~\ref{sec:radiativetransfer}:
 \begin{equation*}
-\sigma_t(\mathbf{x}_i, \vec{\omega}) = \lim_{r\rightarrow 0} \frac{1 - T_r(\mathbf{x}_i, \vec{\omega})}{r}
+\sigma_t(\mathbf{x}_i, \vec{\omega}) = \lim_{r\rightarrow 0} \frac{1 - T_r(\mathbf{x}_i, \vec{\omega})}{r},
 \end{equation*}
-Which leads to a natural definition for the beam transmittance:
+which leads to a natural definition for the beam transmittance
 \begin{equation*}
-T_r(\mathbf{x}_i, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t(\mathbf{x}_i + r' \vec{\omega}, \vec{\omega}) dr'\right)
+T_r(\mathbf{x}_i, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t(\mathbf{x}_i + r' \vec{\omega}, \vec{\omega}) dr'\right).
 \end{equation*}
-We now miss to calculate the last term in the summation, that we call $L^*$:
+We now need to calculate the last term in the summation, which we call $L_r^*$:
 \begin{equation*}
-L_r^*(\mathbf{x}_o, \vec{\omega}_o) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)} [L^-(c)\opa(c,b)] (\mathbf{x}_o, \vec{\omega})
+L_r^*(\mathbf{x}_o, \vec{\omega}_o) = \lim_{C\rightarrow P_r(\mathbf{x}_i,\vec{\omega}_o)} [L^-(c)\opa(c,b)] (\mathbf{x}_o, \vec{\omega}).
 \end{equation*}
-We won't include the full derivation, but by subdividing the cylinder into infinitesimal tiny slices, each with its own transmittance, and then taking the limit, to obtain a integral form for $L_r^*$:
+We will not include the full derivation, but by subdividing the cylinder into infinitesimally thin slices, each with its own transmittance, and then taking the limit, to obtain a integral form for $L_r^*$:
 \begin{equation}
 \label{eq:lastr}
-L_r^*(\mathbf{x}_o, \vec{\omega}_o) = \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'
+L_r^*(\mathbf{x}_o, \vec{\omega}_o) = \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr',
 \end{equation}
-Where $\mathbf{x}' = \mathbf{x}_i + r' \vec{\omega}_o$ and where $L^*$ is the radiance per unit length:
+where $\mathbf{x}' = \mathbf{x}_i + r' \vec{\omega}_o$ and where $L_*$ is the radiance per unit length
 \begin{equation*}
-L_*(\mathbf{x}', \vec{\omega}_o) = \lim_{r \rightarrow 0} \frac{L_r^*(\mathbf{x}_o, \vec{\omega}_o)}{r}
+L_*(\mathbf{x}', \vec{\omega}_o) = \lim_{r \rightarrow 0} \frac{L_r^*(\mathbf{x}_o, \vec{\omega}_o)}{r}.
 \end{equation*}
 By putting together \ref{eq:zerolimit}, \ref{eq:l0r} and \ref{eq:lastr} into \ref{eq:steadystate}, we obtain the following form:
 \begin{equation*}
-L_r(\mathbf{x}_o, \vec{\omega}_o) = L_r^0(\mathbf{x}_o, \vec{\omega}_o) + L_r^*(\mathbf{x}_o, \vec{\omega}_o)
+L_r(\mathbf{x}_o, \vec{\omega}_o) = L_r^0(\mathbf{x}_o, \vec{\omega}_o) + L_r^*(\mathbf{x}_o, \vec{\omega}_o),
 \end{equation*}
 \begin{equation*}
-L_r(\mathbf{x}, \vec{\omega}_o) =  L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) + \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'
+L_r(\mathbf{x}, \vec{\omega}_o) =  L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) + \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'.
 \end{equation*}
 We only need now to define $L_*$ in terms of $L$. For this derivation, let us still consider the configuration of Figure \ref{fig:sphere}, where we have a point $\mathbf{x}'$ and vector $\vec{\omega}'$ on the surface of a sphere $d$ surrounding a point $\mathbf{x}$ on path $P_r(\mathbf{x}_i,r)$ with direction $\vec{\omega} = \vec{\omega}_s$. It is possible to derive an approximation of $S$ for small $s$ as
 \begin{equation*}
@@ -256,73 +256,74 @@ We can now recalculate $L_s^*$ {for the sphere configuration} using the approxim
 \begin{split}
 L_s^*(\mathbf{x}, \vec{\omega}) &= \int_{A_i'} \int_{\Omega^-_i} L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) \frac{s}{A_i'} + o(s)] (\vec{n}' \cdot \vec{\omega}') d\omega' dA_i'  \\
 &= \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  [\sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) s + A_i' o(s)] (\vec{n}' \cdot \vec{\omega}') d\omega'\\
-&= s \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) d\omega' + o(s) \int_{4\pi}  L(\mathbf{x}', \vec{\omega}') A_i'   d\omega'
+&= s \int_{4\pi}  L(\mathbf{x}', \vec{\omega}')  \sigma_s(\mathbf{x}', \vec{\omega}', \vec{\omega}) d\omega' + o(s) \int_{4\pi}  L(\mathbf{x}', \vec{\omega}') A_i'   d\omega'.
 \end{split}
 \end{equation}
 As the sphere gets smaller $s\rightarrow 0$, the second term disappears with the $o(s)$, so that we finally obtain $L_*$ as
 \begin{equation}
 \label{eq:lstar}
-L_*(\mathbf{x}, \vec{\omega}) = \lim_{s\rightarrow 0} \frac{L_s^*(\mathbf{x}, \vec{\omega})}{s} = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}') p(\mathbf{x}, \vec{\omega}', \vec{\omega})   d\omega' 
+L_*(\mathbf{x}, \vec{\omega}) = \lim_{s\rightarrow 0} \frac{L_s^*(\mathbf{x}, \vec{\omega})}{s} = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}') p(\mathbf{x}, \vec{\omega}', \vec{\omega})   d\omega'.
 \end{equation}
 Putting it all together, we obtain the so called \emph{integral form} of the radiative transfer equation:
 \begin{equation}
 \label{eq:integralformrte}
-L_r(\mathbf{x}_o, \vec{\omega}_o) =  L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) + \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}_o) \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega}_o)  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'
+L_r(\mathbf{x}_o, \vec{\omega}_o) =  L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) + \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}_o) \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega}_o)  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'.
 \end{equation}
 This form is described along a the extent of a path rather than a single point as in the integro differential form in Equation~\ref{eq:rte}. We now derive back that form by deriving the above across $r$, which is the same as a directional derivative $ \vec{\omega} \cdot \nabla$. Of the two terms on the right hand side of the equation above, the first becomes:
 \begin{equation*}
 \begin{split}
 \frac{d}{dr} L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) &= L^0(\mathbf{x}_i, \vec{\omega}_o) \frac{d}{dr}  T_r(\mathbf{x}_i, \vec{\omega}_o) \\
-&= L^0(\mathbf{x}_i, \vec{\omega}_o) (-\sigma_t(\mathbf{x}_o, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o)) = -\sigma_t(\mathbf{x}_o, \vec{\omega}_o) L_r^0(\mathbf{x}_o, \vec{\omega}_o)
+&= L^0(\mathbf{x}_i, \vec{\omega}_o) (-\sigma_t(\mathbf{x}_o, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o)) = -\sigma_t(\mathbf{x}_o, \vec{\omega}_o) L_r^0(\mathbf{x}_o, \vec{\omega}_o),
 \end{split}
 \end{equation*}
-Where the last step comes from \ref{eq:l0r}. As for the second term, we use the form from Equation~\ref{eq:lstar}:
+where the last step comes from Equation~\ref{eq:l0r}. As for the second term, we use the form from Equation~\ref{eq:lstar}:
 \begin{equation*}
 \begin{split}
 \frac{d}{dr} L^*_r(\mathbf{x}_o, \vec{\omega}_o) &= \frac{d}{dr} \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr' \\
 &= \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) \frac{d}{dr} T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr' + L_*(\mathbf{x}_o, \vec{\omega}_o)
  \\
  &= -\sigma_t(\mathbf{x}, \vec{\omega}_o)  \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr' + L_*(\mathbf{x}_o, \vec{\omega}_o) \\
- &= -\sigma_t(\mathbf{x}_o, \vec{\omega}_o) L^*_r(\mathbf{x}_o, \vec{\omega}_o) + L_*(\mathbf{x}_o, \vec{\omega}_o)
+ &= -\sigma_t(\mathbf{x}_o, \vec{\omega}_o) L^*_r(\mathbf{x}_o, \vec{\omega}_o) + L_*(\mathbf{x}_o, \vec{\omega}_o).
 \end{split}
 \end{equation*}
 By putting it all together:
 \begin{equation*}
 \begin{split}
 \frac{d}{dr} L_r(\mathbf{x}_o, \vec{\omega}_o) &= -\sigma_t(\mathbf{x}_o, \vec{\omega}_o) [L^0_r(\mathbf{x}, \vec{\omega}_o) + L^*_r(\mathbf{x}_o, \vec{\omega}_o)] + L_*(\mathbf{x}_o, \vec{\omega}_o) \\
-&=  -\sigma_t(\mathbf{x}_o, \vec{\omega_o}) L_r(\mathbf{x}, \vec{\omega}_o) +  L_*(\mathbf{x}_o, \vec{\omega}_o) 
+&=  -\sigma_t(\mathbf{x}_o, \vec{\omega_o}) L_r(\mathbf{x}, \vec{\omega}_o) +  L_*(\mathbf{x}_o, \vec{\omega}_o) .
 \end{split}
 \end{equation*}
 By dropping the dependency on $r$ and the $o$ subscript, and introducing the definition for $L_*$ (Equation~\ref{eq:lstar}) and the directional derivative symbol, we obtain the integro-differential form of the radiative  transfer equation
-\begin{equation*}\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'\end{equation*}
+\begin{equation*}\vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_t(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) + \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d \vec{\omega}'.
+\end{equation*}
 We can then add an additional term to account for emission, obtaining the form in Equation~\ref{eq:rte}.
 \subsection{Global solution to the BSSRDF}
-Now, we proved that the BSSRDF and the RTE are indeed connected through scattering theory. In this section, we will show an equivalent of the global solution~\ref{eq:bssrdfintegral} using the radiative tranfer equation. To achieve this, we define the operator $\operator{S}^1$:
+Now, we proved that the BSSRDF and the RTE are indeed connected through scattering theory. In this section, we will show an equivalent of the global solution~\ref{eq:bssrdfintegral} using the radiative transfer equation. To achieve this, we define the operator $\operator{S}^1$:
 \begin{equation*}
-\operator{S}^1 = \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}) \int_{4\pi} [\ \ ] p(\mathbf{x}', \vec{\omega}', \vec{\omega})  (\vec{n} \cdot \vec{\omega}')  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'
+\operator{S}^1 = \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}) \int_{4\pi} [\ \ ] p(\mathbf{x}', \vec{\omega}', \vec{\omega})  (\vec{n} \cdot \vec{\omega}')  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega})  dr'.
 \end{equation*}
 Note on how this operator is similar to the second term of Equation~\ref{eq:integralformrte}. Now, let us consider a bounded medium, with a starting radiance distribution on the surface $L_0(\mathbf{x}_o, \vec{\omega})$ at a boundary point $\mathbf{x}_o$, where $\vec{\omega}_o$ points towards the inside of the medium. We can extend this initial radiance to any point $\mathbf{x} = \mathbf{x}_o + r \vec{\omega}$ of the medium:
 \begin{equation*}
-L^0(\mathbf{x}, \vec{\omega}) = L^0(\mathbf{x}_o, \vec{\omega}) T_r(\mathbf{x}_o, \vec{\omega})
+L^0(\mathbf{x}, \vec{\omega}) = L^0(\mathbf{x}_o, \vec{\omega}) T_r(\mathbf{x}_o, \vec{\omega}).
 \end{equation*}
-After defining $L^0$, we can define a $n$-ary radiance function $L^{n+1}$ recursively using operator $\operator{S}^1$:
+After defining $L^0$, we can define an $n$-ary radiance function $L^{n+1}$ recursively using operator $\operator{S}^1$:
 \begin{equation*}
-L^{n+1} = L^n \operator{S}^1
+L^{n+1} = L^n \operator{S}^1.
 \end{equation*}
-So, the $n$-ary radiance can be easily be calculated to be the continuous application of the $S$ operator. If we define a new operator $\operator{S}^{n+1} = \operator{S}^1 \operator{S}^n$, one can show in a straightfroward way that 
+The $n$-ary radiance can easily be calculated using a continuous application of the $S$ operator. If we define a new operator $\operator{S}^{n+1} = \operator{S}^1 \operator{S}^n$, one can show in a straightforward way that 
 \begin{equation*}
 L^n = L^0 \operator{S}^n
 \end{equation*}
-For every scattering order $n$.
+for every scattering order $n$.
 We can bring this process to infinity by defining the two quantities:
 \begin{equation*}
-L = \sum_{j=0}^\infty L^j\ \ \ \ \operator{S} = \sum_{j=0}^\infty \operator{S}^j
+L = \sum_{j=0}^\infty L^j,\ \ \ \ \operator{S} = \sum_{j=0}^\infty \operator{S}^j.
 \end{equation*}
 In this particular case, we define $\operator{S}^0 = \operator{I}$, where $\operator{I}$, the identity operator, is a functional for which $f \operator{I} = f$ for every choice of $f$.
 That leads to the formulation:
 \begin{equation}
 \label{eq:funcform}
-L =  \sum_{j=0}^\infty L^j = \sum_{j=0}^\infty L^0 \operator{S}^j = L^0 \operator{S}
+L =  \sum_{j=0}^\infty L^j = \sum_{j=0}^\infty L^0 \operator{S}^j = L^0 \operator{S}.
 \end{equation}
 It is simple to prove that this formulation satisfies the integral form of the radiative transfer equation:
 \begin{equation*}
@@ -333,35 +334,33 @@ L &= L^0 \operator{S} \\
 &= L^0 \left( \operator{I} + \left( \operator{I} + \sum_{l=1}^\infty \operator{S}^l \right) \operator{S}^1 \right)  \\
 &= L^0 \left( \operator{I} + \operator{S} \operator{S}^1 \right)  \\
 &= L^0 + (L^0 \operator{S}) \operator{S}^1   \\
-L &= L^0 + L \operator{S}^1   \\
+L &= L^0 + L \operator{S}^1,   \\
 \end{split}
 \end{equation*}
-Where the last equation corresponds to the integral form of the radiative transfer equation in~\ref{eq:integralformrte}.
+where the last equation corresponds to the integral form of the radiative transfer equation in Equation~\ref{eq:integralformrte}.
 
 Note that, since the solution of the radiance must be unique, the above calculated $L$ in functional form corresponds to the radiance $L$ calculated from Equation~\ref{eq:bssrdfintegral}. This tells us that the calculating the outgoing radiance through the BSSRDF is the same as integrating the radiance across all the possible paths within the material. This fundamental connections justifies comparing BSSRDF renderings, an approximation of equation~\ref{eq:bssrdfintegral}, with volume path tracing, in itself an approximation of Equation~\ref{eq:funcform}.
 
 \subsection{Rendering scattering media}
-
-
 Now, we want to use our formulas to derive a way to render scattering materials. The usual technique used in rendering to solve the rendering equation is Monte Carlo integration with importance sampling. Let us assume we need to solve the integral
-$$
-I = \int_X f(x) dx
-$$
-Over some domain $X$. If we sample uniformly samples in $X$, we can define a estimator for $I$:
-$$
-\hat{I} = \frac{1}{N} \sum_{i=1}^N f(x_i)
-$$
-From the law of large numbers, $\hat{I} \rightarrow I$ for $N \rightarrow \infty$. To improve the convergence rate, we use importance sampling. If we know a distribution $\text{pdf}(x)$ that is somewhat close in shape to $f(x)$ and from which it is easy to draw samples from. We can rewrite the integral $I$ as :
-$$
-I = \int_X \frac{f(x)}{\text{pdf}(x)} \text{pdf}(x) dx
-$$
-Which we can evaluate again using Monte Carlo as:
-$$
-\hat{I} = \frac{1}{N} \sum_{i=1}^N \frac{f(x_i)}{\text{pdf}(x_i)}
-$$
-Where the $x_i$ follow the distribution $\text{pdf}(x)$. As before, $\hat{I} \rightarrow I$ for $N \rightarrow \infty$.
+\begin{equation*}
+I = \int_X f(x) dx.
+\end{equation*}
+Over some domain $X$. If we sample uniformly samples in $X$, we can define a $N$-th estimator for $I$:
+\begin{equation*}
+\hat{I}_N = \frac{1}{N} \sum_{i=1}^N f(x_i).
+\end{equation*}
+From the law of large numbers, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$. To improve the convergence rate, we use importance sampling. If we know a distribution $\text{pdf}(x)$ that is somewhat close in shape to $f(x)$ and from which it is easy to draw samples from. We can rewrite the integral $I$ as :
+\begin{equation*}
+I = \int_X \frac{f(x)}{\text{pdf}(x)} \text{pdf}(x) dx,
+\end{equation*}
+which we can evaluate again using Monte Carlo as:
+\begin{equation*}
+\hat{I}_N = \frac{1}{N} \sum_{i=1}^N \frac{f(x_i)}{\text{pdf}(x_i)}.
+\end{equation*}
+Where the $x_i$ follow the distribution $\text{pdf}(x)$. As before, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$.
 
-Now let us apply importance sampling to obtain a first technique to render scattering materials,  \emph{volume path tracing}. We start by using the integral form of the radiative transfer equation TODO. For the sake of this example, we assume a non emissive homogenous medium, so that the coefficients to not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
+Now let us apply importance sampling to obtain a first technique to render scattering materials,  \emph{volume path tracing}. We start by using the integral form of the radiative transfer equation~\ref{eq:integralformrte}. For the sake of this example, we assume a non emissive homogeneous medium, so that the coefficients do not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
 
 \begin{figure}
 \centering
@@ -371,31 +370,32 @@ Now let us apply importance sampling to obtain a first technique to render scatt
 \label{fig:vpt}
 \end{figure}
 
-The algorithm, traces a ray $-\vec{\omega}$ from the camera, hitting the surface at some point $\mathbf{x}_o$. We need to evaluate $L_r(\mathbf{x}_o, \vec{\omega})$. We first evaluate $r$ as the distance to the other side of the medium, hitting a point $\mathbf{x}_t = \mathbf{x}_o - r \vec{\omega}$. The transmittance is easily evaluated:
-$$
-T_r(\mathbf{x}_t, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t dr'\right) = e^{-\sigma_t r}
-$$
-While $L^0(\mathbf{x}_t, \vec{\omega})$ can be evaluate by recursively evaluating path tracing in direction $-\vec{\omega}$. Now we want to evaluate the second part of equation TODO. For this, we use Monte Carlo integration with importance sampling. We first reparameterize the integral by imposing $s = r - r'$:
-$$
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \int_0^r \sigma_s \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', -\vec{\omega})  d\omega' T_{s}(\mathbf{x}', -\vec{\omega})  ds
-$$
+The algorithm, traces a ray $-\vec{\omega}$ from the camera, hitting the surface at some point $\mathbf{x}_o$. We need to evaluate $L_r(\mathbf{x}_o, \vec{\omega})$. We first evaluate $r$ as the distance to the other side of the medium, hitting a point $\mathbf{x}_t = \mathbf{x}_o - r \vec{\omega}$. Because of the assumption of homogenous medium, the transmittance is easily evaluated:
+\begin{equation*}
+T_r(\mathbf{x}_t, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t dr'\right) = e^{-\sigma_t r}.
+\end{equation*}
+While $L^0(\mathbf{x}_t, \vec{\omega})$ can be evaluate by recursively evaluating path tracing in direction $-\vec{\omega}$. Now we want to evaluate the second part of Equation~\ref{eq:integralformrte}. For this, we use Monte Carlo integration with importance sampling. We first reparameterize the integral by imposing $s = r - r'$:
+\begin{equation*}
+L_r^*(\mathbf{x}_o, \vec{\omega}) = \int_0^r \sigma_s \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', -\vec{\omega})  d\omega' T_{s}(\mathbf{x}', -\vec{\omega})  ds.
+\end{equation*}
 Note that $\mathbf{x}' = \mathbf{x}_o - s \vec{\omega} = \mathbf{x}_t + r' \vec{\omega}$. Now we can write the Monte Carlo formulation sampling both integrals at the same time:
-$$
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \frac{\sigma_s L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', -\vec{\omega}) \exp(-\sigma_t s)}{\text{pdf}(s) \text{pdf}(\vec{\omega}')}
-$$
-For now, we assume that $s < r$, i.e. we are always sampling a point within the medium. Now, we need to choose the pdfs. For standard phase functions such as Heyney-Greenstein, it is possible to analytically find a way to importance sample a vector $\vec{\omega'}$. So, if the vector is carefully chosen, we have $\text{pdf}(\vec{\omega}') = p(\mathbf{x}', \vec{\omega}', -\vec{\omega})$. Then, we can sample $s$ according to the formula:
-$$
-s = \frac{-\ln(1 - \xi)}{\sigma_t}
-$$
-For $\xi \in [0,1)$, that corresponds to a $\text{pdf}(s) = \sigma_t \exp(-s \sigma_t)$. Plugging it in TODO:
-$$
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \alpha L(\mathbf{x}', \vec{\omega}')
-$$
-Where $\alpha = \sigma_s / \sigma_t = \sigma_s / (\sigma_s + \sigma_a)  $ is called \emph{single scattering albedo}. Note that $0 < \alpha < 1$.  Finally, we can introduce an additional importance sampling. We introduce an absorption probability, so that the contribution from $L(\mathbf{x}', \vec{\omega}')$ is included with probability $\text{pdf}_a$. If we choose $\text{pdf}_a = \alpha$, we get to our final formulation:
-$$
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \alpha \frac{L(\mathbf{x}', \vec{\omega}')} {\text{pdf}_a} = \sum_{p=1}^N  L(\mathbf{x}', \vec{\omega}') 
-$$
-Which means, we just need to recursively evaluate radiance to get the final result. At the next recursive step, we will evaluate a new $s$ and $\vec{\omega}'$, interrupt the process with probability $\alpha$ and so on. This creates a random walk within the medium, that does not terminate for $s < r$. If $s > r$, it means that we are exiting the medium. In this case, we continue path tracing from the exit point in the last evaluated direction $\vec{\omega}'$.
+\begin{equation}
+\label{eq:lrintermediate}
+L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \frac{\sigma_s L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', -\vec{\omega}) \exp(-\sigma_t s)}{\text{pdf}(s) \text{pdf}(\vec{\omega}')}.
+\end{equation}
+For now, we assume that $s < r$, i.e. we are always sampling a point within the medium. Now, we need to choose the pdfs. For standard phase functions such as Heyney-Greenstein REF, it is possible to analytically find a way to importance sample a vector $\vec{\omega'}$. So, if the vector is carefully chosen, we have $\text{pdf}(\vec{\omega}') = p(\mathbf{x}', \vec{\omega}', -\vec{\omega})$. Then, we can sample $s$ according to the formula:
+\begin{equation*}
+s = \frac{-\ln(1 - \xi)}{\sigma_t},
+\end{equation*}
+for $\xi \in [0,1)$, that corresponds to a $\text{pdf}(s) = \sigma_t \exp(-s \sigma_t)$. Plugging it in~\ref{eq:lrintermediate} we get the form
+\begin{equation*}
+L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \alpha L(\mathbf{x}', \vec{\omega}'),
+\end{equation*}
+where $\alpha = \sigma_s / \sigma_t = \sigma_s / (\sigma_s + \sigma_a)  $ is called the \emph{single scattering albedo}. Note that $0 < \alpha < 1$.  Finally, we can introduce an additional importance sampling. We introduce a scattering probability $\text{pdf}_s = \alpha$. We decide then if we want to either scatter of absorb the photon, using russian roulette REF. If we decide to absorb the photon, we simply terminate the path. With this procedure in place , we get our final formulation
+\begin{equation*}
+L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \alpha \frac{L(\mathbf{x}', \vec{\omega}')} {\text{pdf}_s} = \sum_{p=1}^N  L(\mathbf{x}', \vec{\omega}'). 
+\end{equation*}
+From this result, we see that we just need to recursively evaluate radiance to get the final result. At the next recursive step, we will evaluate a new $s$ and $\vec{\omega}'$, continue the process with probability $\alpha$ and so on. This creates a random walk within the medium, that does not terminate for $s < r$. If $s > r$, it means that we are exiting the medium. In this case, we continue path tracing from the exit point in the last evaluated direction $\vec{\omega}'$.
 
 \subsection{Analytical BSSRDF Models}
 As we did in the previous section, we distinguish between two cases: analytic and discrete models. In the case of analytical models, Nicodemus was the first to give a modern definition of BSSRDF, with Jensen et al. to give the first BSSRDF model, also called the standard dipole. We will outline the main points in deriving an analytical BSSRDF here, referencing to our note TODO for more details on derivation. We will derive three models based on the diffusion approximation: the standard dipole, the better dipole and the directional dipole.
