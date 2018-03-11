@@ -1,0 +1,638 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xifthen}
+\usepackage{hyperref}
+
+\title{Derivation of standard and directional dipole quantities}
+\date{September 2017}
+\author{Alessandro Dal Corso \\ Technical University of Denmark \and Jeppe Revall Frisvad \\ Technical University of Denmark
+\and Thomas Kim Kjeldsen \\ The Alexandra Institute
+}
+
+\begin{document}
+\maketitle
+\newcommand{\vecfunc}[2] {\vec{#1}(\mathbf{#2})}
+\newcommand{\func}[2] {{#1}(\mathbf{#2})}
+\newcommand{\omegafunc}[2] {{#1}(\mathbf{#2}, \vec{\omega})}
+
+
+\newcommand{\xvecfunc}[1] {\vecfunc{#1}{x}}
+\newcommand{\xfunc}[1] {\func{#1}{x}}
+\newcommand{\xomegafunc}[1] {\omegafunc{#1}{x}}
+\newcommand{\nablavec} {{\nabla}}
+\newcommand{\omegavec} {\vec{\omega}}
+\newcommand{\sphere}[2] {\int_{4\pi}{#1}\ d{\ifthenelse{\isempty{#2}{}}{{\omega}}{#2}}}
+\newcommand{\hemisphere}[2] {\int_{2\pi_+}{#1}\ d{\ifthenelse{\isempty{#2}{}}{{\omega}}{#2}}}
+\newcommand{\inwardhemisphere}[2] {\int_{2\pi_-}{#1}\ d{\ifthenelse{\isempty{#2}{}}{{\omega}}{#2}}}
+
+\newcommand{\absorption}{\sigma_a}
+\newcommand{\transmission}{\sigma_{tr}}
+\newcommand{\scattering}{\sigma_s}
+\newcommand{\extinction}{\sigma_t}
+\newcommand{\fluence}{G_0}
+\newcommand{\flux}{\mathbf{G}_1}
+\newcommand{\sourcezero}[1]{\func{q}{#1}}
+\newcommand{\sourcezerox}{\xfunc{q}}
+\newcommand{\sourceone}[1]{\vec{\mathbf{Q}}(\mathbf{#1}, \omegavec)}
+\newcommand{\sourceonex}{\vec{\mathbf{Q}}(\mathbf{x}, \omegavec)}
+\newcommand{\redsca}{{\sigma}'_s}
+\newcommand{\redext}{{\sigma}'_t}
+\newcommand{\redscaEddington}{\tilde{\sigma}_s}
+\newcommand{\redextEddington}{\tilde{\sigma}_t}
+\newcommand{\de}{\text{d}}
+\newcommand{\cphi}{C_{\phi}}
+\newcommand{\cE}{C_{\mathbf{E}}}
+
+\section{Integrating the radiative transfer equation}
+We start from the radiative transfer equation:
+$$
+(\nablavec \cdot \omegavec) \xomegafunc{L}= -\extinction \xomegafunc{L} + \scattering \sphere {p(\omegavec, \omegavec') L(x,\omegavec')}{\omega'} + \xomegafunc{Q}
+$$
+Then we integrate over $\omegavec$:
+$$
+\sphere{(\nablavec \cdot \omegavec) \xomegafunc{L}}{} =\sphere{ -\extinction \xomegafunc{L}}{} + \sphere{\scattering \sphere {p(\omegavec, \omegavec')L(x,\omegavec')}{\omega'}}{} + \sphere{\xomegafunc{Q}}{}
+$$
+Rearranging we obtain:
+$$
+\nablavec \cdot \left(\sphere{\omegavec \xomegafunc{L}}{}\right) = -\extinction \sphere{\xomegafunc{L}}{} + \scattering \sphere{\left(\sphere{p(\omegavec, \omegavec') }{}\right)\ L(x,\omegavec')}{\omega'} + \sourcezerox
+$$
+Where we used the regularity of the functions involved to switch gradient and integral operation on the left side, and to switch the integrals on the right hand side. The integral of the phase function is 1, since it is normalized, so by further simplifying and applying the definitions we obtain:
+$$
+\nablavec \cdot \xvecfunc{E} = -\extinction  \xfunc{\phi} + \scattering \sphere{L(x,\omegavec')}{\omega'} + \sourcezerox
+$$
+$$
+\nablavec \cdot \xvecfunc{E} = -\extinction  \xfunc{\phi} + \scattering \xfunc{\phi} + \sourcezerox
+$$
+\begin{equation}
+\nablavec \cdot \xvecfunc{E} = -\absorption  \xfunc{\phi} + \sourcezerox
+\label{eq:rte}
+\end{equation}
+Where in the last passage we used $\extinction = \absorption + \scattering$. The last one is equation (1) in Jensen.
+\section{The diffusion approximation}
+To get the diffusion approximation, we approximate radiance using spherical harmonics.
+$$
+\xomegafunc{L} \approx \sum_{n = 0}^{1} \sum_{m = -n}^{n} L_{n,m}(x, \omegavec) Y_{n,m}(\omegavec)
+$$
+Where $ Y_{n,m}(\omegavec)$ is the $n-m$ spherical harmonics base function\footnote{\url{https://www.cs.dartmouth.edu/~wjarosz/publications/dissertation/appendixB.pdf}}, and $L_{n,m}(x, \omegavec)$ is the projection of $L$ over this function:
+$$
+L_{n,m}(x, \omegavec) = \sphere{\xomegafunc{L} Y_{n,m}(\omegavec)}{}
+$$
+For $n = 0$ the integral is trivial.  The first term of the sum becomes:
+$$
+L_{0,0}(x, \omegavec) Y_{0,0}(\omegavec) = \sqrt{\frac{1}{4\pi}} \sphere{\sqrt{\frac{1}{4\pi}} \xomegafunc{L}}{} = \frac{1}{4\pi} \xfunc{\phi}
+$$
+As for the other coordinates, we use the cartesian form. For the first harmonics we have:
+$$
+L_{-1,1}(x, \omegavec) Y_{-1,1}(\omegavec) = \sqrt{\frac{3}{4\pi}} \omega_x \sphere{\sqrt{\frac{3}{4\pi}} \omega_x \xomegafunc{L}}{} = \frac{3}{4\pi} \omega_x {E}_x(x)
+$$
+Where the $x$ subscript indicates the first component. Similarly we obtain:
+$$
+L_{0,1}(x, \omegavec) Y_{0,1}(\omegavec) = \frac{3}{4\pi} \omega_z {E}_z(x)
+$$
+$$
+L_{1,1}(x, \omegavec) Y_{1,1}(\omegavec) = \frac{3}{4\pi} \omega_y {E}_y(x)
+$$
+By applying the approximation, we finally obtain:
+$$
+L(x, \omegavec) \approx \frac{1}{4\pi} \xfunc{\phi} + \frac{3}{4\pi} \omega_x {E}_x(x) + \frac{3}{4\pi} \omega_y {E}_y(x)+ \frac{3}{4\pi} \omega_z {E}_z(x) = \frac{\xfunc{\phi}}{4\pi} + \frac{3}{4\pi} \omegavec \cdot \xvecfunc{E}
+$$
+\section{The diffusion equation}
+We substitute the diffusion approximation into the radiative transfer equation:
+\begin{multline*}
+(\nablavec \cdot \omegavec) \left(\frac{\xfunc{\phi}}{4\pi} + \frac{3}{4\pi} \omegavec \cdot \xvecfunc{E}\right)
+= -\extinction\left(\frac{\xfunc{\phi}}{4\pi} + \frac{3}{4\pi} \omegavec \cdot \xvecfunc{E}\right)
+ \\+ \scattering \sphere {p(\omegavec, \omegavec') \left(\frac{\xfunc{\phi}}{4\pi} + \frac{3}{4\pi} \omegavec' \cdot\xvecfunc{E}\right)}{\omega'}
+ + \xomegafunc{Q}
+\end{multline*}
+We will need the following three identities to go on:
+$$
+\sphere{\omegavec}{} = 0 
+$$
+\begin{equation}
+\sphere{\omegavec (\omegavec \cdot \vec{A}) }{} = \frac{4 \pi}{3} \vec{A} 
+\label{eq:id1}
+\end{equation}
+$$
+\sphere{\omegavec [ \omegavec \cdot \nablavec(\omegavec \cdot \vec{A})]}{} = 0 
+$$
+
+We now further simplify the equation above:
+\begin{multline*}
+\frac{1}{4\pi} \omegavec \cdot \nablavec \xfunc{\phi} + \frac{3}{4\pi} \omegavec \cdot \nablavec (\omegavec \cdot \xvecfunc{E})
+= -\extinction\frac{\xfunc{\phi}}{4\pi}  -\extinction\frac{3}{4\pi} \omegavec \cdot \xvecfunc{E} + \scattering \frac{\xfunc{\phi}}{4\pi} \sphere {p(\omegavec, \omegavec')}{\omega'}
+ \\+ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec, \omegavec')  \omegavec' \cdot \xvecfunc{E}}{\omega'}
+ + \xomegafunc{Q} 
+\end{multline*}
+Now we multiply each term by $\omegavec$ and integrate on the sphere. We take all the terms separately, then put them together at the end.
+$$
+\sphere{\frac{1}{4\pi} \omegavec \cdot \nablavec \xfunc{\phi}\omegavec}{} = \frac{1}{4\pi} \frac{4\pi}{3} \nablavec \xfunc{\phi} = \frac{\nablavec \xfunc{\phi}}{3}
+$$
+$$
+\sphere{\frac{3}{4\pi} \omegavec \cdot \nablavec (\omegavec \cdot \xvecfunc{E}) \omegavec}{} = \frac{3}{4\pi} \sphere{\omegavec [\omegavec \cdot \nablavec (\omegavec \cdot \xvecfunc{E})] }{} = 0
+$$
+$$
+\sphere{-\extinction\frac{\xfunc{\phi}}{4\pi} \omegavec}{} = -\extinction\frac{\xfunc{\phi}}{4\pi} \sphere{\omegavec}{} =  0
+$$
+$$
+\sphere{-\extinction\frac{3}{4\pi} \omegavec \cdot \xvecfunc{E} \omegavec}{} = -\extinction \frac{3}{4\pi} \sphere{ \omegavec (\omegavec \cdot \xvecfunc{E})}{} = -\extinction\frac{3}{4\pi} \frac{4\pi}{3} \xvecfunc{E} = -\extinction \xvecfunc{E}
+$$
+$$
+\sphere{\scattering \frac{\xfunc{\phi}}{4\pi} \sphere {p(\omegavec, \omegavec')}{\omega'} \omegavec}{} = \scattering \frac{\xfunc{\phi}}{4\pi} \sphere{\omegavec}{} = 0
+$$
+$$
+\sphere{ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec, \omegavec')  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} = \sphere{ \frac{3}{4\pi} \scattering  g  (\omegavec \cdot \xvecfunc{E}) \omegavec}{} = g \scattering  \xvecfunc{E}
+$$
+$$
+\sphere{ \xomegafunc{Q} \omegavec}{} =  \sourceonex 
+$$
+Putting everything together:
+$$
+\frac{\nablavec \xfunc{\phi}}{3} + 0 = 0 -\extinction \xvecfunc{E} + 0 + g \scattering  \xvecfunc{E} + \sourceonex 
+$$
+\begin{equation}
+\nablavec \xfunc{\phi} = -3\extinction' \xvecfunc{E} + 3\sourceonex 
+\label{eq:diff}
+\end{equation}
+Where we used $\extinction' = \scattering' + \absorption = \scattering (1-g) + \absorption = \extinction -g \scattering$.
+We combine \ref{eq:diff} and \ref{eq:rte} we obtain the final diffusion equation. First we rearrange \ref{eq:diff}:
+$$
+\xvecfunc{E} = 3 D \sourceonex  - D \nablavec \xfunc{\phi}
+$$
+Where $D = -\frac{1}{3 \extinction'}$. Inserting it into \ref{eq:rte}:
+$$
+\nablavec \cdot (3 D \sourceonex  - D \nablavec \xfunc{\phi}) = -\absorption  \xfunc{\phi} + \sourcezerox
+$$
+$$
+3 D \nablavec \cdot \sourceonex - D \nabla^2 \xfunc{\phi} =  -\absorption  \xfunc{\phi} + \sourcezerox
+$$
+$$
+D \nabla^2 \xfunc{\phi} = \absorption \xfunc{\phi} - \sourcezerox + 3 D \nablavec \cdot \sourceonex
+$$
+Which is the final diffusion equation in Jensen.
+\section{Boundary condition}
+In the case of a scattering medium in a finite region of space, we impose the classic boundary condition that the net inward flux on each surface point $x_s$ with normal $\vec{n}_s$ is zero:
+$$
+\inwardhemisphere{L(x_s, \omegavec) (\omegavec \cdot \vec{n}_s)}{} = 0
+$$
+We use the diffusion approximation:
+$$
+\inwardhemisphere{\left(\frac{\xfunc{\phi}}{4\pi} + \frac{3}{4\pi} \omegavec \cdot \xvecfunc{E}\right) (\omegavec \cdot \vec{n}_s)}{} = 0
+$$
+$$
+\xfunc{\phi} \inwardhemisphere{ (\omegavec \cdot \vec{n}_s)}{} + 3  \inwardhemisphere{(\omegavec \cdot \xvecfunc{E}) (\vec{n}_s \cdot \omegavec) }{} = 0
+$$
+Given the standard spherical coordinates convention, $n_s = (0,0,1)$ and $\omegavec = (\cos\phi\sin\theta,\sin\phi\sin\theta,\cos\theta)$. We obtain then:
+$$
+\inwardhemisphere{ (\omegavec \cdot \vec{n}_s)}{} = \int_{0}^{2\pi} \int_{\frac{\pi}{2}}^{\pi} \cos\theta \sin\theta d\theta d\phi = -\pi
+$$
+And:
+$$
+\inwardhemisphere{(\omegavec \cdot \xvecfunc{E}) (\vec{n}_s \cdot \omegavec) }{} = -\int_{0}^{2\pi} \int_{0}^{\frac{\pi}{2}}(\cos\phi\sin\theta E_x+\sin\phi\sin\theta E_y+\cos\theta E_z) \cos\theta \sin\theta d\theta d\phi 
+$$
+$$
+= -\frac{2\pi}{3} E_z = -\frac{2\pi}{3} \vec{n}_s \cdot \xvecfunc{E}
+$$
+Using the last two results and simplifying, we get:
+$$
+\xfunc{\phi} (-\pi) + 3 \left(-\frac{2\pi}{3} \vec{n}_s \cdot \xvecfunc{E}\right)= 0
+$$
+$$
+\xfunc{\phi} + 2 \vec{n}_s \cdot \xvecfunc{E} = 0
+$$
+From Equation \ref{eq:diff}, assuming no point source, we have the $\sourceonex$ term go to zero, so $\xvecfunc{E} = - D\nablavec \xfunc{\phi}$. Inserting this result and simplifying, we get the final boundary condition:
+$$
+\xfunc{\phi} - 2 D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = 0
+$$
+\section{Different media assumption}
+To include surfaces of different boundaries, we need to change the above equations. The boundary condition then becomes:
+$$
+I_- = \inwardhemisphere{L(x_s, \omegavec) (\omegavec \cdot \vec{n}_s)}{} = \hemisphere{R(\eta, \omegavec) L(x_s, \omegavec) (\omegavec \cdot \vec{n}_s)}{} = I_+
+\label{eq:diffb}
+$$
+Keeping the above conventions, we define $R$ as a step function:
+$$
+R(\eta, \omegavec) = 
+\begin{cases}
+1 \ \ \ \text{for}\ \ \ \frac{\pi}{2} \leq \theta \leq \pi - \theta_c\\
+R_0\ \ \ \text{for}\ \ \  \pi - \theta_c \leq \theta \leq \pi\\
+\end{cases}
+$$
+Where $\theta_c$ is the critical angle, and $R_0 = \left(\frac{n_2 - n_1}{n_2 + n_1} \right)^2$, where $n_1$ and $n_2$ are indices of refraction of vacuum and medium, respectively. We use $\pi - \theta_c$ as the critical angle is conventionally defined from the normal pointing \textit{inside} the surface.
+
+The left side of equation \ref{eq:diffb} is:
+$$
+I_- = \pi \xfunc{\phi} - 2 \pi D (\vec{n}_s \cdot \nablavec) \xfunc{\phi}
+$$
+The other side is more tricky, since it requires splitting the integration along the different angles. We proceed as before, introducing the diffusion approximation:
+$$
+I_+ = \xfunc{\phi} \hemisphere{ R(\eta, \omegavec) (\omegavec \cdot \vec{n}_s)}{} + 3  \hemisphere{R(\eta, \omegavec)(\omegavec \cdot \xvecfunc{E}) (\vec{n}_s \cdot \omegavec) }{}
+$$
+As before, we calculate the integral separately. The first part:
+\begin{multline*}
+\hemisphere{ R(\eta, \omegavec) (\omegavec \cdot \vec{n}_s)}{} = \int_{0}^{2\pi} \int_{\frac{\pi}{2}}^{\pi- \theta_c} \cos\theta \sin\theta d\theta d\phi + \int_{0}^{2\pi} \int_{\pi - \theta_c}^{\pi} R_0 \cos\theta \sin\theta d\theta d\phi = \\ = ((R_0-1)\cos^2\theta_c-R_0)\pi
+\end{multline*}
+The second part (only on the z coordinate, since the other coordinates always go to zero):
+\begin{multline*}
+\hemisphere{R(\eta, \omegavec)(\omegavec \cdot \xvecfunc{E}) (\vec{n}_s \cdot \omegavec) }{} = \\E_z \int_{0}^{2\pi}  \int_{\frac{\pi}{2}}^{\pi- \theta_c} \cos^2\theta \sin\theta d\theta d\phi + E_z \int_{0}^{2\pi} \int_{\pi - \theta_c}^{\pi} R_0 \cos^2\theta \sin\theta d\theta d\phi = \\
+\frac{2\pi}{3} E_z (R_0(1-\cos^3 \theta_c)+\cos^3 \theta_c)
+\end{multline*}
+Performing all simplifications, we finally get:
+$$
+I_+ =  ((R_0-1)\cos^2\theta_c-R_0)\pi \phi(x) + 2 \pi D (R_0(1-\cos^3 \theta_c)+\cos^3 \theta_c) (\vec{n}_s \cdot \nablavec) \xfunc{\phi}
+$$
+We can now impose $I_+ = I_-$:
+$$
+ \pi \xfunc{\phi} + 2 \pi D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = ((R_0-1)\cos^2\theta_c-R_0)\pi \phi(x) + 2 \pi D (R_0(1-\cos^3 \theta_c)+\cos^3 \theta_c) (\vec{n}_s \cdot \nablavec) \xfunc{\phi}
+$$
+That we can simplify as:
+$$
+  \xfunc{\phi} + 2 \frac{(1 - (R_0(1-\cos^3 \theta_c)+\cos^3 \theta_c))}{(1 - ((R_0-1)\cos^2\theta_c-R_0))} D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = 0
+$$
+$$
+  \xfunc{\phi} - 2 \frac{\left(\frac{2}{1-R_0} - 1 + \cos^3 \theta_c\right)}{1 - \cos^2\theta_c} D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = 0
+$$
+$$
+  \xfunc{\phi} - 2 A D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = 0
+$$
+So, to handle the different media, we need to add a corrective factor $A$ in our boundary condition.
+
+\subsection{Approximating the corrective factor}
+
+We can rewrite the $I_+$ term in equation \ref{eq:diffb} as:
+$$
+ \hemisphere{R(\eta, \omegavec) L(x_s, \omegavec) (\omegavec \cdot \vec{n}_s)}{} \approx \hemisphere{R(\eta, \omegavec)  (\omegavec \cdot \vec{n}_s)}{} \hemisphere{L(x_s, \omegavec) (\omegavec \cdot \vec{n}_s)}{}
+$$
+$$
+= F_{dr}(\eta)\  [\pi \xfunc{\phi} + 2 \pi D (\vec{n}_s \cdot \nablavec) \xfunc{\phi}]
+$$
+The $F_{dr}(\eta)$ integral function can be approximated as:
+$$
+F_{dr}(\eta) = -\frac{1.440}{\eta^2} +\frac{0.710}{\eta} + 0.668 + 0.0636 \eta
+$$
+So we can express the boundary condition as:
+$$
+\pi \xfunc{\phi} - 2 \pi D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = F_{dr}(\eta)\  [\pi \xfunc{\phi} + 2 \pi D (\vec{n}_s \cdot \nablavec) \xfunc{\phi}]
+$$
+$$
+\xfunc{\phi} - 2 D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = F_{dr}  [\xfunc{\phi} + 2 D (\vec{n}_s \cdot \nablavec) \xfunc{\phi}]
+$$
+$$
+\xfunc{\phi} (1 - F_{dr}) - 2 D (1 + F_{dr}) (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = 0
+$$
+$$
+\xfunc{\phi} - 2 D \frac{1 + F_{dr}}{1 - F_{dr}} (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = 0
+$$
+$$
+\xfunc{\phi} - 2 A D (\vec{n}_s \cdot \nablavec) \xfunc{\phi} = 0
+$$
+With $A = \frac{1 + F_{dr}}{1 - F_{dr}}$.
+
+\section{Solutions for an infinite medium}
+From the telegraph equation:
+
+$$
+(D \nabla^2 - \absorption) \xfunc{\phi} =  - \sourcezerox + 3 D \nablavec \cdot \sourceonex
+$$
+$$
+(\nabla^2 - \transmission^2) \xfunc{\phi} =  -  \frac{\sourcezerox}{D} + 3 \nablavec \cdot \sourceonex
+$$
+The equation above is a particular case of screened Poisson equation, that has a generic solution:
+$$
+\xfunc{\phi} = \frac{1}{4 \pi} \iiint_{\mathbb{R}^3} \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|} \left(  \frac{\sourcezero{r'}}{D} - 3 \nablavec \cdot \sourceone{r'}\right) d^3 \mathbf{r}'
+\label{eq:poisson}
+$$
+\subsection{Point source solution}
+If we use a simple point source model, we have:
+$$
+\sourcezerox = \Phi_i \redsca \delta(x) \delta(y) \Theta(z) e^{-\redext z}
+$$
+$$
+\sourceonex = 0
+$$
+Plugging in the above sources:
+$$
+\xfunc{\phi} = \frac{1}{4 \pi} \iiint_{\mathbb{R}^3} \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|} \left(   \frac{\Phi_i \redsca \delta(x) \delta(y) \Theta(z) e^{-\redext z}}{D} \right) d^3 \mathbf{r}'
+$$
+Applying the deltas:
+$$
+\xfunc{\phi} = \frac{\Phi_i}{4 \pi D} \int_{0}^{+\infty} \frac{e^{-\transmission \|\mathbf{x} - z \mathbf{e}_z \|}}{\|\mathbf{x} - z \mathbf{e}_z  \|} \left(  \redsca e^{-\redext z} \right) dz
+$$
+Given the assumption of point source, we can assume $\|\mathbf{x} - z \mathbf{e}_z \| \approx \|\mathbf{x}\| = r$. So we get:
+$$
+\xfunc{\phi} = \frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r} \redsca \int_{0}^{+\infty} e^{-\redext z}  dz = \frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r} \frac{\redsca}{\redext} = \alpha' \frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r}
+$$
+Where $\alpha' = \frac{\redsca}{\redext}$ is the reduced albedo. So we get the first solution in an infinite medium (the one used in Jensen):
+$$
+\xfunc{\phi} = \frac{\Phi}{4 \pi D} \frac{e^{-\transmission r}}{r}
+$$
+Where $\Phi = \alpha' \Phi_i$.
+\subsection{Ray source solution}
+In case of ray sources, we have the following equations for the source terms:
+$$
+\sourcezerox = \Phi \redscaEddington \delta(x) \delta(y) \Theta(z) e^{-\redextEddington z}
+$$
+$$
+\sourceonex = \tilde{g} \sourcezerox \mathbf{e}_z
+$$
+Plugging it in in \ref{eq:poisson}, we get two integrals. $\xfunc{\phi} = \xfunc{\phi_1} + \xfunc{\phi_2}$, where:
+$$
+\xfunc{\phi_1} = \frac{1}{4 \pi} \iiint_{\mathbb{R}^3} \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|} \left(   \frac{\Phi \redscaEddington \delta(x) \delta(y) \Theta(z) e^{-\redextEddington z}}{D} \right) d^3 \mathbf{r}'
+$$
+$$
+= \frac{\Phi \redscaEddington}{4 \pi D} \int_{0}^{+\infty} \frac{e^{-\transmission \|\mathbf{x} - z \mathbf{e}_z  \|}}{\|\mathbf{x} - z \mathbf{e}_z  \|}  e^{-\redextEddington z}  dz
+$$
+$$
+= \frac{3\redscaEddington \Phi}{4 \pi} (\redscaEddington (1 - \tilde{g}) + \absorption) \int_{0}^{+\infty} \frac{e^{-\transmission \|\mathbf{x} - z \mathbf{e}_z  \|}}{\|\mathbf{x} - z \mathbf{e}_z  \|}  e^{-\redextEddington z}  dz.
+$$
+And:
+$$
+\xfunc{\phi_2} = -\frac{3}{4 \pi} \iiint_{\mathbb{R}^3}  \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|} \nabla \cdot \left(  \Phi \redscaEddington \tilde{g} \delta(x) \delta(y) \Theta(z) e^{-\redextEddington z} \right)    \mathbf{e}_z d^3 \mathbf{r}'.
+$$
+
+We now apply the divergence operator:
+$$
+\xfunc{\phi_2} = -\frac{3 \Phi \redscaEddington \tilde{g}}{4 \pi} \iiint_{\mathbb{R}^3}  \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|} \left[ \delta(x) \delta(y)
+\frac{\partial}{\partial z}  (\Theta(z) e^{-\redextEddington z}) \right]  d^3 \mathbf{r}'.
+$$
+Note that we have only the $z$ term given that we multiply by $\mathbf{e}_z$.
+Using that $\frac{\partial \Theta(z)}{\partial z} = \delta(z) $:
+$$
+\xfunc{\phi_2} = -\frac{3 \Phi \redscaEddington \tilde{g}}{4 \pi} \iiint_{\mathbb{R}^3}  \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|}  \delta(x) \delta(y) \left[
+\delta(z) e^{-\redextEddington z} - \redextEddington \Theta(z) e^{-\redextEddington z} \right]  d^3 \mathbf{r}'.
+$$
+Given the three deltas in the first term, we can explicitly solve the integral for $\mathbf{r'} = (x,y,z) = \mathbf{0}$. 
+$$
+\xfunc{\phi_2} = -\frac{3 \Phi \redscaEddington \tilde{g}}{4 \pi} \frac{e^{-\transmission r}}{r} +\frac{3 \Phi \redscaEddington \tilde{g} \redextEddington}{4 \pi} \iiint_{\mathbb{R}^3}  \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|}  \delta(x) \delta(y)   \Theta(z) e^{-\redextEddington z}  d^3 \mathbf{r}'.
+$$
+$$
+= -\frac{3 \Phi \redscaEddington \tilde{g}}{4 \pi} \frac{e^{-\transmission r}}{r} +\frac{3 \Phi \redscaEddington \tilde{g} \redextEddington}{4 \pi} \int_{0}^{+\infty} \frac{e^{-\transmission \|\mathbf{x} - z \mathbf{e}_z  \|}}{\|\mathbf{x} - z \mathbf{e}_z  \|}  e^{-\redextEddington z}  dz.
+$$
+Putting it together:
+$$
+\xfunc{\phi} = -\frac{3 \Phi \redscaEddington \tilde{g}}{4 \pi} \frac{e^{-\transmission r}}{r} + \frac{3\redscaEddington \Phi}{4 \pi} (\redscaEddington (1 - \tilde{g}) + \absorption + \redscaEddington \tilde{g} + \absorption  \tilde{g} ) \int_{0}^{+\infty} \frac{e^{-\transmission \|\mathbf{x} - z \mathbf{e}_z  \|}}{\|\mathbf{x} - z \mathbf{e}_z  \|}  e^{-\redextEddington z}  dz
+$$
+$$
+\xfunc{\phi} = -\frac{3 \Phi \redscaEddington \tilde{g}}{4 \pi} \frac{e^{-\transmission r}}{r} + \frac{3\redscaEddington \Phi}{4 \pi} (\redscaEddington + \absorption  ( 1 + \tilde{g})) \int_{0}^{+\infty} \frac{e^{-\transmission \|\mathbf{x} - z \mathbf{e}_z  \|}}{\|\mathbf{x} - z \mathbf{e}_z  \|}  e^{-\redextEddington z}  dz
+\label{eq:phi}
+$$
+
+We can interpret the second term in Eq.~(\ref{eq:phi}) as the fluence from
+an exponentially decaying line source along the $z$ axis.
+Due to this exponentially decaying factor, the integrand
+will only have a significant weight for small $z$.
+Hence, in the asymptotic limit, $r \gg 1/\redscaEddington$, we can approximate
+the distances in the integrand
+\begin{eqnarray*}
+    |\mathbf{x} - z \mathbf{e}_z| &=& \sqrt{r^2 + z^2 - 2 z r \cos
+    \theta} = r \left(1 - 2 \frac{z}{r} \cos \theta + \frac{z^2}{r^2}
+    \right)^\frac{1}{2} \\
+    &\approx& r \left( 1 -  \frac{z}{r} \cos \theta \right) = r - z \cos
+    \theta,
+\end{eqnarray*}
+and
+\begin{eqnarray*}
+    \frac{1}{|\mathbf{x} - z \mathbf{e}_z|} &=& \frac{1}{\sqrt{r^2 + z^2 - 2 z r \cos
+    \theta}} = \frac{1}{r} \left(1 - 2 \frac{z}{r} \cos \theta + \frac{z^2}{r^2}
+    \right)^{-\frac{1}{2}} \\
+    &\approx& \frac{1}{r} \left( 1 +  \frac{z}{r} \cos \theta \right),
+\end{eqnarray*}
+
+
+\begin{eqnarray*}
+     \int_0^\infty\frac{e^{-(\redscaEddington + \absorption)z} e^{-\transmission|\mathbf{x}
+    - z \mathbf{e}_z| }}{|\mathbf{x} - z \mathbf{e}_z|}   d z & \approx &
+    \frac{e^{-\transmission r}}{r}  \int_0^\infty 
+    e^{-(\redscaEddington + \absorption - \transmission \cos \theta )z}\left(1 + \frac{z}{r}
+    \cos \theta \right)d z  \\
+    &=& \frac{e^{-\transmission r}}{r} \left( \frac{1}{\redscaEddington + \absorption - \transmission
+    \cos \theta } + \frac{\cos \theta}{r} \frac{1}{(\redscaEddington + \absorption - \transmission \cos \theta)^2}
+    \right).
+\end{eqnarray*}
+
+In an highly scattering medium $\absorption \ll \redscaEddington$. For $g \ne 1$ this
+will imply and $\absorption \ll \transmission \ll \redscaEddington$, and, hence
+\begin{equation}
+    \frac{1}{\redscaEddington + \absorption - \transmission \cos \theta} =
+    \frac{1}{\redscaEddington} \left(1 +
+    \frac{\absorption - \transmission \cos \theta}{\redscaEddington}  \right)^{-1} \approx
+    \frac{1}{\redscaEddington}  \left(1 -
+    \frac{\absorption - \transmission \cos \theta}{\redscaEddington}  \right)
+\end{equation}
+and
+\begin{equation}
+    \frac{1}{(\redscaEddington + \absorption - \transmission \cos \theta)^2} =
+    \frac{1}{\redscaEddington^2} \left(1 + \frac{\absorption - \transmission \cos \theta}{\redscaEddington}  \right)^{-2} \approx
+    \frac{1}{\redscaEddington^2}  \left(1 - 2 \frac{\absorption - \transmission \cos \theta}{\redscaEddington}  \right).
+\end{equation}
+The integral can now be approximated by
+\begin{eqnarray*}
+     \int_0^\infty  \frac{e^{-(\redscaEddington + \absorption)z} e^{-\transmission|\mathbf{x}
+    - z \mathbf{e}_z| }}{|\mathbf{x} - z \mathbf{e}_z|} d z & \approx &
+   \frac{e^{-\transmission r}}{r} \left( \frac{1}{\redscaEddington + \absorption - \transmission
+    \cos \theta } + \frac{\cos \theta}{r} \frac{1}{(\redscaEddington + \absorption - \transmission \cos \theta)^2}
+    \right) \\
+    &\approx & \frac{e^{-\transmission r}}{\redscaEddington r} \left(1 -
+    \frac{\absorption - \transmission \cos \theta}{\redscaEddington}      +  \frac{\cos \theta}{\redscaEddington r} \left(1 - 2 \frac{\absorption - \transmission \cos \theta}{\redscaEddington}  \right)
+    \right) \\
+    &=&\frac{e^{-\transmission r}}{\redscaEddington r} \left(1 -
+    \frac{\absorption}{\redscaEddington} + \frac{\cos \theta}{\redscaEddington} \left(
+    \transmission + \frac{1}{r} - 2 \frac{\absorption}{\redscaEddington r} \right) + 2
+    \frac{\transmission \cos^2\theta}{\redscaEddington^2 r} \right).
+\end{eqnarray*}
+Inserting this expression in Eq.~(\ref{eq:phi})
+\begin{eqnarray*}
+    \frac{\phi(\mathbf{x})}{\Phi} &\approx& - \frac{3 \tilde{g} \redscaEddington e^{- \transmission r}}{4\pi r}
+      \\
+     && + \frac{3 \left(\redscaEddington + (\tilde{g} +1) \absorption \right) e^{-\transmission r} }{4\pi r}
+  \left(1 -
+    \frac{\absorption}{\redscaEddington} + \frac{\cos \theta}{\redscaEddington} \left(
+    \transmission + \frac{1}{r} - 2 \frac{\absorption}{\redscaEddington r} \right) + 2
+    \frac{\transmission \cos^2\theta}{\redscaEddington^2 r} \right) \\
+    &=& \frac{3 e^{- \transmission r}}{4\pi r} \left( \left(\redscaEddington +
+    (\tilde{g} +1) \absorption \right)  \left( 1 - \frac{\absorption}{\redscaEddington}
+    \right) - \tilde{g} \redscaEddington  \right) \\
+    && + \frac{3 e^{- \transmission r}}{4\pi r} \cos \theta  \left(1 +
+    (\tilde{g} +1) \frac{\absorption}{\redscaEddington} \right) \left( \transmission +
+    \frac{1}{r} - \frac{2 \absorption}{\redscaEddington r} \right) \\
+    && + \frac{3 \left(\redscaEddington + (\tilde{g} +1) \absorption \right) e^{-\transmission r} }{4\pi r}
+ 2 \frac{\transmission \cos^2\theta}{\redscaEddington^2 r} .
+\end{eqnarray*}
+Now we neglect terms $\absorption/\redscaEddington$ compared to unity
+\begin{equation*}
+   \frac{\phi(\mathbf{x})}{\Phi} \approx  \frac{3 e^{- \transmission r}}{4\pi r} \redscaEddington
+    \left( 1 - \tilde{g} \right)
+    + \frac{3 e^{- \transmission r}}{4\pi r} \cos \theta \left( \transmission + \frac{1}{r} \right)
+    + \frac{3 e^{-\transmission r} }{4\pi r} 2 \frac{\transmission
+    \cos^2\theta}{\redscaEddington r}.
+\end{equation*}
+Introducing the reduced scattering coefficient $\redextEddington = \redscaEddington ( 1 -
+\tilde{g}) = \mu ( 1 - g)$ and neglecting terms $\transmission/\redscaEddington \cdot 1/(\redscaEddington r)$ compared to unity
+\begin{equation*}
+    \phi(\mathbf{x}) \approx  \frac{3 \Phi e^{- \transmission r}}{4\pi r} \redextEddington
+    + \frac{3 \Phi e^{- \transmission r}}{4\pi r} \cos \theta \left( \transmission +
+    \frac{1}{r} \right) = \frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r} \left( 1 
+    + 3 D \frac{1 + \transmission r}{r} \cos \theta \right).
+\end{equation*}
+For highly scattering media, the reduced scattering coefficient, $\redscaEddington$ can
+be approximated by the reduced extinction coefficient, because absorption
+will be negligible compared to scattering.
+
+\section{Fresnel integrals}
+We define the first two order Fresnel integrals, to aid in our calculations:
+$$
+\cphi(\eta) = \frac{1}{4\pi}\int_{2\pi} T_{21}(\eta,\theta_o)\cos \theta_o \de \omegavec_o
+$$
+$$
+\cE(\eta) = \frac{3}{4\pi}\int_{2\pi} T_{21}(\eta,\theta_o)\cos^2 \theta_o \de \omegavec_o
+$$
+Where $\cos\theta_o = \vec{n}_o \cdot \omegavec_o$, and the integral is on the whole hemisphere where $\vec{n}_o \cdot \omegavec_o > 0$.
+
+\section{BSSRDF theory}
+The BSSRDF is defined as the ration of an element of emergent radiance $L_r$ and an element of incident flux $\Phi_i$:
+$$
+S(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o, \omegavec_o) = \frac{\de L_r(\mathbf{x}_o, \omegavec_o)}{\de \Phi_i(\mathbf{x}_i, \omegavec_i)}
+$$
+There are various approximations available for the BSSRDF. For the directional dipole, we use the delta-Eddington approximation:
+$$
+S = T_{12} (S_{\delta E} + S_d) T_{21}
+$$
+Let us consider only the diffusive part, $S_d$. The emergent radiance due to diffusion events is given by 
+$$
+L_{r,d}(\mathbf{x}_o, \omegavec_o) = \eta^2 T_{21} L_{d}(\mathbf{x}_o, \omegavec_{21}) 
+$$ 
+Where $\omegavec_{21}$ is the refracted vector corresponding to $\omegavec_{o}$:
+$$
+\omegavec_{21} = \frac{\omegavec_o}{\eta} - \left(\frac{\vec{n}_o \cdot \omegavec_o}{\eta} - \sqrt{1 - \frac{1 - (\vec{n}_o \cdot \omegavec_o
+)^2}{\eta^2}}\right) \vec{n}_o 
+$$
+Combining the above equations we obtain:
+$$
+S_d(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o, \omegavec_o) =  T_{12} S_d T_{21} = \frac{\de L_{r,d}(\mathbf{x}_o, \omegavec_o)}{\de \Phi_i(\mathbf{x}_i, \omegavec_i)} = \eta^2 \frac{\de T_{21}  L_{d}(\mathbf{x}_o, \omegavec_{21}) }{\de \Phi_i(\mathbf{x}_i, \omegavec_i)}
+$$
+We now integrate both sides over the cosine weighted hemisphere where $\vec{n}_o \cdot \omegavec_o > 0$:
+$$
+\int_{2\pi} T_{12} S_d T_{21} \cos \theta_o \de \omegavec_o =  \int_{2\pi} \eta^2 \frac{\de T_{21}  L_{d}(\mathbf{x}_o, \omegavec_{21}) }{\de \Phi_i(\mathbf{x}_i, \omegavec_i)} \cos \theta_o \de \omegavec_o
+$$
+We now assume no directional dependency, $S_d(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o, \omegavec_o) = S_d(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o)$:
+$$
+ T_{12} S_d(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o) \int_{2\pi} T_{21} \cos \theta_o \de \omegavec_o =   \eta^2 \frac{\de \int_{2\pi} T_{21}  L_{d}(\mathbf{x}_o, \omegavec_{21}) \cos \theta_o \de \omegavec_o}{\de \Phi_i(\mathbf{x}_i, \omegavec_i)} 
+$$
+$$
+ T_{12} S_d(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o) 4\pi\frac{\cphi(\eta)}{\eta^2} =   \frac{\de M_d(\mathbf{x}_o)}{\de \Phi_i(\mathbf{x}_i, \omegavec_i)} 
+$$
+$$
+ T_{12} S_d(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o) 4\pi\cphi(1/\eta) =   \frac{\de M_d(\mathbf{x}_o)}{\de \Phi_i(\mathbf{x}_i, \omegavec_i)} 
+$$
+Let us calculate the diffuse exitant radiance first. Plug in the diffusion approximation into the exitant radiance formula:
+$$
+M_d(\mathbf{x}_o) = \int_{2\pi} T_{21}  L_{d}(\mathbf{x}_o, \omegavec_{21}) \cos \theta_o \de \omegavec_o = \int_{2\pi} T_{21}  \left(\frac{\phi(\mathbf{x}_o)}{4\pi} - \frac{3}{4\pi} D\ \omegavec_{21} \cdot \nabla \phi(\mathbf{x}_o)\right) \cos \theta_o \de \omegavec_o
+$$
+$$
+= \underbrace{\frac{\phi(\mathbf{x}_o)}{4\pi} \int_{2\pi} T_{21} \cos \theta_o \de \omegavec_o}_{I_\phi}  - \underbrace{\frac{3}{4\pi} D \int_{2\pi}  \omegavec_{21} \cdot \nabla \phi(\mathbf{x}_o) \cos \theta_o \de \omegavec_o }_{I_{\mathbf{E}}}
+$$
+And, in a straightforward way, 
+$$
+I_\phi = \cphi(\eta) \phi(\mathbf{x}_o)
+$$
+The second part is more complicated. Without loss of generality, we rotate the reference coordinate system so that $\omegavec_o = (\cos\phi\sin\theta, \sin\phi \sin\theta, \cos\theta)$ and $\vec{n}_o = (0,0,1)$.  Given this reference system, the refracted vector becomes:
+$$
+\omegavec_{21} = \frac{(\cos\phi\sin\theta, \sin\phi \sin\theta, \cos\theta)}{\eta} - \left(\frac{\cos\theta}{\eta} - \sqrt{1 - \frac{\sin^2\theta}{\eta^2}}\right) (0,0,1) 
+$$
+$$
+= \left(\frac{\cos\phi\sin\theta}{\eta}, \frac{\sin\phi \sin\theta}{\eta},  \sqrt{1 - \frac{\sin^2\theta}{\eta^2}}\right)
+$$
+When plugged into the dot product in equation $I_{\mathbf{E}}$, we get a sum of three components. The first two terms of this sum go to zero, since we can first integrate over $\phi$:
+$$
+\int_0^{2\pi} \cos\phi \de \phi = \int_0^{2\pi} \sin\phi \de \phi = 0.
+$$
+So we are left only with the cumbersome $z$ term:
+$$
+I_{\mathbf{E}} = \frac{3}{4\pi} D (\nabla \phi_z(\mathbf{x}_o)) \int_{0}^{2\pi}\int_{0}^{\frac{\pi}{2}} T_{21}(\eta,\theta_o) \sqrt{1 - \frac{\sin^2\theta_o}{\eta^2}} \cos \theta_o \sin \theta_o \de \theta_o \de \phi
+$$
+Where we note that $\nabla \phi_z(\mathbf{x}_o) = \nabla\phi(\mathbf{x}_o) \cdot \vec{n}_o$. Note that without loss of generality we can assume $\eta > 1$, so that the argument of the square root is never negative.  We now perform a substitution using  Snell's law, $\sin\theta_o = \eta \sin\theta_i$. We obtain  the following identities:
+$$
+\de \theta_o = \frac{\eta \cos\theta_i}{\cos\theta_o} \de \theta_i,\ \ \ T_{21}(\eta,\theta_o) = T_{21}(1/\eta,\theta_i),\ \ \ \sqrt{1 - \frac{\sin^2\theta_o}{\eta^2}} = \cos\theta_i.
+$$
+If we introduce a critical angle $\theta_c = \arcsin(1/\eta)$. We finally get:
+$$
+I_{\mathbf{E}} = \frac{3}{4\pi} D \nabla\phi(\mathbf{x}_o) \cdot \vec{n}_o \int_{0}^{2\pi}\int_{0}^{\theta_c} T_{21}(1/\eta,\theta_i) \cos\theta_i \cos \theta_o \eta \sin \theta_i \frac{\eta \cos\theta_i}{\cos\theta_o} \de \theta_i \de \phi
+$$
+$$
+= D \nabla\phi(\mathbf{x}_o) \cdot \vec{n}_o \frac{3}{4\pi} \eta^2 \int_{0}^{2\pi}\int_{0}^{\theta_c} T_{21}(1/\eta,\theta_i) \cos^2\theta_i \sin \theta_i \de \theta_i \de \phi 
+$$
+$$
+= D \nabla\phi(\mathbf{x}_o) \cdot \vec{n}_o \eta^2 \cE(1/\eta) = \cE(\eta) D \nabla\phi(\mathbf{x}_o) \cdot \vec{n}_o. 
+$$
+We can finally get our final expression for  $M_d(\mathbf{x}_o)$
+$$
+M_d(\mathbf{x}_o) =  \cphi(\eta) \phi(\mathbf{x}_o) - \cE(\eta) D \nabla\phi(\mathbf{x}_o) \cdot \vec{n}_o
+$$
+Inserting into the expression, we derive the BSSRDF in an infinite medium:
+$$
+S_d(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o)  =  \frac{1}{4\pi T_{12}\cphi(1/\eta)} \frac{\de M_d(\mathbf{x}_o)}{\de \Phi_i(\mathbf{x}_i, \omegavec_i)} 
+$$
+\subsection{Jensen's dipole}
+Using the expression from Jensen:
+$$
+\xfunc{\phi} = \alpha' \frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r}
+$$
+We get the gradient as:
+$$
+\nabla \xfunc{\phi} =  -\alpha'\frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r^3} (1 + \transmission r) \mathbf{x}
+$$
+So we can calculate the BSSRDF in the infinite medium:
+$$
+S_d(\mathbf{x}_i, \mathbf{x}_o)  = \frac{1}{4\pi\cphi(1/\eta)} \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} \left[ \cphi(\eta) \frac{r^2}{D} + \cE(\eta) (1 + \transmission r) \mathbf{x} \cdot \vec{n}_o \right]
+$$
+Where we used $\Phi_i = T_{12} \Phi_i(\mathbf{x}_i, \omegavec_i)$. This is the better dipole from Eugene d'Eon. To get Jensen's dipole, we further approximate the above expression so that $\cphi(1/\eta) = 1/4$, $\cphi(\eta) = 0$, $ \cE(\eta) = 1$:
+$$
+S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} (1 + \transmission r) \mathbf{x} \cdot \vec{n}_o 
+$$
+This is Jensen's final dipole in an infinite medium.
+\subsection{Directional dipole}
+For the directional dipole, we have the following form:
+$$
+\xfunc{\phi} = \frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r} \left( 1 
+    + 3 D \frac{1 + \transmission r}{r} \cos \theta \right).
+$$
+Is is more convenient to do the gradient in spherical coordinates:
+$$
+\nabla \xfunc{\phi} = \frac{\partial}{\partial r} \xfunc{\phi} \vec{e}_r + \frac{1}{r} \frac{\partial}{\partial \theta} \xfunc{\phi} \vec{e}_\theta +  \frac{1}{r \sin \theta}  \frac{\partial}{\partial \phi} \xfunc{\phi} \vec{e}_\phi
+$$
+Where:
+$$
+ \frac{\partial}{\partial r} \xfunc{\phi} = - \frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r^2} \left( 3D \frac{2 (1 + \transmission r)  + (\transmission r)^2}{r} \cos\theta + (1 + \transmission r) \right)
+$$
+And:
+$$
+ \frac{\partial}{\partial \theta} \xfunc{\phi} = - \frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r^2} 3D (1 + \transmission r) \sin\theta
+ $$ 
+Finally, $ \frac{\partial}{\partial \phi} \xfunc{\phi} = 0$. Given our choice of basis for derivation, we can use the following identities:
+$$
+\vec{e}_r = \frac{\mathbf{x}}{r}
+$$
+$$
+- \vec{e}_\theta \sin\theta = \omegavec_{12} - \vec{e}_r \cos\theta 
+$$
+Inserting the identities, we get the final expression for the gradient:
+\begin{multline*}
+\nabla \xfunc{\phi} = - \frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r^2} \left( 3D \frac{2 (1 + \transmission r)  + (\transmission r)^2}{r} \cos\theta + (1 + \transmission r) \right) \vec{e}_r \\ + \frac{1}{r}  \frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r^2} 3D (1 + \transmission r) (- \vec{e}_\theta \sin\theta)
+\end{multline*}
+\begin{multline*}
+\nabla \xfunc{\phi} =\frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r^3} \bigg[ \left( -3D \frac{2 (1 + \transmission r)  + (\transmission r)^2}{r} \cos\theta - (1 + \transmission r) \right) r \vec{e}_r  \\-  3D (1 + \transmission r) \cos\theta \vec{e}_r + 3D (1 + \transmission r) \omegavec_{12} ]
+\end{multline*}
+\begin{multline*}
+\nabla \xfunc{\phi} =\frac{\Phi}{4\pi D} \frac{e^{- \transmission r}}{ r^3} \bigg[ -\left( 3D \frac{3 (1 + \transmission r)  + (\transmission r)^2}{r} \cos\theta + (1 + \transmission r) \right) \mathbf{x}  \\ + 3D (1 + \transmission r) \omegavec_{12} ]
+\end{multline*}
+We can do now the same as above, obtaining the BSSRDF:
+\begin{multline*}
+S_d'(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o)  = \frac{1}{4\pi\cphi(1/\eta)} \frac{1}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} \bigg[ \cphi(\eta) (\frac{r^2}{D} +  3 (1 + \transmission r) \mathbf{x}\cdot\omegavec_{12} ) \\ - \cE(\eta) \left[3D (1 + \transmission r) \omegavec_{12} \cdot \vec{n}_o - \left((1 + \transmission r) + 3D \frac{3 (1 + \transmission r)  + (\transmission r)^2}{r^2}\mathbf{x}\cdot\omegavec_{12}\right) \mathbf{x} \cdot \vec{n}_o\right] \bigg]
+\end{multline*}
+Alternative form, using $t = 1 + \transmission r$:
+\begin{multline*}
+S_d'(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o)  = \frac{1}{4\pi\cphi(1/\eta)} \frac{\transmission}{4 \pi^2} \frac{e^{1-t}}{(t-1)^3} \bigg[\frac{\cphi}{D}(t-1)^2+ 3 \cphi \transmission  t (t-1) (\vec{x} \cdot  \omegavec_{12}) \\- 3 \cE D  \transmission^2   t (\vec{n}_o \cdot  \omegavec_{12}) + \cE \transmission^2  (t+1) (\vec{x} \cdot \vec{n}_o) + \cE  D \transmission^3  \frac{t^2+t+1}{t-1} (\vec{x} \cdot  \omegavec_{12}) (\vec{x} \cdot \vec{n}_o)\bigg]
+\end{multline*}
+\end{document}
