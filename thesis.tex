@@ -22,7 +22,8 @@
 %==================================================================================================
 % PACKAGES
 %==================================================================================================
-\usepackage{LukeThesis}                             %Import Thesis base style
+\usepackage{LukeThesis}   
+\usepackage{CJKutf8}                          %Import Thesis base style
 \usepackage{pdfpages}
 \usepackage{mwe,tikz}
 \usepackage{tocloft}
@@ -73,6 +74,14 @@
 %Frontmatter material
 %--------------------
 \frontmatter
+\thispagestyle{empty}
+\begin{flushright}
+\vspace*{3cm}
+\begin{CJK}{UTF8}{min}七転び八起き.\end{CJK} \\
+\textit{Fall down seven times, stand up eight.} \\
+- Japanese proverb
+\end{flushright}
+\clearpage
 \pagenumbering{roman}                               %Set frontmatter numbering style
 \input{tex/summaryuk}                                   %English summary of Thesis
 \markboth{}{}                                       %Set headings (left)(right)
