@@ -515,7 +515,7 @@ L(\mathbf{x}, \vec{\omega}) = \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{
 \end{equation}
 This is called the reflectance equation. As before, we can add the emitted radiance $L_e$ to obtain the traditional form of the rendering equation~\cite{Kajiya1986}. We can easily extend the two properties of the BSSRDF in Equations~\ref{eq:bssrdfconservation} and~\ref{eq:bssrdfreciprocity}. Conservation of energy imposes
 \begin{equation*}
-0 \leq \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o)  (\vec{n} \cdot \vec{\omega}_i) d\vec{\omega}_i \leq 1.
+0 \leq \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o)  (\vec{n} \cdot \vec{\omega}_i) d{\omega}_i \leq 1.
 \end{equation*}
 On the other hand, Helmholtz reciprocity gives
 \begin{equation*}
@@ -531,7 +531,7 @@ From the reflectance equation above, we can see why BRDFs are usually used in ha
 Polar representation &  Rusinkiewicz representation \\
 $f_r(\theta_i, \phi_i, \theta_o, \phi_o)$ &  $f_r(\theta_h, \phi_h, \theta_d, \phi_d)$ \\
 \end{tabular}
-\caption{Different representations for BRDFs. To the right, standard representation using polar coordinates. To the right, the representation from~\cite{Rusinkiewicz1998}. } 
+\caption{Different representations for BRDFs. To the left, standard representation using polar coordinates. To the right, the representation from~\cite{Rusinkiewicz1998}. } 
 \label{fig:brdfrepr}
 \end{figure}
 
