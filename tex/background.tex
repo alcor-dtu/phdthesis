@@ -231,9 +231,10 @@ where $\mathbf{x}' = \mathbf{x}_i + r' \vec{\omega}_o$ and where $L_*$ is the ra
 L_*(\mathbf{x}', \vec{\omega}_o) = \lim_{r \rightarrow 0} \frac{L_r^*(\mathbf{x}_o, \vec{\omega}_o)}{r}.
 \end{equation*}
 By putting together \ref{eq:zerolimit}, \ref{eq:l0r} and \ref{eq:lastr} into \ref{eq:steadystate}, we obtain the following form:
-\begin{equation*}
+\begin{equation}
+\label{eq:fullformintegralpacked}
 L_r(\mathbf{x}_o, \vec{\omega}_o) = L_r^0(\mathbf{x}_o, \vec{\omega}_o) + L_r^*(\mathbf{x}_o, \vec{\omega}_o),
-\end{equation*}
+\end{equation}
 \begin{equation*}
 L_r(\mathbf{x}, \vec{\omega}_o) =  L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) + \int_0^r L_*(\mathbf{x}', \vec{\omega}_o) T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'.
 \end{equation*}
@@ -266,8 +267,10 @@ L_*(\mathbf{x}, \vec{\omega}) = \lim_{s\rightarrow 0} \frac{L_s^*(\mathbf{x}, \v
 \end{equation}
 Putting it all together, we obtain the so called \emph{integral form} of the radiative transfer equation:
 \begin{equation}
+\begin{split}
 \label{eq:integralformrte}
-L_r(\mathbf{x}_o, \vec{\omega}_o) =  L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) + \int_0^r \sigma_s(\mathbf{x}', \vec{\omega}_o) \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega}_o)  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'.
+L_r(\mathbf{x}_o, \vec{\omega}_o) &=  L^0(\mathbf{x}_i, \vec{\omega}_o) T_r(\mathbf{x}_i, \vec{\omega}_o) + \\ &+\int_0^r \sigma_s(\mathbf{x}', \vec{\omega}_o) \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega}_o)  d\omega' T_{r-r'}(\mathbf{x}', \vec{\omega}_o)  dr'.
+\end{split}
 \end{equation}
 This form is described along a the extent of a path rather than a single point as in the integro differential form in Equation~\ref{eq:rte}. We now derive back that form by deriving the above across $r$, which is the same as a directional derivative $ \vec{\omega} \cdot \nabla$. Of the two terms on the right hand side of the equation above, the first becomes:
 \begin{equation*}
@@ -345,13 +348,13 @@ Note that, since the solution of the radiance must be unique, the above calculat
 \label{sec:renderingscattering}
 Now, we want to use our formulas to derive a way to render scattering materials. The usual technique used in rendering to solve the rendering equation is Monte Carlo integration with importance sampling~\cite{Kalos2008}. Let us assume we need to solve the integral
 \begin{equation*}
-I = \int_X f(x) dx.
+I = \int_a^b f(x) dx.
 \end{equation*}
-Over some domain $X$. If we sample uniformly samples in $X$, we can define a $N$-th estimator for $I$:
+If we draw samples uniformly samples in $[a,b[$, we can define a $N$-th estimator for $I$:
 \begin{equation*}
-\hat{I}_N = \frac{1}{N} \sum_{i=1}^N f(x_i).
+\hat{I}_N = \frac{b-a}{N} \sum_{i=1}^N f(x_i).
 \end{equation*}
-From the law of large numbers, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$. To improve the convergence rate, we use importance sampling. If we know a distribution $\text{pdf}(x)$ that is somewhat close in shape to $f(x)$ and from which it is easy to draw samples from. We can rewrite the integral $I$ as :
+From the law of large numbers, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$. To improve the convergence rate, we use importance sampling. If we know a distribution $\text{pdf}(x)$ that is somewhat close in shape to $f(x)$ and from which it is easy to draw samples $x_i \in [a,b]$. We can rewrite the integral $I$ as :
 \begin{equation*}
 I = \int_X \frac{f(x)}{\text{pdf}(x)} \text{pdf}(x) dx,
 \end{equation*}
@@ -362,7 +365,7 @@ which we can evaluate again using Monte Carlo as:
 Where the $x_i$ follow the distribution $\text{pdf}(x)$. As before, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$.
 
 \subsubsection{Volume path tracing}
-Now let us apply importance sampling to obtain a first technique to render scattering materials,  \emph{volume path tracing}~\cite{Rushmeier1988}. We start by using the integral form of the radiative transfer equation~\ref{eq:integralformrte}. For the sake of this example, we assume a non emissive homogeneous medium, so that the coefficients do not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
+Now let us apply importance sampling to obtain a first technique to render scattering materials, namely \emph{volume path tracing}~\cite{Rushmeier1988}. We start by using the integral form of the radiative transfer equation~\ref{eq:integralformrte}. For the sake of this example, we assume a non emissive homogeneous medium, so that the coefficients do not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
 
 \begin{figure}
 \centering
@@ -372,50 +375,50 @@ Now let us apply importance sampling to obtain a first technique to render scatt
 \label{fig:vpt}
 \end{figure}
 
-The algorithm, traces a ray $-\vec{\omega}$ from the camera, hitting the surface at some point $\mathbf{x}_o$. We need to evaluate $L_r(\mathbf{x}_o, \vec{\omega})$. We first evaluate $r$ as the distance to the other side of the medium, hitting a point $\mathbf{x}_t = \mathbf{x}_o - r \vec{\omega}$. Because of the assumption of homogenous medium, the transmittance is easily evaluated:
+The algorithm, traces a ray from the camera direction $-\vec{\omega}$. The ray hits the surface at some point $\mathbf{x}_o$. We need to evaluate $L_r(\mathbf{x}_o, \vec{\omega})$. We first evaluate $r$ as the distance to the other side of the medium, hitting a point $\mathbf{x}_t = \mathbf{x}_o - r \vec{\omega}$. Because of the assumption of homogenous medium, the transmittance is easily evaluated:
 \begin{equation*}
 T_r(\mathbf{x}_t, \vec{\omega}) = \exp\left(-\int_0^r \sigma_t dr'\right) = e^{-\sigma_t r}.
 \end{equation*}
-While $L^0(\mathbf{x}_t, \vec{\omega})$ can be evaluate by recursively evaluating path tracing in direction $-\vec{\omega}$. Now we want to evaluate the second part of Equation~\ref{eq:integralformrte}. For this, we use Monte Carlo integration with importance sampling. We first reparameterize the integral by imposing $s = r - r'$:
+We evaluate $L^0(\mathbf{x}_t, \vec{\omega})$ by continuing the path outside the medium in direction $-\vec{\omega}$. Now, we want to evaluate the second part of Equation~\ref{eq:integralformrte}, which is $L_r^*(\mathbf{x}_o, \vec{\omega})$ from Equation~\ref{eq:fullformintegralpacked}. For this, we use Monte Carlo integration with importance sampling. We first reparameterize the integral by imposing $s = r - r'$:
 \begin{equation*}
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \int_0^r \sigma_s \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', -\vec{\omega})  d\omega' T_{s}(\mathbf{x}', -\vec{\omega})  ds.
+L_r^*(\mathbf{x}_o, \vec{\omega}) = \int_0^r \sigma_s \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})  d\omega' T_{s}(\mathbf{x}', -\vec{\omega})  ds.
 \end{equation*}
-Note that $\mathbf{x}' = \mathbf{x}_o - s \vec{\omega} = \mathbf{x}_t + r' \vec{\omega}$. Now we can write the Monte Carlo formulation sampling both integrals at the same time:
+Note that $\mathbf{x}' = \mathbf{x}_o - s \vec{\omega} = \mathbf{x}_t + r' \vec{\omega}$. Now we can write the Monte Carlo estimator sampling both integrals at the same time:
 \begin{equation}
 \label{eq:lrintermediate}
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \frac{\sigma_s L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', -\vec{\omega}) \exp(-\sigma_t s)}{\text{pdf}(s) \text{pdf}(\vec{\omega}')}.
+\hat{L}_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N\sum_{q=1}^M \frac{\sigma_s L(\mathbf{x}_o - s_p, \vec{\omega}, \vec{\omega}'_q) p(\mathbf{x}_o - s_p, \vec{\omega}, \vec{\omega}'_q, \vec{\omega}) \exp(-\sigma_t s_p)}{\text{pdf}(s_p) \text{pdf}(\vec{\omega}'_q)}.
 \end{equation}
-For now, we assume that $s < r$, i.e. we are always sampling a point within the medium. Now, we need to choose the pdfs. For standard phase functions such as Heyney-Greenstein~\cite{Henyey1940}, it is possible to analytically find a way to importance sample a vector $\vec{\omega'}$. So, if the vector is carefully chosen, we have $\text{pdf}(\vec{\omega}') = p(\mathbf{x}', \vec{\omega}', -\vec{\omega})$. Then, we can sample $s$ according to the formula:
+For now, we assume that $s_p < r$, i.e. we are always sampling a point within the medium. Now, we need to choose the pdfs.  We can sample $s_p$ according to the formula:
 \begin{equation*}
-s = \frac{-\ln(1 - \xi)}{\sigma_t},
+s_p = \frac{-\ln(1 - \xi)}{\sigma_t},
 \end{equation*}
-for $\xi \in [0,1)$, that corresponds to a $\text{pdf}(s) = \sigma_t \exp(-s \sigma_t)$. Plugging it in~\ref{eq:lrintermediate} we get the form
+for $\xi \in [0,1)$, that corresponds to a $\text{pdf}(s_p) = \sigma_t \exp(-s_p \sigma_t)$. Once we have chosen $s_p$, we can move onto sampling $\vec{\omega}'_q$. For standard phase functions such as Henyey-Greenstein~\cite{Henyey1940}, it is possible to analytically find a way to importance sample a vector $\vec{\omega}'_q$. So, if the vector is carefully chosen, we have $\text{pdf}(\vec{\omega}'_p) = p(\mathbf{x}_o - s_p \vec{\omega}, \vec{\omega}'_q, \vec{\omega})$.
+
+Plugging it in~\ref{eq:lrintermediate} we get the form
 \begin{equation*}
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \alpha L(\mathbf{x}', \vec{\omega}'),
+\hat{L}_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \sum_{q=1}^M \alpha L(\mathbf{x}_o - s_p, \vec{\omega}, \vec{\omega}'_q),
 \end{equation*}
 where $\alpha = \sigma_s / \sigma_t = \sigma_s / (\sigma_s + \sigma_a)  $ is called the \emph{single scattering albedo}. Note that $0 < \alpha < 1$.  Finally, we can introduce an additional importance sampling. We introduce a scattering probability $\text{pdf}_s = \alpha$. We decide then if we want to either scatter of absorb the photon, using russian roulette~\cite{Arvo1990}. If we decide to absorb the photon, we simply terminate the path. With this procedure in place , we get our final formulation
 \begin{equation*}
-L_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \alpha \frac{L(\mathbf{x}', \vec{\omega}')} {\text{pdf}_s} = \sum_{p=1}^N  L(\mathbf{x}', \vec{\omega}'). 
+\hat{L}_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \sum_{q=1}^M\alpha \frac{L(\mathbf{x}_o - s_p, \vec{\omega}'_q)} {\text{pdf}_s} = \sum_{p=1}^N\sum_{q=1}^M L(\mathbf{x}_o - s_p, \vec{\omega}'_q). 
 \end{equation*}
-From this result, we see that we just need to recursively evaluate radiance to get the final result. At the next recursive step, we will evaluate a new $s$ and $\vec{\omega}'$, continue the process with probability $\alpha$ and so on. This creates a random walk within the medium, that does not terminate for $s < r$. If $s > r$, it means that we are exiting the medium. In this case, we continue path tracing from the exit point in the last evaluated direction $\vec{\omega}'$.
+From this result, we see that we just need to recursively evaluate radiance to get the final result. At the next recursive step, we will evaluate a new $s_p$ and $\vec{\omega}'_q$, continue the process with probability $\alpha$ and so on. This creates a random walk within the medium, that does not terminate for $s_p < r$. If $s_p > r$, it means that we are exiting the medium. In this case, we continue path tracing from the exit point in the last evaluated direction $\vec{\omega}'_q$.
 
 \subsubsection{The extended rendering equation}
 
-Instead of using the various forms of the radiative transfer equation, we can use the form of the rendering equation in Equation~\ref{eq:bssrdfintegral}. Jensen and Buhler~\cite{Jensen2002} first proposed one of such techniques, hierarchical integration. In general, we want to be able to sample points and directions on the surface of the scattering media, so that we can solve the rendering equation via Monte Carlo as
+Instead of using the various forms of the radiative transfer equation, we can use the form of the rendering equation in Equation~\ref{eq:bssrdfintegral}. Jensen and Buhler~\cite{Jensen2002} proposed one such technique, namely hierarchical integration. In general, we want to be able to sample points and directions on the surface of the scattering medium, so that we can solve the rendering equation via Monte Carlo integration using
 \begin{equation*}
-L(\mathbf{x}_o, \vec{\omega}_o) \approx \sum_{k = 1}^K \frac{S(\mathbf{x}_k, \vec{\omega}_k, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_k, \vec{\omega}_k) (\vec{n}_k \cdot \vec{\omega}_k)}{\text{pdf}(\vec{\omega}_k) \text{pdf}(A_k)} .
+\hat{L}(\mathbf{x}_o, \vec{\omega}_o) \approx \sum_{p = 1}^N \sum_{q = 1}^M \frac{S(\mathbf{x}_{i,p}, \vec{\omega}_{i,q}, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_{i,p}, \vec{\omega}_{i,q}) (\vec{n}_{i,p} \cdot \vec{\omega}_{i,q})}{\text{pdf}(\vec{\omega}_{i,q}) \text{pdf}(\mathbf{x}_{i,p})}.
 \end{equation*}
-We reference our note in Appendix~\ref{sec:pointcloudnote} for a rendering technique that uses this formulation of the extended rendering equation.
+We refer to our note in Appendix~\ref{sec:pointcloudnote} for a rendering technique that uses this estimator for the extended rendering equation.
 
 \subsection{Analytical BSSRDF Models}
 
-So far, we have defined the BSSRDF as a proportionality constant between radiometric quantities. Given some assumptions about light propagation in materials, it is possible to derive analytical formulas for a BSSRDF for practical use in rendering. In the case of analytical models, Jensen et al.~\cite{Jensen2001} first provided an analyitical BSSRDF function based on the dipole solution on the work by Farrell et al.~\cite{Farrell1992} (the standard dipole). In this section, we outline the derivation of three analytical models, the standard dipole~\cite{Jensen2001}, the better dipole~\cite{dEon2012} and the directional dipole~\cite{Frisvad2014}. Our note in Appendix~\ref{sec:jensennote} provides additional derivation details for the interested reader. 
+So far, we have defined the BSSRDF as a proportionality constant between radiometric quantities. Given some assumptions about light propagation in materials, it is possible to derive analytical formulas for a BSSRDF for practical use in rendering. In the case of analytical models, Jensen et al.~\cite{Jensen2001} first provided an analyitical BSSRDF function based on the dipole solution in the work of Farrell et al.~\cite{Farrell1992} (the standard dipole). In this section, we outline the derivation of three analytical models, the standard dipole~\cite{Jensen2001}, the better dipole~\cite{dEon2012} and the directional dipole~\cite{Frisvad2014}. Our note in Appendix~\ref{sec:jensennote} provides additional derivation details for the interested reader. 
 
-Generically, the light exiting at a point $\mathbf{x}_o$ on a direction $\vec{\omega}_o$ on a scattering medium can be tought as coming from three contributions: direct transmission, single and multiple scattering. We define $\vec{\omega}_{21}$ as the refraction of $\vec{\omega}_o$ inside the medium oriented towards the surface. Direct transmission is the contribution of the light coming from direction $-\vec{\omega}_{21}$ that does not scatter along the path (see Equation~\ref{eq:l0r}). The single scattering term comes from light that enters at any point of the medium, scatters once, then aligns with $\vec{\omega}_{21}$ to refract out in direction $\vec{\omega}_o$. The multiple scattering term is similar, but it includes light that has scattered more than once before exiting the medium. 
+Generically, the light exiting from a scattering medium at a point $\mathbf{x}_o$ at a direction $\vec{\omega}_o$ can be thought as coming from three contributions: direct transmission, single and multiple scattering. We define $\vec{\omega}_{21}$ as the refraction of $\vec{\omega}_o$ into the medium oriented towards the surface. Direct transmission is the contribution of the light coming from direction $-\vec{\omega}_{21}$ that does not scatter along the path (see Equation~\ref{eq:l0r}). The single scattering term comes from light that enters at any point of the medium, scatters once, then aligns with $\vec{\omega}_{21}$ to refract out in direction $\vec{\omega}_o$. The multiple scattering term is similar, but it includes light that has scattered more than once before exiting the medium. 
 
-Single and multiple scattering are usually separated due to their different characteristics. Single scattering is highly peaked and directional, while multiple scattering can be handled as a stochastic process. The three analytical model we describe model the scattering of light as a diffusion process~\cite{Stam1995}. As such, the standard and better dipole model multiple scattering only, while the directional dipole models also part of the single scattering contribution. 
-
-
+Single and multiple scattering are usually separated due to their different characteristics. Single scattering is highly peaked and directional, while multiple scattering can be handled as a stochastic process. The three analytical models we describe model the scattering of light as a diffusion process~\cite{Stam1995}. As such, the standard and better dipole model multiple scattering only, while the directional dipole models also part of the single scattering contribution. 
 
 As before, we define operators to simplify notation:
 \begin{equation*}
@@ -435,33 +438,33 @@ where $Q_0 = q \operator{G}$ and $\vec{Q} = q \vec{\operator{G}}$ are the integr
 \label{eq:fluencepoint}
 \phi(\mathbf{x}) = \frac{\alpha' \Phi_i}{4 \pi D} \frac{e^{-\sigma_{tr} r}}{r}.
 \end{equation}
-And for the directional solution, we get:
+And for the ray source term, we get:
 \begin{equation}
 \label{eq:fluenceray}
 \phi(\mathbf{x}) = \frac{\alpha' \Phi_i}{4 \pi D} \frac{e^{-\sigma_{tr} r}}{r} \left(1 + 3D \frac{1 + \sigma_{tr} r}{r} \cos\theta \right).
 \end{equation}
-Now that we have a formulation for the fluence, we need to connect it to the BSSRDF. First, we consider only the part of the BSSRDF depending on the diffusion approximation $S_d$. From the definition of BSSRDF in Equation~\ref{eq:bssrdf} and assuming a pure Fresnel boundary we get to this formulation in terms of the diffusive exitant radiance $M_d$
+Now that we have a formulation for the fluence, we need to connect it to the BSSRDF. First, we consider only the part of the BSSRDF depending on the diffusion approximation $S_d$. From the definition of BSSRDF in Equation~\ref{eq:bssrdf} and assuming a pure Fresnel boundary we get to this formulation in terms of the diffusive radiant exitance $M_d$
 \begin{equation*}
 S_d(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o)  =  \frac{1}{4\pi T_{12}C_\phi(1/\eta)} \frac{d M_d(\mathbf{x}_o)}{d \Phi_i(\mathbf{x}_i, \vec{\omega}_i)} .
 \end{equation*} 
-Through the diffusion approximation, we can approximate the diffusive exitant radiance $M_d$ as
+Through the diffusion approximation, we can approximate the diffusive radiant exitance $M_d$ as
 \begin{equation*}
 M_d(\mathbf{x}_o) =  C_\phi(\eta) \phi(\mathbf{x}_o) - C_E(\eta) D \nabla\phi(\mathbf{x}_o) \cdot \vec{n}_o,
 \end{equation*}
-where $T_{12}$ is the incoming Fresnel coefficient, $C_\phi$ amnd $C_E$ are the first two order fresnel integrals, that can be approximated with analytical formulas~\cite{dEon2011}. The value $\eta$ is the index of refraction of the medium. By plugging in our solutions for the fluence in Equations~\ref{eq:fluencepoint} and~\ref{eq:fluenceray}, we get the analytical formula for a BSSRDF in a infinite medium. In the case of a point source term, we obtain
+where $T_{12}$ is the incoming Fresnel coefficient, $C_\phi$ amnd $C_E$ are the first two orders of Fresnel integrals, which can be approximated by analytical formulas~\cite{dEon2011}. The value $\eta$ is the index of refraction of the medium. By plugging in our solutions for the fluence in Equations~\ref{eq:fluencepoint} and~\ref{eq:fluenceray}, we get the analytical formula for a BSSRDF if we disregard the fact that light does not scatter outside the medium. In the case of a point source term, we obtain
 \begin{equation*}
 S_d(\mathbf{x}_i, \mathbf{x}_o)  = \frac{1}{4\pi C_\phi(1/\eta)} \frac{\alpha'}{4 \pi^2} \frac{e^{-\sigma_{tr} r}}{r^3} \left[ C_\phi(\eta) \frac{r^2}{D} + C_E(\eta) (1 + \sigma_{tr} r) \mathbf{x} \cdot \vec{n}_o \right],
 \end{equation*}
-where $\mathbf{x} = \mathbf{x}_o - \mathbf{x}_i$ and $r = \|x\|$. This is the better dipole~\cite{dEon2012}. We can further simplify this if we take the limit of the Fresnel integrals, obtaining $C_\phi(\eta) = 0$, $C_E(\eta) = 1$ and $C_\phi(1/\eta) = 1/4$. This leads to
+where $\mathbf{x} = \mathbf{x}_o - \mathbf{x}_i$ and $r = \|x\|$. This is the term used for the better dipole~\cite{dEon2012}. We can further simplify if we take the limit of the Fresnel integrals, obtaining $C_\phi(\eta) = 0$, $C_E(\eta) = 1$ and $C_\phi(1/\eta) = 1/4$. This leads to
 \begin{equation*}
 S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\sigma_{tr} r}}{r^3} (1 + \sigma_\text{tr} r) \mathbf{x} \cdot \vec{n}_o,
 \end{equation*}
-which is the standard dipole~\cite{Jensen2001}. Finally, if we use the ray source solution, we obtain
+which is used for standard dipole~\cite{Jensen2001}. Finally, if we use the ray source solution, we obtain
 \begin{multline*}
 S_d(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o)  = \frac{1}{4\pi C_\phi(1/\eta)} \frac{1}{4 \pi^2} \frac{e^{-\sigma_\text{tr} r}}{r^3} \bigg[ C_\phi(\eta) (\frac{r^2}{D} +  3 (1 + \sigma_\text{tr} r) \mathbf{x}\cdot\vec{\omega}_{12} ) \\ - C_E(\eta) \left[3D (1 + \sigma_\text{tr} r) \vec{\omega}_{12} \cdot \vec{n}_o - \left((1 + \sigma_\text{tr} r) + 3D \frac{3 (1 + \sigma_\text{tr} r)  + (\sigma_\text{tr} r)^2}{r^2}\mathbf{x}\cdot\vec{\omega}_{12}\right) \mathbf{x} \cdot \vec{n}_o\right] \bigg],
 \end{multline*}
-which is the directional dipole~\cite{Frisvad2014}. 
-
+which is used for he directional dipole~\cite{Frisvad2014}. 
+%
 \begin{figure}
 \centering
 \begin{tabular}{@{}c@{\hskip 1em}c@{}}
@@ -471,18 +474,18 @@ Standard and better dipole &  Directional dipole \\
 \caption{Placement of virtual (red) and real (blue) sources for the dipoles described in the text.} 
 \label{fig:bssrdfsources}
 \end{figure}
-
-As we mentioned, all these solutions are suitable only for an infinite medium with coefficients $\sigma_s$, $\sigma_a$ and $g$. To get a full BSSRDF, we need to introduce a boundary. We assume a refractive boundary with relative index of refraction $\eta$ as the ratio of the index of refraction of the incoming medium on the index of the refraction of the scattering media. For the vast majority of analytical BSSRDFs, we derive a solution for a semi infinite plane configuration, then correct the formulas for non planar geometry.
+%
+As we mentioned, all these solutions are suitable only when light is allowed to scatter within an infinite medium with coefficients $\sigma_s$, $\sigma_a$ and $g$. To get a full BSSRDF, we need to introduce a boundary. We assume a refractive boundary with relative index of refraction $\eta$ as the ratio of the index of refraction of the incoming medium to the index of the refraction of the scattering medium. For the vast majority of analytical BSSRDFs, we derive a half-space solution based on a plane surface, then correct the formulas for non planar geometry.
 
 To achieve a solution for a point $\mathbf{x}_o$ on a semi infinite plane with normal $\vec{n}_o$, we let the fluence $\phi$ vanish at the boundary. This leads for the following boundary condition for the diffusion approximation: 
 \begin{equation*}
 \phi(\mathbf{x}_o) - 2 A d_e (\vec{n}_o \cdot \nabla) \phi(\mathbf{x}_o) = 0
 \end{equation*}
-Where $d_e$ is called extrapolation distance, $A(\eta)$ is a term that accounts for mismatched index of refraction at the boundaries. The idea here is that the diffusion approximation matches better the exact solution if we let the fluence vanish not at the boundary, but at an \emph{extrapolated boundary} at distance $2 A d_e$ along the normal direction. This boundary condition can be satisfied by introducing two light sources, a positive \emph{real} source and a negative \emph{virtual} source, that together form a \emph{dipole configuration}.  Standard and better dipole use two point lights in the configuration to the left of Figure~\ref{fig:bssrdfsources}, with the real source (blue) below and the virtual source (red) above the surface. The directional dipole use a real ray source on $\mathbf{x}_i$, and a virtual ray source above the surface (see right of Figure~\ref{fig:bssrdfsources}). The solutions for infinite media reported above are then evaluated for real and virtual source, then the results are combined to obtain the final BSSRDF value for rendering. 
+Where $d_e$ is called extrapolation distance, $A(\eta)$ is a term that accounts for mismatched index of refraction at the boundaries. The idea here is that the diffusion approximation matches better the exact solution if we let the fluence vanish not at the boundary, but at an \emph{extrapolated boundary} at distance $2 A d_e$ along the normal direction. This boundary condition can be satisfied by introducing two light sources, a positive \emph{real} source and a negative \emph{virtual} source, that together form a \emph{dipole configuration}.  Standard and better dipole use two point lights in the configuration to the left of Figure~\ref{fig:bssrdfsources}, with the real source (blue) below and the virtual source (red) above the surface. The directional dipole uses a real ray source on $\mathbf{x}_i$, and a virtual ray source above the surface (see right of Figure~\ref{fig:bssrdfsources}). The solutions for infinite media reported above are then evaluated for the real and the virtual source, and the results are then combined to obtain the final BSSRDF value for rendering. 
 
 \section{Non-scattering media}
 \label{sec:brdftheory}
-In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application that the BSSRDF.   
+In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application than the BSSRDF.   
 
 \subsection{The BRDF}
 \begin{figure}
@@ -493,14 +496,14 @@ In this section, we will introduce some simplifications to the scattering theory
 \label{fig:brdf_configuration}
 \end{figure}
 
-The methods that include scattering media we described in Section~\ref{sec:renderingscattering} are usually quite complex to render, requiring a high number of samples to converge. For many materials such as plastic or metal, the scattering process  is quite restricted around the point of emergence $\mathbf{x}_o$. For these particular materials, we can introduce some simplifications to obtain more tractable functions. We assume that the BSSRDF is limited across a small area around the emergence point $\mathbf{x}_o$, and zero everywhere else. In this configuration, we can assume that the radiance is constant across the plane ($L_i(\mathbf{x}_i, \vec{\omega}_i) \approx L_i(\vec{\omega}_i)$). We also need to assume the material to be locally isotropic, i.e. its properties do not change across the surface. In this case, we can approximate the outgoing radiance as:
+The methods that include scattering media we described in Section~\ref{sec:renderingscattering} are usually quite complex to render, requiring a high number of samples to converge. For many materials such as plastic or metal, the scattering process  is quite restricted around the point of emergence $\mathbf{x}_o$. For these particular materials, we can introduce some simplifications to obtain more tractable functions. We assume that the BSSRDF is limited across a small area around the emergence point $\mathbf{x}_o$, and zero everywhere else. In this configuration, we can assume that the radiance is constant across the plane ($L_i(\mathbf{x}_i, \vec{\omega}_i) \approx L_i(\vec{\omega}_i)$). We also need to assume that the material is locally isotropic, i.e. its properties do not change across the surface. In this case, we can approximate the outgoing radiance as:
 \begin{equation*}
 d L(\mathbf{x}_o, \vec{\omega}_o) \approx \int_A d L(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i).
 \end{equation*}
-By the definition of flux, irradiance and the assumption of constant radiance outlined above, we obtain 
+By the definitions of flux and irradiance and the assumption of constant radiance outlined above, we obtain 
 \begin{equation*}
 \begin{split}
-d L(\mathbf{x}_o, \vec{\omega}_o) &\approx \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \omega_i  \\ &= L_i(\vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d \omega_i \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o)   d A_i \\ &= d E_i(\vec{\omega}_i) \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d A_i.
+d L(\mathbf{x}_o, \vec{\omega}_o) &= \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d A_i d \omega_i  \\ &\approx L_i(\vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d \omega_i \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o)   d A_i \\ &= d E_i(\vec{\omega}_i) \int_A S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d A_i.
 \end{split}
 \end{equation*}
 The last integral eliminates the dependency on $\mathbf{x}_i$, as it is a function purely dependent on the point of emergence $\mathbf{x}_o$ the two angular vectors $\vec{\omega}_i$ and $\vec{\omega}_o$. This proportionality constant between incoming irradiance and outgoing radiance $f_r$
@@ -508,12 +511,12 @@ The last integral eliminates the dependency on $\mathbf{x}_i$, as it is a functi
 \label{eq:brdf}
 d L(\mathbf{x}_o, \vec{\omega}_o) = f_r(\mathbf{x}_o, \vec{\omega}_i, \vec{\omega}_o) d E_i(\mathbf{x}_o, \vec{\omega}_i),
 \end{equation}
-is called \emph{bidirectional reflectance distribution function} (BRDF)~\cite{Nicodemus1977}. The BRDF is measured in $\siunitnospace{\per \steradian}$. As before, we can obtain the reflected radiance from the definition above:
+is called the \emph{bidirectional reflectance distribution function} (BRDF)~\cite{Nicodemus1977}. The BRDF is measured in $\siunitnospace{\per \steradian}$. As before, we can obtain the reflected radiance from the definition above:
 \begin{equation}
 \label{eq:brdfintegral}
 L(\mathbf{x}, \vec{\omega}) = \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) L_i(\mathbf{x}, \vec{\omega}_i) (\vec{n} \cdot \vec{\omega}_i) d{\omega}_i  \siunit{\watt \per \square \metre \per \steradian}.
 \end{equation}
-This is called the reflectance equation. As before, we can add the emitted radiance $L_e$ to obtain the traditional form of the rendering equation~\cite{Kajiya1986}. We can easily extend the two properties of the BSSRDF in Equations~\ref{eq:bssrdfconservation} and~\ref{eq:bssrdfreciprocity}. Conservation of energy imposes
+This is called the reflected radiance equation. As before, we can add the emitted radiance $L_e$ to obtain the traditional form of the rendering equation~\cite{Kajiya1986}. We can easily extend the two properties of the BSSRDF in Equations~\ref{eq:bssrdfconservation} and~\ref{eq:bssrdfreciprocity}. Conservation of energy imposes
 \begin{equation*}
 0 \leq \int_\Omega f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o)  (\vec{n} \cdot \vec{\omega}_i) d{\omega}_i \leq 1.
 \end{equation*}
@@ -521,7 +524,7 @@ On the other hand, Helmholtz reciprocity gives
 \begin{equation*}
 f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_o,  \vec{\omega}_i).
 \end{equation*}
-From the reflectance equation above, we can see why BRDFs are usually used in hard real time application, since they require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). Moreover, in applications such as games we may have a finite number of point and directional lights, that simplify the integral in Equation~\ref{eq:brdfintegral} as a sum over all the lights.
+From the reflectance equation above, we can see why BRDFs are usually employed in real time applications, since they require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). Moreover, in applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
 
 \subsection{Empirical BRDFs}
 \begin{figure}
@@ -537,28 +540,28 @@ $f_r(\theta_i, \phi_i, \theta_o, \phi_o)$ &  $f_r(\theta_h, \phi_h, \theta_d, \p
 
 Given the low dimensionality of the BRDF, it is possible to actually measure and tabulate it, so that it can be used in future renderings. If we assume a non-spatially varying BRDF (dropping the dependency from $\mathbf{x}_o$ in Equation~\ref{eq:brdf}) and expressing each vector $\vec{\omega}$ in terms of its polar angles $\theta, \phi$, we obtain a four dimensional function:
 \begin{equation*}
-f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_i, \phi_i, \theta_o, \phi_o)
+f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_i, \phi_i, \theta_o, \phi_o).
 \end{equation*}
 Moreover, from now on we assume the BRDF to be \emph{isotropic}, so that it depends only on the relative angle $\phi_\text{diff} = \phi_o - \phi_i$:
 \begin{equation*}
-f_r^\text{iso}(\theta_i, \phi_i, \theta_o, \phi_o) = f_r^\text{iso}(\theta_i, \theta_o, \phi_\text{diff})
+f_r^\text{iso}(\theta_i, \phi_i, \theta_o, \phi_o) = f_r^\text{iso}(\theta_i, \theta_o, \phi_\text{diff}).
 \end{equation*}
-Anisotropic materials (e.g. brushed metal) are rarer in nature and are usually created using some sort of manifacturing process.
-This na\"ive representation, presented in Figure~\ref{fig:brdfrepr}, can be used to store BRDFs in a compact way, tough with some issues. Generally, BRDFs tend to have a highly peaked region around the half vector:
-\begin{equation*}\vec{\omega}_h = \frac{\vec{\omega}_i + \vec{\omega}_o}{\|\vec{\omega}_i + \vec{\omega}_o\|}
+Anisotropic materials (e.g. brushed metal) are rarer in nature and are usually created using some sort of manufacturing process.
+This na\"ive representation, presented in Figure~\ref{fig:brdfrepr}, can be used to store BRDFs in a compact way, though with some issues. Generally, BRDFs tend to have a highly peaked region around the half vector:
+\begin{equation*}\vec{\omega}_h = \frac{\vec{\omega}_i + \vec{\omega}_o}{\|\vec{\omega}_i + \vec{\omega}_o\|},
 \end{equation*}
-where there is usually a strong peak due to reflection, or \emph{specular highlight}. If we use the na\"ive parametrization, we would encounter some discretization issues around $\vec{\omega}_h$. To avoid this loss of precision, it is important to represent the BRDF more accurately around the half vector. So for measured datasets such as the MERL dataset~\cite{Matusik2003}, the Rusinkiewicz half vector parameterization is used (see Figure~\ref{fig:brdfrepr}). This representation measures angles relative to the half vector instead of the surface normal:
+where there is usually a strong peak due to reflection, or \emph{specular highlight}. If we use the na\"ive parametrization, we would encounter some discretization issues around $\vec{\omega}_h$. To avoid this loss of precision, it is important to represent the BRDF more accurately around the half vector. So for measured datasets such as the MERL dataset~\cite{Matusik2003}, the Rusinkiewicz half-difference parameterization is used (see Figure~\ref{fig:brdfrepr}). This representation measures angles relative to the half vector instead of the surface normal:
 \begin{equation*}
-f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_h, \phi_h, \theta_d, \phi_d)
+f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_h, \phi_h, \theta_d, \phi_d),
 \end{equation*}
-In this case,  isotropic materials can be described by dropping the dependency on $\phi_d$, i.e. the overall rotation of the system around the normal.
+where $\theta_h, \phi_h$ are the spherical coordinates of $\vec{\omega}_h$, and where $\theta_d, \phi_d$ are the spherical coordinates of $\vec{\omega}_i$ rotated so that $\vec{\omega}_h$ matches the reference frame of $\vec{n}$. In this case,  isotropic materials can be described by dropping the dependency on $\phi_d$, i.e. the overall rotation of the system around the normal.
 
-After we have chosen our representation, we can pack our isotropic BRDF in a 3D data structure. Note that similar packing reprensetations exist also for BSSRDFs~\cite{Donner2009}, but the high dimensionality of the BSSRDF (5 up to 14 dimensions) renders these representations somewhat less practical.
+After we have chosen our representation, we can pack our isotropic BRDF in a 3D data structure. Note that similar packing representations exist also for BSSRDFs~\cite{Donner2009}, but the high dimensionality of the BSSRDF (5 up to 14 dimensions) renders these representations somewhat less practical.
 
 \section{Rendering techniques} 
 \label{sec:renderingparadigms}
 
-In the previous sections, we introduced theory and algorithms to render physically based materials, without going into details on how the different algorithms are implemented. To conclude our background section, we introduce two of the main paradigms used to render physically based materials on GPUs, namely rasterization and ray tracing. 
+In the previous sections, we introduced theory and algorithms for rendering physically based materials, without going into details on how the different algorithms are implemented. To conclude our background section, we introduce two of the main paradigms used to render physically based materials on GPUs, namely rasterization and ray tracing. 
 
 \subsection{Rasterization}
 
@@ -569,15 +572,15 @@ In the previous sections, we introduced theory and algorithms to render physical
 \label{fig:rasterpipeline}
 \end{figure}
 
-The first of the two techniques is rasterization. In this technique, some rendering primitives, triangles, are scanned one by one and then drawn on the screen. One example of algorithms used to transform triangles into pixel-size elements (or fragments) is scanline rendering~\cite{Wylie1967}, tough it depends on the GPU vendor. By its nature, rasterization can be highly parallelized, since every primitive can be drawn in parallel. On modern graphics cards, the rasterization process is performed in hardware as part of the \emph{graphics pipeline}, a highly fine tuned sequence of steps, both hardware and software, to render triangles efficiently. A simplified version of the pipeline is illustrated in Figure~\ref{fig:rasterpipeline}. The pipeline is composed of programmable parts (called \emph{shaders}) and hardware parts, that are only controllable through state flags. The core rasterization process, transforming primitives into fragments, is executed in parallel by a specified hardware unit. 
+The first of the two techniques is rasterization. In this technique, some rendering primitives, triangles, are scanned one by one and then drawn on the screen. One example of algorithms used to transform triangles into pixel-size elements (or fragments) is scanline rendering~\cite{Wylie1967}, though it depends on the GPU vendor. By its nature, rasterization is highly parallelizable, since every primitive can be drawn in parallel. On modern graphics cards, the rasterization process is performed in hardware as part of the \emph{graphics pipeline}, a highly fine tuned sequence of steps, both hardware and software, to render triangles efficiently. A simplified version of the pipeline is illustrated in Figure~\ref{fig:rasterpipeline}. The pipeline is composed of programmable parts (called \emph{shaders}) and hardware parts, that are only controllable through state flags. The core rasterization process, transforming primitives into fragments, is executed in parallel by a specified hardware unit. 
 
-Let us describe the life of a single triangle through the pipeline. Once the CPU issues the command to draw some triangles, a \emph{draw call} (Figure~\ref{fig:rasterpipeline}, a), the pipeline starts on the GPU. For each of the three vertices composing a triangle, we independently execute a programmable part, called the \emph{vertex shader}, that allows operation such as model and perspective transformation (Figure~\ref{fig:rasterpipeline}, b). Once the vertices have been processed, the primitive is assembled and then processed by the hardware rasterizer, generating a certain number of fragments  (Figure~\ref{fig:rasterpipeline}, c). For each fragment, we execute another programmable shader, the \emph{fragment shader}. This stage needs to output the final color of the fragment, so we light interaction is usually added at this stage (Figure~\ref{fig:rasterpipeline}, d). Multiple attributes can be passed inbetween vertex and fragment shader, that will be interpolated using the triangle's barycentric coordinates. This allows to interpolate attributes, such as normal and texture coordinates, across the triangle, leading to a more accurate appearance. 
+Let us describe the life of a single triangle through the pipeline. Once the CPU issues the command to draw some triangles, a \emph{draw call} (Figure~\ref{fig:rasterpipeline}, a), the pipeline starts on the GPU. For each of the three vertices composing a triangle, we independently execute a programmable part, called the \emph{vertex shader}, that allows operation such as model and perspective transformation (Figure~\ref{fig:rasterpipeline}, b). Once the vertices have been processed, the primitive is assembled and then processed by the hardware rasterizer, generating a certain number of fragments  (Figure~\ref{fig:rasterpipeline}, c). For each fragment, we execute another programmable shader, the \emph{fragment shader}. This stage needs to output the final color of the fragment, so light interaction is usually added at this stage (Figure~\ref{fig:rasterpipeline}, d). Multiple attributes can be passed in between vertex and fragment shader, which will be interpolated using the triangle's barycentric coordinates. This allows interpolation of attributes, such as normal and texture coordinates, across the triangle, leading to a more accurate appearance. 
 
 Once the fragments are generated, they need to be stored on the image plane. Note that multiple fragments can land on the same pixel, and that the order of landing of the fragments is not defined, since the full pipeline is entirely asynchronous. So, modern GPUs use another hardware unit, the Render OutPut unit (ROP, Figure~\ref{fig:rasterpipeline}, e) to determine how to store the fragments in the final image. This unit usually can perform depth test (via a Z-buffer) or blend the fragments, allowing us to obtain a consistent result across invocations.
 
-This is only a simplified view of the full graphics pipeline, that, allows tessellation (domain and hull shaders), geometry manipulation (geometry shaders) or writing back into a vertex stream (transform feedback). There are also shaders that are completely detached from the graphics pipeline (compute shaders), that allows us to perform tasks in parallel on the GPU that are not directly related a graphics task. 
+This is only a simplified view of the full graphics pipeline, that, allows tessellation (domain and hull shaders), geometry manipulation (geometry shaders) or writing back into a vertex stream (transform feedback). There are also shaders that are completely detached from the graphics pipeline (compute shaders), allowing to perform tasks in parallel on the GPU that are not directly related to a graphics task. 
 
-Rasterization is extensively used in game development and real time applications, given its high speed and predictability. However, it is not particularly well suited to propagate light across a scene, making it difficult to achieve complex optical effects, that often require ad-hoc solutions.
+Rasterization is extensively used in game development and real time applications, given its high speed and predictability. However, it is not particularly well suited for propagating light across a scene, making it difficult to achieve complex optical effects, why these often require ad-hoc solutions.
 
 \subsection{Ray tracing}
 
@@ -589,13 +592,13 @@ Rasterization is extensively used in game development and real time applications
 \label{fig:ray_tracing}
 \end{figure}
 
-We start this section by describing \emph{ray casting}, that can be considered the dual technique to rasterization. In rasterization, we match each triangle to its final position on the screen. In ray casting, we do the opposite: for each pixel on the screen, we find the corresponding triangles that land within that pixel. This equates to \emph{shooting} a ray through the pixel, and intersecting it though the scene geometry. Once the hitpoint is found, attributes can be generated and the point shaded as in a fragment shader. 
+We start this section by describing \emph{ray casting}, that can be considered the dual technique to rasterization. In rasterization, we match each triangle to its final position on the screen. In ray casting, we do the opposite: for each pixel on the screen, we find the corresponding triangles that land within that pixel. This equates to \emph{shooting} a ray through the pixel, and intersecting it though the scene geometry. Once the hit point is found, attributes can be generated and the point shaded as in a fragment shader. 
 
-We note that, once the data structure is established, we can trace ray from any point to another in the scene. So ray tracing describes this process of querying this data structure to generate intesection points. Depending on the algorithm used, ray tracing can be used as a base of multiple rendering algorithms, such as the volume path tracing we illustrated in Section~\ref{sec:renderingscattering}. One the first ray tracing algorithms was proposed by Whitted~\cite{Whitted1980}.
+We note that, once the data structure is established, we can trace rays from any point to another in the scene. So ray tracing describes this process of querying a data structure to generate intersection points. Depending on the algorithm used, ray tracing can be used as a base of multiple rendering algorithms, such as the volume path tracing we illustrated in Section~\ref{sec:renderingscattering}. One of the first ray tracing algorithms was proposed by Whitted~\cite{Whitted1980}.
 
-For the purposes of our thesis, we focus on GPU ray tracers. Modern GPU ray tracers build a tree data structure to efficiently lookup intersections. The most commonly used data structure is a \emph{bounding volume hierarchy}, or BVH. In a BVH, each of the primitives (usually triangles, but custom primitives such as spheres, cubes or quadrilaterals are possible) is enclosed in a bounding box. The various bounding boxes are then arranged in a tree data structure for fast lookup. Once a ray is traced, it is first inexpensively tested against the bounding boxes. For the bounding boxes that are hit, a expensive intersection test is performed to check for a hit. Depending on the shading algorithm, a callback can be issued at every encountered intersection (\emph{any hit}), or at the intersection closest to the camera (\emph{closest hit}). The process to trace a single ray in a two dimensional example is illustrated in Figure~\ref{fig:ray_tracing}. 
+For the purpose of this thesis, we focus on GPU ray tracers. Modern GPU ray tracers build a tree data structure to efficiently lookup intersections. The most commonly used data structure is a \emph{bounding volume hierarchy}, or BVH. In a BVH, each of the primitives (usually triangles, but custom primitives such as spheres, cubes or quadrilaterals are possible) is enclosed in a bounding box. The various bounding boxes are then arranged in a tree data structure for fast lookup. Once a ray is traced, it is first inexpensively tested against the bounding boxes. For the bounding boxes that are hit, an expensive intersection test is performed to check for a hit. Depending on the shading algorithm, a callback can be issued at every encountered intersection (\emph{any hit}), or at the intersection closest to the camera (\emph{closest hit}). The process to trace a single ray in a two dimensional example is illustrated in Figure~\ref{fig:ray_tracing}. 
 
-Many challenges need to be solved to obtain an efficient GPU ray tracer. The first challenge is recursion. In the case of an algorithm such as path tracing, a probabilistic recursive ray tracing call is performed at the closest hit. So, an efficient ray tracer needs to keep track of the state at each intersection, generically though a recursion stack (OptiX~\cite{Parker2010} is such an example, where the stack is build automatically at the instruction level). The second challenge is on how to manage the data structure if the geometry of the material changes, through deformation or animation. Simple rigid tranformations can be handled relatively inexpensively by the BVH, tough more complicated operations need to be done if  changes are performed at the single primitive level. Modern ray tracing techniques such as the TRBVH~\cite{Karras2013} can rebuild part of the BVH on the fly without excessive memory consumption. 
+Many challenges need to be solved to obtain an efficient GPU ray tracer. The first challenge is recursion. In the case of an algorithm such as path tracing, a probabilistic recursive ray tracing call is performed at the closest hit. So, an efficient ray tracer needs to keep track of the state at each intersection, generically though a recursion stack (OptiX~\cite{Parker2010} is such an example, where the stack is built automatically at the instruction level). The second challenge is on how to manage the data structure if the geometry of the material changes, through deformation or animation. Simple rigid tranformations can be handled relatively inexpensively by the BVH, tough more complicated operations need to be done if  changes are performed at the single primitive level. Modern ray tracing techniques such as the TRBVH~\cite{Karras2013} can rebuild part of the BVH on the fly without excessive memory consumption. 
 
 Given its state as a "natural" solution to light transport and its ability to model complex optical effects, ray tracing is commonly employed in the movie industry. Moreover, ray tracing scales better to scenes with a huge amount of triangles, such as in animated movies or virtual effects scenes. On the other hand, ray tracing is limited in the game developers community, due to smaller scenes and increased memory and lookup costs. Moreover, algorithms such as path tracing tend to give a noisier result, that is not acceptable in game applications. 
 
