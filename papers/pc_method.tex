@@ -28,50 +28,50 @@ A_i = \frac{1}{2} \|(\mathbf{v}^i_1 - \mathbf{v}^i_0) \times (\mathbf{v}^i_2 - \
 \end{equation*}
 Once we have defined our triangles, we can start describing out our solution. 
 
-Theoretically, we solve the standard rendering equation for BSSRDFs:
+Theoretically, we solve the standard reflectance equation for BSSRDFs:
 \begin{equation*}
-L(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i 
+L_r(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i 
 \end{equation*}
 We now solve the integral with Monte Carlo integration with importance sampling. We take $K$ samples from the area integral and one sample from the directional integral:
 \begin{equation}
 \label{eq:mc}
 \begin{split}
-L(\mathbf{x}_o, \vec{\omega}_o) &\approx \sum_{k = 1}^K \frac{S(\mathbf{x}_k, \vec{\omega}_k, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_k, \vec{\omega}_k) (\vec{n}_k \cdot \vec{\omega}_k)}{\text{pdf}(\vec{\omega}_k) \text{pdf}(A_k)} = \\
-&=  \sum_{k = 1}^K S(\mathbf{x}_k, \vec{\omega}_k, \mathbf{x}_o, \vec{\omega}_o) \Phi_{i,k}(\mathbf{x}_k, \vec{\omega}_k)
+\hat{L}_r(\mathbf{x}_o, \vec{\omega}_o) &\approx \sum_{k = 1}^K \frac{S(\mathbf{x}_{i,k}, \vec{\omega}_{i,k}, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_{i,k}, \vec{\omega}_{i,k}) (\vec{n}_{i,k}\cdot \vec{\omega}_{i,k})}{\text{pdf}(\vec{\omega}_{i,k}) \text{pdf}(\mathbf{x}_{i,k})} = \\
+&=  \sum_{k = 1}^K S(\mathbf{x}_{i,k}, \vec{\omega}_{i,k}, \mathbf{x}_o, \vec{\omega}_o) \Phi_{i,k}(\mathbf{x}_{i,k}, \vec{\omega}_{i,k})
 \end{split}
 \end{equation}
 
-The algorithm is composed of two phases. In the first phase, we generate the $K$ samples on the surface of the model, storing for each position $\mathbf{x}_k$, direction $\vec{\omega}_k$ and incoming flux $\Phi_{i,k}$. In the second phase, we render the final image evaluating the contribution at each pixel.
+The algorithm is composed of two phases. In the first phase, we generate the $K$ samples on the surface of the model, storing for each position $\mathbf{x}_{i,k}$, direction $\vec{\omega}_{i,k}$ and incoming flux $\Phi_{i,k}$. In the second phase, we render the final image evaluating the contribution at each pixel.
 
-In phase one, we produce $K$ samples. The $k$-th  sample is composed of a position $\mathbf{x}_k$, a direction $\vec{\omega}_k$ and a flux $\Phi_{i,k}$. First, we choose a triangle $T_j$. We choose the triangle uniformly, so given a random number $\xi \in [0,1)$, $j = \left \lfloor{\xi N_\Delta}\right \rfloor$. To get $\mathbf{x}_k$, we sample a point uniformly on the triangle $T_j$:
+In phase one, we produce $K$ samples. The $k$-th  sample is composed of a position $\mathbf{x}_{i,k}$, a direction $\vec{\omega}_{i,k}$ and a flux $\Phi_{i,k}$. First, we choose a triangle $T_j$. We choose the triangle uniformly, so given a random number $\xi \in [0,1)$, $j = \left \lfloor{\xi N_\Delta}\right \rfloor$. To get $\mathbf{x}_k$, we sample a point uniformly on the triangle $T_j$:
 \begin{equation*}
-\mathbf{x}_k = (1 - \sqrt{\xi_0})\mathbf{v}^j_0 + (1 - {\xi_1})  \sqrt{\xi_0} \mathbf{v}^j_1 +  \xi_1\sqrt{\xi_0} \mathbf{v}^j_2
+\mathbf{x}_{i,k} = (1 - \sqrt{\xi_0})\mathbf{v}^j_0 + (1 - {\xi_1})  \sqrt{\xi_0} \mathbf{v}^j_1 +  \xi_1\sqrt{\xi_0} \mathbf{v}^j_2
 \end{equation*}
 Where $\xi_0, \xi_1 \in [0,1)$. 
 
-Now, the sampling direction $\vec{\omega}_k$ and the flux $\Phi_{i,k}$ need to be evaluated. We leave the choice of the sampling distribution for $\vec{\omega}_k$ to implementation, since it is not important for the method. From sampling the light source we obtain $\vec{\omega}_k$ and an irradiance $E_k$:
+Now, the sampling direction $\vec{\omega}_{i,k}$ and the flux $\Phi_{i,k}$ need to be evaluated. We leave the choice of the sampling distribution for $\vec{\omega}_{i,k}$ to implementation, since it is not important for the method. From sampling the light source we obtain $\vec{\omega}_{i,k}$ and an irradiance $E_{i,k}$:
 \begin{equation*}
-E_k(\mathbf{x}_k, \vec{\omega}_k) = \frac{L_i(\mathbf{x}_k, \vec{\omega}_k) (\vec{n}_k \cdot \vec{\omega}_k)}{\text{pdf}(\vec{\omega}_k)}
+E_{i,k}(\mathbf{x}_{i,k}, \vec{\omega}_{i,k}) = \frac{L_i(\mathbf{x}_{i,k}, \vec{\omega}_{i,k}) (\vec{n}_{i,k} \cdot \vec{\omega}_{i,k})}{\text{pdf}(\vec{\omega}_{i,k})}
 \end{equation*}
-We need the pdf of the area $\text{pdf}(A_k)$. Since we sampled the triangle and then the point, we combine the two independent probabilities:
+We need the pdf of choosing the point $\text{pdf}(\mathbf{x}_{i,k})$. Since we sampled the triangle and then the point, we combine the two independent probabilities:
 \begin{equation*}
-\text{pdf}(A_k) = \text{pdf}(T_k) \text{pdf}(\mathbf{x}_k) = \frac{1}{N_\Delta A_j} 
+\text{pdf}(\mathbf{x}_{i,k}) = \frac{1}{N_\Delta A_j} 
 \end{equation*}
 Putting it all together:
 \begin{equation*}
-\Phi_{i,k}(\mathbf{x}_k, \vec{\omega}_k)  = \frac{E_k(\mathbf{x}_k, \vec{\omega}_k) }{\text{pdf}(A_k)} = N_\Delta A_j E_k(\mathbf{x}_k, \vec{\omega}_k)
+\Phi_{i,k}(\mathbf{x}_{i,k}, \vec{\omega}_{i,k})  = \frac{E_{i,k}(\mathbf{x}_{i,k}, \vec{\omega}_k) }{\text{pdf}(\mathbf{x}_{i,k})} = N_\Delta A_j E_{i,k}(\mathbf{x}_{i,k}, \vec{\omega}_{i,k})
 \end{equation*}
 Once we have stored this quantity in the sample, we are ready to proceed to the second and final phase. For each pixel, we ray trace a camera ray, obtaining a point $\mathbf{x}_o$ and a direction towards the camera $\vec{\omega}_o$. We consider the scattering medium with coefficients $\sigma_a, \sigma_s, g$ and relative index of refraction $\eta$ as a pure Fresnel interface with added scattering. 
 
 In our path tracing implementation, we perform russian roulette on the Fresnel coefficient $R$ to choose reflected or refracted direction. In the case of reflection, we continue tracing the reflected ray. In the case of refraction, we calculate the final radiance as:
 \begin{equation*}
-L_o(\mathbf{x}_o, \vec{\omega}_o) = L_e(\mathbf{x}_o, \vec{\omega}_o) + L_t(\mathbf{x}_o, \vec{\omega}_o) + L(\mathbf{x}_o, \vec{\omega}_o) 
+\hat{L}_o(\mathbf{x}_o, \vec{\omega}_o) = L_e(\mathbf{x}_o, \vec{\omega}_o) + L_t(\mathbf{x}_o, \vec{\omega}_o) + \hat{L}_r(\mathbf{x}_o, \vec{\omega}_o) 
 \end{equation*}
-Where $L_e$ is the emitted radiance from the medium, $L_t$ is the radiance due to direct transmission and $L$ comes from \ref{eq:mc}. 
+Where $L_e$ is the emitted radiance from the medium, $L_t$ is the radiance due to direct transmission and $\hat{L}_r$ comes from \ref{eq:mc}. 
 
 To efficiently render the model and save expensive BSSRDF evaluations, we do a last optimization. We evaluate the BSSRDF stochastically with probability $\exp(-\sigma_{tr} \| \mathbf{x}_o - \mathbf{x}_k \|)$, where $\sigma_{tr} = \sqrt{3 \sigma_a (\sigma_a + (1-g) \sigma_s)} $ is the effective transport coefficient.  So, only samples that are very close to the exit point $\mathbf{x}_o$ will be actually evaluated. In formulas:
 \begin{equation*}
-L(\mathbf{x}_o, \vec{\omega}_o) \approx  \sum_{k = 1}^K S(\mathbf{x}_k, \vec{\omega}_k, \mathbf{x}_o, \vec{\omega}_o) \Phi_{i,k}(\mathbf{x}_k, \vec{\omega}_k) V(\xi, e^{-\sigma_{tr} \| \mathbf{x}_o - \mathbf{x}_k \|})\; e^{\sigma_{tr} \| \mathbf{x}_o - \mathbf{x}_k \|}
+\hat{L}_r(\mathbf{x}_o, \vec{\omega}_o) \approx  \sum_{k = 1}^K S(\mathbf{x}_k, \vec{\omega}_k, \mathbf{x}_o, \vec{\omega}_o) \Phi_{i,k}(\mathbf{x}_k, \vec{\omega}_k) V(\xi, e^{-\sigma_{tr} \| \mathbf{x}_o - \mathbf{x}_k \|})\; e^{\sigma_{tr} \| \mathbf{x}_o - \mathbf{x}_k \|}
 \end{equation*}
 Where:
 \begin{equation*}

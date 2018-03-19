@@ -1,0 +1,113 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xifthen}
+\usepackage{hyperref}
+
+\title{Camera space BSSRDF importance sampling}
+\date{September 2017}
+\author{Alessandro Dal Corso \\ Technical University of Denmark \and Jeppe Revall Frisvad \\ Technical University of Denmark
+}
+
+\begin{document}
+\maketitle
+\newcommand{\vecfunc}[2] {\vec{#1}(\mathbf{#2})}
+\newcommand{\func}[2] {{#1}(\mathbf{#2})}
+\newcommand{\omegafunc}[2] {{#1}(\mathbf{#2}, \vec{\omega})}
+
+
+\newcommand{\xvecfunc}[1] {\vecfunc{#1}{x}}
+\newcommand{\xfunc}[1] {\func{#1}{x}}
+\newcommand{\xomegafunc}[1] {\omegafunc{#1}{x}}
+\newcommand{\nablavec} {{\nabla}}
+\newcommand{\omegavec} {\vec{\omega}}
+\newcommand{\sphere}[2] {\int_{4\pi}{#1}\ d{\ifthenelse{\isempty{#2}{}}{{\omega}}{#2}}}
+\newcommand{\hemisphere}[2] {\int_{2\pi_+}{#1}\ d{\ifthenelse{\isempty{#2}{}}{{\omega}}{#2}}}
+\newcommand{\inwardhemisphere}[2] {\int_{2\pi_-}{#1}\ d{\ifthenelse{\isempty{#2}{}}{{\omega}}{#2}}}
+
+\newcommand{\absorption}{\sigma_a}
+\newcommand{\transmission}{\sigma_{tr}}
+\newcommand{\scattering}{\sigma_s}
+\newcommand{\extinction}{\sigma_t}
+\newcommand{\fluence}{G_0}
+\newcommand{\flux}{\mathbf{G}_1}
+\newcommand{\sourcezero}[1]{\func{q}{#1}}
+\newcommand{\sourcezerox}{\xfunc{q}}
+\newcommand{\sourceone}[1]{\vec{\mathbf{Q}}(\mathbf{#1}, \omegavec)}
+\newcommand{\sourceonex}{\vec{\mathbf{Q}}(\mathbf{x}, \omegavec)}
+\newcommand{\redsca}{{\sigma}'_s}
+\newcommand{\redext}{{\sigma}'_t}
+\newcommand{\redscaEddington}{\tilde{\sigma}_s}
+\newcommand{\redextEddington}{\tilde{\sigma}_t}
+\newcommand{\de}{\text{d}}
+\newcommand{\cphi}{C_{\phi}}
+\newcommand{\cE}{C_{\mathbf{E}}}
+\newcommand{\nvec} {\vec{n}}
+\newcommand{\radius} {r}
+
+This note explain the importance sampling technique in camera space from Mertens et al.~\cite{Mertens2003}.
+
+\section{Planar surfaces}
+We start from the classical BSSRDF form of the rendering equation:
+\begin{equation*}
+L_o(\mathbf{x}_o, \omegavec_o) = \int_A \int_{\Omega(\mathbf{x}_i)} L_i(\mathbf{x}_i, \omegavec_i) S(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o, \omegavec_o) (\omegavec_i \cdot \nvec_i) d\omega_i dA
+\end{equation*}
+
+Where $\Omega(\mathbf{x}_i)$ is an hemisphere placed in $\mathbf{x}_i$ with normal $\nvec_i$.
+Our first step is to convert the integration into polar coordinates. We assume for now that the integration happens on a plane. In polar coordinates, we have $dA = r dr d\theta$. The integral becomes:
+
+\begin{equation*}
+L_o(\mathbf{x}_o, \omegavec_o) = \int_0^{2\pi} \int_0^{+\infty} \int_{\Omega(\mathbf{x}_i)} L_i(\mathbf{x}_i, \omegavec_i) S(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o, \omegavec_o) (\omegavec_i \cdot \nvec_i) d\omega_i r dr d\theta
+\end{equation*}
+Where $r = \|\mathbf{x}_o-\mathbf{x}_i\|$. Also, $\mathbf{x}_i = \mathbf{x}_o + r \cos\theta\; \vec{t}_o + r \sin\theta\; \vec{b}_o$, where $\vec{t}_o$ and $\vec{b}_o$ form an orthonormal basis with $\vec{n}_o$.
+
+We can now perform Monte Carlo integration, that gives the estimator:
+
+\begin{equation*}
+L_o^{N,M}(\mathbf{x}_o, \omegavec_o) = \frac{1}{NM}\sum_{p=1}^M \sum_{q=1}^N \frac{L_i(\mathbf{x}_{i,p}, \omegavec_{i,q}) S(\mathbf{x}_{i,p}, \omegavec_{i,q}, \mathbf{x}_o, \omegavec_o) (\omegavec_{i,q} \cdot \nvec_{i,p}) \radius }{\text{pdf}(\radius,\theta) \text{pdf}(\omega_{i,q})}
+\end{equation*}
+Now, we can importance sample our disc coordinates $(\radius,\theta)$ using the joint pdf:
+$$
+\text{pdf}(\radius,\theta) = \frac{1}{2 \pi} \sigma_{tr} e^{-\sigma_{tr} \radius} 
+$$
+And we can sample the incoming light direction using a cosine weighted hemisphere:
+$$
+\text{pdf}(\omega_{i,q}) = \frac{\omegavec_{i,q} \cdot \nvec_{i,p}}{\pi} 
+$$
+So the integral can be finally approximated as:
+$$
+L_o^{N,M}(\mathbf{x}_o, \omegavec_o) = \frac{2 \pi^2}{NM \sigma_{tr}}\sum_{p=1}^M \sum_{q=1}^N L_i(\mathbf{x}_{i,p}, \omegavec_{i,q}) S(\mathbf{x}_{i,p}, \omegavec_{i,q}, \mathbf{x}_o, \omegavec_o) \radius e^{\sigma_{tr} \radius}   
+$$
+Note that the  $\radius e^{\sigma_{tr} \radius} $ cancels out some terms inside the BSSRDF. 
+\section{Non planar surfaces}
+We now assume that the surface is no longer planar. So we want to make a change of variables so that our integral becomes tractable, i.e. we are able to perform it in the tangent plane. Let us call $dA_{tan}$ an element of area in the tangent plane. The change of variables simply becomes:
+
+\begin{equation*}
+L_o(\mathbf{x}_o, \omegavec_o) = \int_{A_{tan}} \int_{\Omega(\mathbf{x}_i)} L_i(\mathbf{x}_i, \omegavec_i) S(\mathbf{x}_i, \omegavec_i, \mathbf{x}_o, \omegavec_o) (\omegavec_i \cdot \nvec_i) d\omega_i \left|\frac{dA}{dA_{tan}} \right| dA_{tan}
+\end{equation*}
+
+Where $dA$ is the corresponding area element on the real surface, continuing a camera ray. We call the camera ray $\vec{d} = \frac{\mathbf{x}_i - \mathbf{e}}{\|\mathbf{x}_i - \mathbf{e}\|} $, where $\mathbf{e}$ is the camera position. 
+
+We only need to estimate the Jacobian of the change of variables $\left|\frac{dA}{dA_{tan}} \right|$. We observe that, since we are using a pinhole camera, the solid angles subtended by the projected area elements must be equal. We calculate them and put them equal, that gives:
+$$
+\frac{dA (\nvec_i \cdot -\vec{d})}{d^2} = \frac{dA_{tan} (\nvec_o \cdot -\vec{d})}{d_{tan}^2} 
+$$
+Where $d = \|\mathbf{x}_i - \mathbf{e}\|$ and $d_{tan} = \|\mathbf{x}_{i,tan} - \mathbf{e}\|$ are the distances with the real point and the point in tangent space, respectively. The Jacobian then becomes:
+$$
+\left|\frac{dA}{dA_{tan}} \right| = \frac{(\nvec_o \cdot -\vec{d})}{(\nvec_i \cdot -\vec{d})} \frac{d^2}{d_{tan}^2}
+$$
+Note that for a plane, $\nvec_i = \nvec_o$ and $d = d_{tan}$, giving a unitary Jacobian as expected.
+
+After the change of variables, we can now proceed as in the previous section, and obtaining the final estimator:
+$$
+L_o^{N,M}(\mathbf{x}_o, \omegavec_o) = \frac{2 \pi^2}{NM \sigma_{tr}}\sum_{p=1}^M \sum_{q=1}^N L_i(\mathbf{x}_{i,p}, \omegavec_{i,q}) S(\mathbf{x}_{i,p}, \omegavec_{i,q}, \mathbf{x}_o, \omegavec_o)\frac{(\nvec_o \cdot -\vec{d})}{(\nvec_i \cdot -\vec{d})} \frac{d^2}{d_{tan}^2}   \radius e^{\sigma_{tr} \radius} 
+$$
+
+
+\bibliographystyle{plain}
+
+\bibliography{mertens_note}
+
+\end{document}
