@@ -146,6 +146,7 @@ Note that we did not assume anything about the material, deriving the BSSRDF fro
 Note that Equation~\ref{eq:bssrdfintegral} does not give the full outgoing radiance distribution $L_o$, since we need to add the radiance emitted by the body:
 \begin{equation*}
 L_o(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) + L(\mathbf{x}, \vec{\omega}) .
+\label{eq:renderingequation}
 \end{equation*}
 This equation gives the so called extended form of the rendering equation ~\cite{Jensen2001}. Given the physical nature of the BSSRDF, we can impose conservation of energy, so that the reflected light never increases:
 \begin{equation}
@@ -365,6 +366,7 @@ which we can evaluate again using Monte Carlo as:
 Where the $x_i$ follow the distribution $\text{pdf}(x)$. As before, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$.
 
 \subsubsection{Volume path tracing}
+\label{sec:volumept}
 Now let us apply importance sampling to obtain a first technique to render scattering materials, namely \emph{volume path tracing}~\cite{Rushmeier1988}. We start by using the integral form of the radiative transfer equation~\ref{eq:integralformrte}. For the sake of this example, we assume a non emissive homogeneous medium, so that the coefficients do not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
 
 \begin{figure}
@@ -413,6 +415,7 @@ Instead of using the various forms of the radiative transfer equation, we can us
 We refer to our note in Appendix~\ref{sec:pointcloudnote} for a rendering technique that uses this estimator for the extended rendering equation.
 
 \subsection{Analytical BSSRDF Models}
+\label{sec:analyticalbssrdf}
 
 So far, we have defined the BSSRDF as a proportionality constant between radiometric quantities. Given some assumptions about light propagation in materials, it is possible to derive analytical formulas for a BSSRDF for practical use in rendering. In the case of analytical models, Jensen et al.~\cite{Jensen2001} first provided an analyitical BSSRDF function based on the dipole solution in the work of Farrell et al.~\cite{Farrell1992} (the standard dipole). In this section, we outline the derivation of three analytical models, the standard dipole~\cite{Jensen2001}, the better dipole~\cite{dEon2012} and the directional dipole~\cite{Frisvad2014}. Our note in Appendix~\ref{sec:jensennote} provides additional derivation details for the interested reader. 
 
@@ -488,6 +491,7 @@ Where $d_e$ is called extrapolation distance, $A(\eta)$ is a term that accounts 
 In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application than the BSSRDF.   
 
 \subsection{The BRDF}
+\label{sec:brdfsec}
 \begin{figure}
 \centering
    \def\svgwidth{0.8\textwidth}
@@ -527,6 +531,7 @@ f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_
 From the reflectance equation above, we can see why BRDFs are usually employed in real time applications, since they require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). Moreover, in applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
 
 \subsection{Empirical BRDFs}
+\label{sec:empiricalbssrdf}
 \begin{figure}
 \centering
 \begin{tabular}{@{}c@{\hskip 1em}c@{}}
@@ -583,7 +588,7 @@ This is only a simplified view of the full graphics pipeline, that, allows tesse
 Rasterization is extensively used in game development and real time applications, given its high speed and predictability. However, it is not particularly well suited for propagating light across a scene, making it difficult to achieve complex optical effects, why these often require ad-hoc solutions.
 
 \subsection{Ray tracing}
-
+\label{sec:raytracing}
 \begin{figure}
 \centering
    \def\svgwidth{\textwidth}

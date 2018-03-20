@@ -1,40 +1,32 @@
 
-Real-Time Polygonal-Light Shading with Linearly Transformed Cosines  Paper Abstract Author Preprint Paper Video Demo Program or Source Code
-Eric Heitz, Jonathan Dupuy (Unity Technologies), Stephen Hill (Ubisoft), David Neubelt (Ready At Dawn Studios)
+    Hardware RT
+    
+SGRT: A Mobile GPU Architecture for Real-Time Ray Tracing  Paper Abstract Author Preprint
+Won-Jong Lee, Youngsam Shin, Jaedon Lee, Jin-Woo Kim, Jae-Ho Nah, Seokyoon Jung, Shihwa Lee, Hyun-Sang Park, Tack-Don Han
 
-Efficient GPU Rendering of Subdivision Surfaces using Adaptive Quadtrees  Paper Abstract Author Preprint Paper Video
-Wade Brainerd (Activision), Tim Foley, Manuel Kraemer, Henry Moreton (NVIDIA Corporation), Matthias Niesner (Stanford University)
+Reduced Precision for Hardware Ray Tracing in GPUs  Paper Presentation 
+Sean Keely
 
-LOD Generation for Urban Scenes  Paper Abstract Author Preprint (TOG Paper)
-Yannick Verdie Florent Lafarge Pierre Alliez (Inria Sophia Antipolis - TITANE)
+    GI    
+    
+Tobias Ritschel, Thomas Engelhardt, Thorsten Grosch, Hans-Peter Seidel, Jan Kautz, and
+Carsten Dachsbacher. 2009. Micro-Rendering for Scalable, Parallel Final Gathering.
+ACM Trans. Graph. 28, 5 (2009), 132:1–132:8.
 
-A Machine Learning Approach for Filtering Monte Carlo Noise  Paper Abstract Author Preprint Paper Video Demo Program or Source Code
-Nima Khademi Kalantari, Steve Bako, Pradeep Sen (University of California, Santa Barbara)
+Specular Lobe-Aware Filtering and Upsampling for Interactive Indirect Illumination Author Preprint Paper Video
+Yusuke Tokuyoshi
+enceslas Biri
+    
+PAPAIOANNOU, G. 2011. Real-time diffuse global illumination using radiance hints.
 
-Gradient-Domain Path Tracing  Paper Abstract Author Preprint Paper Images
-Markus Kettunen (Aalto University), Marco Manzi (University of Bern), Miika Aittala (Aalto University), Jaakko Lehtinen (Aalto University and NVIDIA Research), Fredo Durand (MIT CSAIL), Matthias Zwicker (University of Bern)
+Real-time Radiance Caching using Chrominance Compression  Paper Abstract Author Preprint Paper Video Demo Program or Source Code
+Kostas Vardis, Georgios Papaioannou, Anastasios Gkaravelis
 
-Rendering Glints on High-Resolution Normal-Mapped Specular Surfaces  Paper Abstract Author Preprint Paper Video
-Ling-Qi Yan, Milos Hasan (University of California at Berkeley), Wenzel Jakob (Cornell University), Jason Lawrence (University of Virginia), Steve Marschner (Cornell University), Ravi Ramamoorthi (University of California at Berkeley)
+Layered Reflective Shadow Maps for Voxel-based Indirect Illumination (Paper Abstract) (Paper Abstract Author Preprint Paper Video)
+Masamichi Sugihara, Randall Rauwendaal, Marco Salvi
 
-Progressive Light Transport Simulation on the GPU: Survey and Improvements  Paper Abstract Author Preprint (TOG Paper)
-Tomas Davidovic (Saarland University and Intel VCI), Jaroslav Krivanek (Charles University in Prague), Milos Hasan (Autodesk, Inc.), Philipp Slusallek (Saarland University and DFKI)
-
-Axis-Aligned Filtering for Interactive Physically Based Diffuse Indirect Lighting  Paper Abstract Author Preprint Paper Video
-Soham Uday Mehta, Brandon Wang Ravi Ramamoorthi (University of California at Berkeley), Fredo Durand (MIT CSAIL)
-
-A Hardware Unit for Fast SAH-optimised BVH Construction
-Michael Doyle, Colin Fowler, Michael Manzke (Trinity College Dublin)
-
-Real-time Global Illumination by Precomputed Local Reconstruction from Sparse Radiance Probes ACM DOI Paper Abstract Author Preprint Paper Video
-Ari Silvennoinen (Aalto University and Remedy Entertainment), Jaakko Lehtinen (Aalto University and NVIDIA Research)
-
-Downsampling Scattering Parameters for Rendering Anisotropic Media  Paper Abstract Author Preprint Paper Video
-Shuang Zhao* (University of California, Irvine), Lifan Wu* (University of California, San Diego), Fredo Durand (Massachusetts Institute of Technology), Ravi Ramamoorthi (University of California, San Diego) (* Joint first authors)
-
-On Optimal, Minimal BRDF Sampling for Reflectance Acquisition ACM DOI Author Preprint Paper Data Demo Program or Source Code
-Jannik Boll Nielsen (Technical University of Denmark), Henrik Wann Jensen, Ravi Ramamoorthi (University of California, San Diego)
-
+        BVH
+        
 GPU Ray Tracing using Irregular Grids Author Preprint Demo Program or Source Code
 Arsene Perard-Gayot, Javor Kalojanov, Philipp Slusallek
 
@@ -43,71 +35,6 @@ Jakub Hendrich, Daniel Meister, Jiri Bittner
 
 A GPU-Adapted Structure for Unstructured Grids Author Preprint 
 Rhaleb Zayer, Markus Steinberger, Hans-Peter Seidel
-
-Specular Lobe-Aware Filtering and Upsampling for Interactive Indirect Illumination Author Preprint Paper Video
-Yusuke Tokuyoshi
-
-Global Illumination Using Well-Separated Pair Decomposition Paper Abstract Author Preprint
-Norbert Bus, Nabil H. Mustafa, Venceslas Biri
-
-T-SAH: Animation Optimized Bounding Volume Hierarchies
-JiÅ™Ã­ Bittner, Daniel Meister
-
-IlluminationCut Paper Abstract Author Preprint Demo Program or Source Code
-Norbert Bus, Nabil H. Mustafa, Venceslas Biri
-
-Rich-VPLs for Improving the Versatility of Many-Light Methods Paper Abstract Author Preprint Paper Video Paper Presentation 
-Florian Simon, Johannes Hanika, Carsten Dachsbacher
-
-Real-Time Global Illumination using Precomputed Light Field Probes Paper Abstract Author Preprint Paper Video Paper Images Demo Program or Source Code
-Morgan McGuire, Michael Mara, Derek Nowrouzezahrai, David Luebke
-
-Real-time Rendering of Procedural Multiscale Materials Paper Abstract Author Preprint
-Tobias Zirr, Anton Kaplanyan
-
-A Phenomenological Scattering Model for Order-Independent Transparency Paper Abstract Author Preprint Paper Video
-Morgan McGuire, Michael Mara
-
-
-Moment Shadow Mapping  Paper Abstract Author Preprint Paper Video
-Christoph Peters, Reinhard Klein
-
-Frustum-Traced Raster Shadows: Revisiting Irregular Z-Buffers (Author Preprint) (Paper Abstract Author Preprint Paper Video)
-Chris Wyman, Rama Hoetzlein, Aaron Lefohn
-
-
-Real-time Radiance Caching using Chrominance Compression  Paper Abstract Author Preprint Paper Video Demo Program or Source Code
-Kostas Vardis, Georgios Papaioannou, Anastasios Gkaravelis
-
-Efficient GPU Screen-Space Ray Tracing  Paper Abstract Author Preprint Demo Program or Source Code
-Morgan McGuire, Michael Mara
-
-Aggregate G-Buffer Anti-Aliasing  Paper Abstract Author Preprint Paper Video
-Cyril Crassin, Morgan McGuire, Kayvon Fatahalian, Aaron Lefohn
-
-
-Toward Practical Real-Time Photon Mapping: Efficient GPU Density Estimation  Paper Abstract Author Preprint Paper Images
-Michael Mara, David Luebke, Morgan McGuire
-
-
-Nonlinearly Weighted First-Order Regression for Denoising Monte Carlo Renderings  Paper Abstract Author Preprint Paper Video Demo Program or Source Code
-Benedikt Bitterli, Fabrice Rousselle, Bochang Moon, Jose A. Iglesias-Guitian, Adler, D., Kenny Mitchell, Wojciech Jarosz, Jan Novak
-
-Fast Filtering of Reflection Probes  Paper Abstract Author Preprint 
-Josiah Manson, Peter-Pike Sloan
-
-SGRT: A Mobile GPU Architecture for Real-Time Ray Tracing  Paper Abstract Author Preprint
-Won-Jong Lee, Youngsam Shin, Jaedon Lee, Jin-Woo Kim, Jae-Ho Nah, Seokyoon Jung, Shihwa Lee, Hyun-Sang Park, Tack-Don Han
-
-Reduced Precision for Hardware Ray Tracing in GPUs  Paper Presentation 
-Sean Keely
-
-Layered Reflective Shadow Maps for Voxel-based Indirect Illumination (Paper Abstract) (Paper Abstract Author Preprint Paper Video)
-Masamichi Sugihara, Randall Rauwendaal, Marco Salvi
-
-An Adaptive Acceleration Structure for Screen-space Ray Tracing  Paper Abstract Author Preprint Paper Video
-Jan Kautz, Sven Widmer, Dawid Pajak, Andre Schulz, Kari Pulli, Michael Goesele, David Luebke
-
 
 Watertight Ray Traversal with Reduced Precision and Bounding Plane Reuse  Paper Abstract Author Preprint
 Karthik Vaidyanathan, Tomas Akenine-Moller, Marco Salvi
@@ -118,25 +45,24 @@ Nikolaus Binder, Alexander Keller
 Bandwidth-Efficient BVH Layout for Incremental Hardware Traversal  Paper Abstract Author Preprint
 Gabor Liktor, Karthik Vaidyanathan
 
-DIRT: Deferred Image-based Ray Tracing  Paper Abstract Author Preprint Demo Program or Source Code
-Konstantinos Vardis, Andreas A. Vasilakis, Georgios Papaioannou
-
-Deep G-Buffers for Stable Global Illumination Approximation  Paper Abstract Author Preprint Paper Video Demo Program or Source Code
-Michael Mara, Morgan McGuire, Derek Nowrouzezahrai, David Luebke
-
-Lightcuts Interpolation  Paper Abstract Author Preprint
-Hauke Rehfeld, Carsten Dachsbacher
-
-GVDB: Raytracing Sparse Voxel Database Structures on the GPU  Author Preprint Paper Video 
-Rama Hoetzlein
-
 Improved Two-Level BVHs Using Partial Re-Braiding Author Preprint
 Carsten Benthin, Sven Woop, Ingo Wald, Attila Afra
 
 STBVH: A Spatial-Temporal BVH for Efficient Multi-Segment Motion Blur Author Preprint
 Sven Woop, Attila Afra, Carsten Benthin
 
+T-SAH: Animation Optimized Bounding Volume Hierarchies
+JiÅ™Ã­ Bittner, Daniel Meister
+
+        Shadows
+
 Non-Linearly Quantized Moment Shadow Maps Paper Abstract Author Preprint Paper Video Demo Program or Source Code
 Christoph Peters
+
+Moment Shadow Mapping  Paper Abstract Author Preprint Paper Video
+Christoph Peters, Reinhard Klein
+
+Frustum-Traced Raster Shadows: Revisiting Irregular Z-Buffers (Author Preprint) (Paper Abstract Author Preprint Paper Video)
+Chris Wyman, Rama Hoetzlein, Aaron Lefohn
 
 
