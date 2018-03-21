@@ -1,7 +1,7 @@
 \chapter{Background}
 \label{sec:background}
 
-In this section, we will introduce the theorectical elements necessary to complete the related work and the contributions illustrated in Chapters~\ref{sec:related} and~\ref{sec:contributions}. Our contributions range a wide span of physically based materials, including both scattering and non scattering media. We will describe both in this chapter (Sections~\ref{sec:scatteringtheory}~and~\ref{sec:brdftheory} respectively), with a brief introduction to basic radiometric concept (Section~\ref{sec:radiometry}). We will finally conclude (Section~\ref{sec:renderingparadigms}) with a more detailed description of the two main rendering paradigms we used to achieve our results, rasterization and ray tracing.
+In this section, we will introduce the theoretical elements necessary to complete the related work and the contributions illustrated in Chapters~\ref{sec:related} and~\ref{sec:contributions}. Our contributions range a wide span of physically based materials, including both scattering and non scattering media. We will describe both in this chapter (Sections~\ref{sec:scatteringtheory}~and~\ref{sec:brdftheory} respectively), with a brief introduction to basic radiometric concept (Section~\ref{sec:radiometry}). We will finally conclude (Section~\ref{sec:renderingparadigms}) with a more detailed description of the two main rendering paradigms we used to achieve our results, rasterization and ray tracing.
 
 \section{Radiometry}
 \label{sec:radiometry}
@@ -67,7 +67,9 @@ Note that we assume that the flux does not vary across the path, which is genera
 
 \section{Scattering Media}
 \label{sec:scatteringtheory}
-The first group of physically based materials we tackle is scattering media. Scattering is the process photons go through once they hit an optically dense medium. Photons are deflected from their current path by electromagnetic forces, due to atom nuclei and atomic bonds. It is possible to model this process mathematically. We start by discussing one of such models, the radiative transfer equation, which is a local solution of the scattering process for a point in the medium. Then, we will provide a more global formulation of the scattering process as a function of light propagating between two surface points, the BSSRDF. We will then proceed to prove that the BSSRDF indeed respects the radiative transfer equation, and then describe two ways to render materials: one using the radiative transfer equation, one using BSSRDF. Finally, we will introduce three BSSRDF analytical models that can be used in rendering.
+The first group of physically based materials we tackle is scattering media. We deal with efficient rendering of scattering media in Contributions~\ref{sec:juice} and~\ref{sec:interactivedirsss}, so we introduce relevant theory to better contextualize those contributions.
+
+Scattering is the process photons go through once they hit an optically dense medium. Photons are deflected from their current path by electromagnetic forces, due to atom nuclei and atomic bonds. It is possible to model this process mathematically. We start by discussing one of such models, the radiative transfer equation, which is a local solution of the scattering process for a point in the medium. Then, we will provide a more global formulation of the scattering process as a function of light propagating between two surface points, the BSSRDF. We will then proceed to prove that the BSSRDF indeed respects the radiative transfer equation, and then describe two ways to render materials: one using the radiative transfer equation, one using BSSRDF. Finally, we will introduce three BSSRDF analytical models that can be used in rendering.
 
 \subsection{The radiative transfer equation}
 \label{sec:radiativetransfer}
@@ -357,17 +359,19 @@ If we draw samples uniformly samples in $[a,b[$, we can define a $N$-th estimato
 \end{equation*}
 From the law of large numbers, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$. To improve the convergence rate, we use importance sampling. If we know a distribution $\text{pdf}(x)$ that is somewhat close in shape to $f(x)$ and from which it is easy to draw samples $x_i \in [a,b]$. We can rewrite the integral $I$ as :
 \begin{equation*}
-I = \int_X \frac{f(x)}{\text{pdf}(x)} \text{pdf}(x) dx,
+I = \int_a^b \frac{f(x)}{\text{pdf}(x)} \text{pdf}(x) dx,
 \end{equation*}
 which we can evaluate again using Monte Carlo as:
 \begin{equation*}
-\hat{I}_N = \frac{1}{N} \sum_{i=1}^N \frac{f(x_i)}{\text{pdf}(x_i)}.
+\hat{I}_N = \frac{b-a}{N} \sum_{i=1}^N \frac{f(x_i)}{\text{pdf}(x_i)}.
 \end{equation*}
 Where the $x_i$ follow the distribution $\text{pdf}(x)$. As before, $\hat{I}_N \rightarrow I$ for $N \rightarrow \infty$.
 
 \subsubsection{Volume path tracing}
 \label{sec:volumept}
-Now let us apply importance sampling to obtain a first technique to render scattering materials, namely \emph{volume path tracing}~\cite{Rushmeier1988}. We start by using the integral form of the radiative transfer equation~\ref{eq:integralformrte}. For the sake of this example, we assume a non emissive homogeneous medium, so that the coefficients do not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
+Now let us apply importance sampling to obtain a first technique to render scattering materials, namely \emph{volume path tracing}~\cite{Rushmeier1988}. Volume path tracing is the classical formulation to render participating media, and it is usually used to generate reference images. In our Contribution~\ref{sec:juice}, where we strive for comparing images with photographs, we use a GPU-optimized version of volume path tracing to efficiently render glasses of apple juice.
+
+We start by using the integral form of the radiative transfer equation~\ref{eq:integralformrte}. For the sake of this example, we assume a non emissive homogeneous medium, so that the coefficients do not depend on position and direction within the medium. We also assume index matched media, so we can simplify the interaction at the boundary. 
 
 \begin{figure}
 \centering
@@ -412,12 +416,12 @@ Instead of using the various forms of the radiative transfer equation, we can us
 \begin{equation*}
 \hat{L}(\mathbf{x}_o, \vec{\omega}_o) \approx \sum_{p = 1}^N \sum_{q = 1}^M \frac{S(\mathbf{x}_{i,p}, \vec{\omega}_{i,q}, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_{i,p}, \vec{\omega}_{i,q}) (\vec{n}_{i,p} \cdot \vec{\omega}_{i,q})}{\text{pdf}(\vec{\omega}_{i,q}) \text{pdf}(\mathbf{x}_{i,p})}.
 \end{equation*}
-We refer to our note in Appendix~\ref{sec:pointcloudnote} for a rendering technique that uses this estimator for the extended rendering equation.
+We refer to our note in Appendix~\ref{sec:pointcloudnote} for a rendering technique that uses this estimator for the extended rendering equation, that we use in Contribution~\ref{sec:interactivedirsss} as an unbiased reference.
 
 \subsection{Analytical BSSRDF Models}
 \label{sec:analyticalbssrdf}
 
-So far, we have defined the BSSRDF as a proportionality constant between radiometric quantities. Given some assumptions about light propagation in materials, it is possible to derive analytical formulas for a BSSRDF for practical use in rendering. In the case of analytical models, Jensen et al.~\cite{Jensen2001} first provided an analyitical BSSRDF function based on the dipole solution in the work of Farrell et al.~\cite{Farrell1992} (the standard dipole). In this section, we outline the derivation of three analytical models, the standard dipole~\cite{Jensen2001}, the better dipole~\cite{dEon2012} and the directional dipole~\cite{Frisvad2014}. Our note in Appendix~\ref{sec:jensennote} provides additional derivation details for the interested reader. 
+So far, we have defined the BSSRDF as a proportionality constant between radiometric quantities. Given some assumptions about light propagation in materials, it is possible to derive analytical formulas for a BSSRDF for practical use in rendering. In the case of analytical models, Jensen et al.~\cite{Jensen2001} first provided an analyitical BSSRDF function based on the dipole solution in the work of Farrell et al.~\cite{Farrell1992} (the standard dipole). In this section, we outline the derivation of three analytical models, the standard dipole~\cite{Jensen2001}, the better dipole~\cite{dEon2012} and the directional dipole~\cite{Frisvad2014}. Our note in Appendix~\ref{sec:jensennote} provides additional derivation details for the interested reader. Note that more advanced dipoles exist, in particular the fully directional forward dipole~\cite{Frederickx2017}. We refer to the original paper for details on the derivation, which is out of the scope of this thesis.
 
 Generically, the light exiting from a scattering medium at a point $\mathbf{x}_o$ at a direction $\vec{\omega}_o$ can be thought as coming from three contributions: direct transmission, single and multiple scattering. We define $\vec{\omega}_{21}$ as the refraction of $\vec{\omega}_o$ into the medium oriented towards the surface. Direct transmission is the contribution of the light coming from direction $-\vec{\omega}_{21}$ that does not scatter along the path (see Equation~\ref{eq:l0r}). The single scattering term comes from light that enters at any point of the medium, scatters once, then aligns with $\vec{\omega}_{21}$ to refract out in direction $\vec{\omega}_o$. The multiple scattering term is similar, but it includes light that has scattered more than once before exiting the medium. 
 
@@ -486,9 +490,14 @@ To achieve a solution for a point $\mathbf{x}_o$ on a semi infinite plane with n
 \end{equation*}
 Where $d_e$ is called extrapolation distance, $A(\eta)$ is a term that accounts for mismatched index of refraction at the boundaries. The idea here is that the diffusion approximation matches better the exact solution if we let the fluence vanish not at the boundary, but at an \emph{extrapolated boundary} at distance $2 A d_e$ along the normal direction. This boundary condition can be satisfied by introducing two light sources, a positive \emph{real} source and a negative \emph{virtual} source, that together form a \emph{dipole configuration}.  Standard and better dipole use two point lights in the configuration to the left of Figure~\ref{fig:bssrdfsources}, with the real source (blue) below and the virtual source (red) above the surface. The directional dipole uses a real ray source on $\mathbf{x}_i$, and a virtual ray source above the surface (see right of Figure~\ref{fig:bssrdfsources}). The solutions for infinite media reported above are then evaluated for the real and the virtual source, and the results are then combined to obtain the final BSSRDF value for rendering. 
 
+As we have seen, the complexity of the dipole greatly changes depending on how good the approximation is. The standard dipole, given its pure dependency on $r$, can be approximated quite efficiently, especially as a series of gaussian convolutions. The drawback of these dipole is that directional effects are lost, giving often an overly blurred result. In our contribution~\ref{sec:interactivedirsss} we will see how do we manage to create a interactive rendering technique that can handle the directional effects introduced by the directional dipole.
+
 \section{Non-scattering media}
 \label{sec:brdftheory}
 In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application than the BSSRDF.   
+
+\subsection{Glass}
+Multiple of our contributions make use of glass, in particular Contribution~\ref{sec:glass} and Contribution~\ref{sec:juice}. In this particular contribution, we describe glass as a non-scattering media, i.e. where $\sigma_s = 0$. This greatly simplifies the equations involved, leaving only the direct transmission term $L^0_r$ in Equation~\ref{eq:fullformintegralpacked}. This implies that the only noticeable effect is absorption, since $\sigma_t = \sigma_a$. Moreover, to define glass we need to define an interface, that in general is a specular interface defined by a relative index of refraction $\eta$. This is a good approximation for clear polished glass as the one we render in Contribution~\ref{sec:glass}. We discuss in contribution~\ref{sec:juice} how to include a diffuse term in the interface, since the glass in this case was scratched. We can easily render glass in a path tracing environment using the technique in in Section~\ref{sec:volumept}, leaving out the random walk and including the direct transmission contribution.
 
 \subsection{The BRDF}
 \label{sec:brdfsec}
@@ -528,7 +537,7 @@ On the other hand, Helmholtz reciprocity gives
 \begin{equation*}
 f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_o,  \vec{\omega}_i).
 \end{equation*}
-From the reflectance equation above, we can see why BRDFs are usually employed in real time applications, since they require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). Moreover, in applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
+From the reflectance equation above, we can see why BRDFs are usually employed in real time applications, since BRDF require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). We then use BRDFs in our Contributions~\ref{sec:glass},~\ref{sec:srt}~and~\ref{sec:vrbrdf} where the focus is not specific to scattering media. In applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
 
 \subsection{Empirical BRDFs}
 \label{sec:empiricalbssrdf}
@@ -543,7 +552,7 @@ $f_r(\theta_i, \phi_i, \theta_o, \phi_o)$ &  $f_r(\theta_h, \phi_h, \theta_d, \p
 \label{fig:brdfrepr}
 \end{figure}
 
-Given the low dimensionality of the BRDF, it is possible to actually measure and tabulate it, so that it can be used in future renderings. If we assume a non-spatially varying BRDF (dropping the dependency from $\mathbf{x}_o$ in Equation~\ref{eq:brdf}) and expressing each vector $\vec{\omega}$ in terms of its polar angles $\theta, \phi$, we obtain a four dimensional function:
+Given the low dimensionality of the BRDF, it is possible to actually measure and tabulate it, so that it can be used in future renderings. We use tabulated BRDFs multiple times in our Contributions~\ref{sec:glass} and~\ref{sec:vrbrdf}, given that they allows us to easily achieve a photorealistic look. If we assume a non-spatially varying BRDF (dropping the dependency from $\mathbf{x}_o$ in Equation~\ref{eq:brdf}) and expressing each vector $\vec{\omega}$ in terms of its polar angles $\theta, \phi$, we obtain a four dimensional function:
 \begin{equation*}
 f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_i, \phi_i, \theta_o, \phi_o).
 \end{equation*}
@@ -566,7 +575,7 @@ After we have chosen our representation, we can pack our isotropic BRDF in a 3D 
 \section{Rendering techniques} 
 \label{sec:renderingparadigms}
 
-In the previous sections, we introduced theory and algorithms for rendering physically based materials, without going into details on how the different algorithms are implemented. To conclude our background section, we introduce two of the main paradigms used to render physically based materials on GPUs, namely rasterization and ray tracing. 
+In the previous sections, we introduced theory and algorithms for rendering physically based materials, without going into details on how the different algorithms are implemented. To conclude our background section, we introduce two of the main paradigms used to render physically based materials on GPUs, namely rasterization and ray tracing. In our contribution, we use both techniques (rasterization in Contributions~\ref{sec:interactivedirsss}~and~\ref{sec:vrbrdf}, ray tracing in Contributions~\ref{sec:glass},~\ref{sec:juice} and~\ref{sec:srt}), choosing either one depending on the application constraints.
 
 \subsection{Rasterization}
 

@@ -25,9 +25,13 @@
 \usepackage{LukeThesis}   
 \usepackage{CJKutf8}                          %Import Thesis base style
 \usepackage{pdfpages}
-\usepackage{mwe,tikz}
+\usepackage{tikz}
 \usepackage{tocloft}
 \usepackage{xcolor}
+\usepackage{natbib}
+\renewcommand{\cite}{\citep}
+\setcitestyle{square, comma, aysep={}}
+\hypersetup{colorlinks, linkcolor={blue} , citecolor={blue} , urlcolor={blue}}
 \usepackage{rotating}
 \usepackage{mathrsfs}
 \usepackage{siunitx}
@@ -84,8 +88,8 @@
 \clearpage
 \pagenumbering{roman}                               %Set frontmatter numbering style
 \input{tex/summaryuk}                                   %English summary of Thesis
-\markboth{}{}                                       %Set headings (left)(right)
-\input{tex/summarydk}                      
+%\markboth{}{}                                       %Set headings (left)(right)
+%\input{tex/summarydk}                      
              %Danish summary of Thesis
 \markboth{}{}                                       %Set headings (left)(right)
 \input{tex/preface}                                     %Preface
@@ -108,6 +112,7 @@
 % Main content
 %-------------
 \include{tex/contributionslist}
+\addcontentsline{toc}{chapter}{List of contributions}        %Force addition to TOC
 \mainmatter
 %Chapter 1
 \include{tex/introduction}                                  %Chapter 1
@@ -126,7 +131,7 @@
 \renewcommand{\sectionmark}[1]{\markright{#1}}
 \sectionmark{Bibliography}
 \addcontentsline{toc}{chapter}{Bibliography}        %Force addition of Bibliography to TOC
-\bibliographystyle{alpha}                           %Use alpha codes for references
+\bibliographystyle{plainnat}                           %Use alpha codes for references
 \bibliography{references}                           %Bibliography file called
 \end{document}
 % % % EOF % % %
