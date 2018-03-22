@@ -433,7 +433,7 @@ As before, we define operators to simplify notation:
 \end{equation*}
 In radiative transport, we use spherical harmonics to simplify radiance~\cite{Eason1978}:
 \begin{equation*}
-L(\mathbf{x}, \vec{\omega}) = \frac{1}{4\pi}\phi(\mathbf{x}) + \frac{3}{4\pi} \vec{E}(\mathbf{x}),
+L(\mathbf{x}, \vec{\omega}) = \frac{1}{4\pi}\phi(\mathbf{x}) + \frac{3}{4\pi} \vec{\omega} \cdot \vec{E}(\mathbf{x}),
 \end{equation*}
 where $\phi = L \operator{G}$ and $\vec{E} = L \vec{\operator{G}}$. Once we combine the radiative transfer equation and the diffusion approximation, we get the form:
 \begin{equation}
@@ -443,12 +443,12 @@ where $\phi = L \operator{G}$ and $\vec{E} = L \vec{\operator{G}}$. Once we comb
 where $Q_0 = q \operator{G}$ and $\vec{Q} = q \vec{\operator{G}}$ are the integrals of the emission term in the radiative transfer equation $q(\mathbf{x}, \vec{\omega})$ (see Equation~\ref{eq:rte}). The choice of $q$, or \emph{source term} leads to different approximations. Standard and better dipole use a point source term, while the directional dipole uses a ray source. Equation~\ref{eq:telegraph} is a particular case of screened Poisson equation, that can be explicitly integrated~\cite{Fetter2003}. For a point source term, we obtain:
 \begin{equation}
 \label{eq:fluencepoint}
-\phi(\mathbf{x}) = \frac{\alpha' \Phi_i}{4 \pi D} \frac{e^{-\sigma_{tr} r}}{r}.
+\phi(\mathbf{x}) = \frac{\alpha' \Phi_i}{4 \pi D} \frac{e^{-\sigma_\text{tr} r}}{r}.
 \end{equation}
 And for the ray source term, we get:
 \begin{equation}
 \label{eq:fluenceray}
-\phi(\mathbf{x}) = \frac{\alpha' \Phi_i}{4 \pi D} \frac{e^{-\sigma_{tr} r}}{r} \left(1 + 3D \frac{1 + \sigma_{tr} r}{r} \cos\theta \right).
+\phi(\mathbf{x}) = \frac{\alpha' \Phi_i}{4 \pi D} \frac{e^{-\sigma_\text{tr} r}}{r} \left(1 + 3D \frac{1 + \sigma_\text{tr} r}{r} \cos\theta \right).
 \end{equation}
 Now that we have a formulation for the fluence, we need to connect it to the BSSRDF. First, we consider only the part of the BSSRDF depending on the diffusion approximation $S_d$. From the definition of BSSRDF in Equation~\ref{eq:bssrdf} and assuming a pure Fresnel boundary we get to this formulation in terms of the diffusive radiant exitance $M_d$
 \begin{equation*}
@@ -460,11 +460,11 @@ M_d(\mathbf{x}_o) =  C_\phi(\eta) \phi(\mathbf{x}_o) - C_E(\eta) D \nabla\phi(\m
 \end{equation*}
 where $T_{12}$ is the incoming Fresnel coefficient, $C_\phi$ amnd $C_E$ are the first two orders of Fresnel integrals, which can be approximated by analytical formulas~\cite{dEon2011}. The value $\eta$ is the index of refraction of the medium. By plugging in our solutions for the fluence in Equations~\ref{eq:fluencepoint} and~\ref{eq:fluenceray}, we get the analytical formula for a BSSRDF if we disregard the fact that light does not scatter outside the medium. In the case of a point source term, we obtain
 \begin{equation*}
-S_d(\mathbf{x}_i, \mathbf{x}_o)  = \frac{1}{4\pi C_\phi(1/\eta)} \frac{\alpha'}{4 \pi^2} \frac{e^{-\sigma_{tr} r}}{r^3} \left[ C_\phi(\eta) \frac{r^2}{D} + C_E(\eta) (1 + \sigma_{tr} r) \mathbf{x} \cdot \vec{n}_o \right],
+S_d(\mathbf{x}_i, \mathbf{x}_o)  = \frac{1}{4\pi C_\phi(1/\eta)} \frac{\alpha'}{4 \pi^2} \frac{e^{-\sigma_\text{tr} r}}{r^3} \left[ C_\phi(\eta) \frac{r^2}{D} + C_E(\eta) (1 + \sigma_\text{tr} r) \mathbf{x} \cdot \vec{n}_o \right],
 \end{equation*}
 where $\mathbf{x} = \mathbf{x}_o - \mathbf{x}_i$ and $r = \|x\|$. This is the term used for the better dipole~\cite{dEon2012}. We can further simplify if we take the limit of the Fresnel integrals, obtaining $C_\phi(\eta) = 0$, $C_E(\eta) = 1$ and $C_\phi(1/\eta) = 1/4$. This leads to
 \begin{equation*}
-S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\sigma_{tr} r}}{r^3} (1 + \sigma_\text{tr} r) \mathbf{x} \cdot \vec{n}_o,
+S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\sigma_\text{tr} r}}{r^3} (1 + \sigma_\text{tr} r) \mathbf{x} \cdot \vec{n}_o,
 \end{equation*}
 which is used for standard dipole~\cite{Jensen2001}. Finally, if we use the ray source solution, we obtain
 \begin{multline*}

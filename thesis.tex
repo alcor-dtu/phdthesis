@@ -14,7 +14,7 @@
 %==================================================================================================
 % DOCUMENT SETUP
 %==================================================================================================
-\documentclass[10pt,twoside]{book}                  %Official DTU-IMM Thesis document setup
+\documentclass[10pt,twoside, table]{book}                  %Official DTU-IMM Thesis document setup
 %
 %Set to 'print' for printed version, use 'net' for online version
 \def\thesisversion{net}
@@ -28,6 +28,9 @@
 \usepackage{tikz}
 \usepackage{tocloft}
 \usepackage{xcolor}
+\definecolor{alexblue}{RGB}{58, 147, 252}
+\rowcolors{2}{alexblue!20}{white}
+\usepackage{pbox}
 \usepackage{natbib}
 \renewcommand{\cite}{\citep}
 \setcitestyle{square, comma, aysep={}}
@@ -111,9 +114,13 @@
 %-------------
 % Main content
 %-------------
-\include{tex/contributionslist}
-\addcontentsline{toc}{chapter}{List of contributions}        %Force addition to TOC
 \mainmatter
+\include{tex/contributionslist}
+\markboth{}{} 
+%\addcontentsline{toc}{chapter}{List of contributions}        %Force addition to TOC
+\include{tex/notation}
+\markboth{}{} %\addcontentsline{toc}{chapter}{List of symbols}        %Force addition to TOC
+
 %Chapter 1
 \include{tex/introduction}                                  %Chapter 1
 \include{tex/background}                                  %Chapter 1
