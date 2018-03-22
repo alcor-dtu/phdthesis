@@ -416,7 +416,7 @@ Instead of using the various forms of the radiative transfer equation, we can us
 \begin{equation*}
 \hat{L}(\mathbf{x}_o, \vec{\omega}_o) \approx \sum_{p = 1}^N \sum_{q = 1}^M \frac{S(\mathbf{x}_{i,p}, \vec{\omega}_{i,q}, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_{i,p}, \vec{\omega}_{i,q}) (\vec{n}_{i,p} \cdot \vec{\omega}_{i,q})}{\text{pdf}(\vec{\omega}_{i,q}) \text{pdf}(\mathbf{x}_{i,p})}.
 \end{equation*}
-We refer to our note in Appendix~\ref{sec:pointcloudnote} for a rendering technique that uses this estimator for the extended rendering equation, that we use in Contribution~\ref{sec:interactivedirsss} as an unbiased reference.
+We refer to our note in Appendix~\ref{sec:pointcloudnote} for a rendering technique that uses this estimator for the extended rendering equation, that we use in Contribution~\ref{sec:interactivedirsss} as an unbiased reference. Also, the technique from~\cite{Mertens2003} makes use of this approximation, which we derived again in Appendix~\ref{sec:mertensnote}.
 
 \subsection{Analytical BSSRDF Models}
 \label{sec:analyticalbssrdf}
@@ -570,7 +570,7 @@ f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_h, \phi_h, \theta_
 \end{equation*}
 where $\theta_h, \phi_h$ are the spherical coordinates of $\vec{\omega}_h$, and where $\theta_d, \phi_d$ are the spherical coordinates of $\vec{\omega}_i$ rotated so that $\vec{\omega}_h$ matches the reference frame of $\vec{n}$. In this case,  isotropic materials can be described by dropping the dependency on $\phi_d$, i.e. the overall rotation of the system around the normal.
 
-After we have chosen our representation, we can pack our isotropic BRDF in a 3D data structure. Note that similar packing representations exist also for BSSRDFs~\cite{Donner2009}, but the high dimensionality of the BSSRDF (5 up to 14 dimensions) renders these representations somewhat less practical.
+After we have chosen our representation, we can pack our isotropic BRDF in a 3D data structure. Note that similar packing representations exist also for BSSRDFs~\cite{Donner2009}, but the high dimensionality of the BSSRDF (5 up to 14 dimensions) renders these representations somewhat less practical. See the note in Appendix~\ref{sec:bssrdfnote} for a derivation on how to compute a simulated empirical BSSRDF. 
 
 \section{Rendering techniques} 
 \label{sec:renderingparadigms}
