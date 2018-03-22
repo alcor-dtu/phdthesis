@@ -56,20 +56,19 @@ We now discuss three more detailed use cases in which there is a demand for impr
 \begin{figure}
 \centering
 \begin{tabular}{@{}c@{}c@{}c@{}}
-	 \includegraphics[draft,width=0.33\textwidth]{figures/lumion-crop.jpg} & 	 \includegraphics[width=0.33\textwidth]{figures/lumion-crop.jpg} 
+	 \includegraphics[width=0.33\textwidth]{figures/3dprinting_preview_crop} & 	 \includegraphics[width=0.33\textwidth]{figures/lumion-crop.jpg} 
 & 	 \includegraphics[width=0.33\textwidth]{figures/the-climb-crop.jpg} \\
 \end{tabular}
 \caption{Applications of photorealistic interactive rendering. Left to right: 3d printing preview, architectural visualization (courtesy \emph{Lumion}), virtual reality games (courtesy \emph{The Climb} by \emph{Crytek}).} 
 \label{fig:applications}
 \end{figure}
 
-\subsection{3D printing}
-The first case we discuss applications of interactive photorealistic rendering is additive manufacturing, in particular 3D printing. In this application, we want to preview the appearance of the printed object. Many challenges are required to faithfully represent a 3D printed object, depending on the production process used. This process greatly influences the shape and the appearance of the final object. Moreover, the materials used for 3D printing exhibit some particular radiometric properties, that makes them even more challenging to render accurately. 
+\subsection{Digital prototyping and 3D printing}
+The first case we discuss applications of interactive photorealistic rendering is digital prototyping, in particular applied to 3D printing. In this application, we want to preview the appearance of a manufactured object. In the particular case of 3D printing, the production process greatly influences the shape and the appearance of the final object. Moreover, the materials used for 3D printing exhibit some particular radiometric properties, that makes them even more challenging to render accurately. 
 
 In this application, the role of photorealistic rendering is dual. Apart from previewing the final result of the 3D printing process,   we can actively use photorealistic rendering to predict and measure the radiometric properties of the object. This requires a  specific setup and calibrated scene, in which a picture of the object is taken. Then, lots of different renderings can be made, tweaking the radiometric properties to predict the final appearance of the object. In both these applications, we require a high accuracy in our rendering (see Figure~\ref{fig:main_diagram}). In this case, a noisier or downsampled result can be acceptable, at the price of a certain inaccuracy in measuring the parameters. 
 
-All these innovations go towards a more strict integration of 3D printing processes and digital image synthesis as a whole (the digital-physical ecosystem). Photorealistic rendering helps reduce the number of iterations necessary to achieve a satisfying printed piece. This translates to reduced printing times for the same quality, and it avoids wasting potentially expensive printing material. Moreover, in a production environment, the validation through rendering enables us to perform quality assurance on the finished pieces, by comparing them with images of previously printed versions of the same piece.
-
+All these innovations go towards a more strict integration of 3D printing processes and digital image synthesis as a whole (the digital-physical ecosystem). Photorealistic rendering helps reduce the number of iterations necessary to achieve a satisfying printed piece. This translates to reduced printing times for the same quality, and it avoids wasting potentially expensive printing material. Moreover, in a digital production  environment, the validation through rendering enables us to perform quality assurance on the finished pieces, by comparing them with images of previously printed versions of the same piece.
 
 \subsection{Architectural visualization}
 
