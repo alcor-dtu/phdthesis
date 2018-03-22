@@ -109,7 +109,7 @@ Absorption and out-scattering, given their similarities, are often combined into
 \begin{equation*}
 \vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = \sigma_s(\mathbf{x}, \vec{\omega}) \int_{4\pi} L(\mathbf{x}, \vec{\omega}')  p(\mathbf{x}, \vec{\omega}', \vec{\omega}) d {\omega}'\siunit{\watt \per \cubic \metre \per \steradian}.
 \end{equation*}
-Note the multiplication by $\sigma_s$so that we account for the right amount of scattering as we move along the ray. From the phase function, we can calculate the dimensionless radiometric property $g(\mathbf{x}, \vec{\omega})$, describing the mean cosine of the scattering angle between $\vec{\omega}$ and $\vec{\omega}'$ as
+Note the multiplication by $\sigma_s$ to account for the right amount of scattering as we move along the ray. From the phase function, we can calculate the dimensionless radiometric property $g(\mathbf{x}, \vec{\omega})$, describing the mean cosine of the scattering angle between $\vec{\omega}$ and $\vec{\omega}'$ as
 \begin{equation*}
 g(\mathbf{x}, \vec{\omega}) = \int_{4\pi} (\vec{\omega}' \cdot \vec{\omega}) p(\mathbf{x}, \vec{\omega}', {\omega}) d{\omega}'
 \siunit{-}.
@@ -540,7 +540,7 @@ f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_
 From the reflectance equation above, we can see why BRDFs are usually employed in real time applications, since BRDF require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). We then use BRDFs in our Contributions~\ref{sec:glass},~\ref{sec:srt}~and~\ref{sec:vrbrdf} where the focus is not specific to scattering media. In applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
 
 \subsection{Empirical BRDFs}
-\label{sec:empiricalbssrdf}
+\label{sec:empiricalbrdf}
 \begin{figure}
 \centering
 \begin{tabular}{@{}c@{\hskip 1em}c@{}}
