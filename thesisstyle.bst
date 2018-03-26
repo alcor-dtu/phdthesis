@@ -285,7 +285,7 @@ FUNCTION {format.issn}
 FUNCTION {format.url}
 { url empty$
     { "" }
-    { new.block "URL \url{" url * "}" * }
+    { "" }
   if$
 }
 
@@ -299,7 +299,7 @@ FUNCTION {format.doi}
 FUNCTION {format.title}
 { title empty$
     { "" }
-    { title "t" change.case$ }
+    { title }
   if$
 }
 
@@ -1083,8 +1083,7 @@ MACRO {tcs} {"Theoretical Computer Science"}
 READ
 
 FUNCTION {sortify}
-{ purify$
-  "l" change.case$
+{ 
 }
 
 INTEGERS { len }
@@ -1241,7 +1240,6 @@ FUNCTION {sort.format.title}
       "The " #4 t chop.word
     chop.word
   chop.word
-  sortify
   #1 global.max$ substring$
 }
 
