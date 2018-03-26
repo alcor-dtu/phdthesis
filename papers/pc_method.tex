@@ -3,15 +3,25 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{color}
 \usepackage{xifthen}
 \usepackage{hyperref}
 \title{Point cloud method for rendering BSSRDFs}
 \date{March 2018}
 \author{Jeppe Revall Frisvad \\ Technical University of Denmark
 \and Alessandro Dal Corso \\ Technical University of Denmark}
-
+\renewcommand{\floatpagefraction}{1.}%
 \begin{document}
 \maketitle
+
+\begin{figure}
+\centering
+   \def\svgwidth{0.8\textwidth}
+   \input{pcmethod.pdf_tex} \\
+\caption{Diagram illustrating our method. Two points $\mathbf{x}_{i,k}$ are selected on the surface, and the light stored in a buffer. The contribution is then gathered from the various points out towards the eye at point $\mathbf{x}_o$.} 
+\label{fig:vpt}
+\end{figure}
 
 This is a short note on rendering a triangular mesh onto which we apply a BSSRDF model. The method works on arbitrary static triangular meshes and is unbiased.
 
