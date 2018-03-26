@@ -123,6 +123,7 @@ We can now combine all terms to obtain the complete integro-differential form of
 \end{equation}
 %
 \subsection{The BSSRDF}
+\label{sec:bssrdfgeneral}
 \begin{figure}
 \centering
    \def\svgwidth{0.8\textwidth}
@@ -497,6 +498,7 @@ As we have seen, the complexity of the dipole greatly changes depending on how g
 In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application than the BSSRDF.   
 
 \subsection{Glass}
+\label{sec:glassdescr}
 Multiple of our contributions make use of glass, in particular Contribution~\ref{sec:glass} and Contribution~\ref{sec:juice}. In this particular contribution, we describe glass as a non-scattering media, i.e. where $\sigma_s = 0$. This greatly simplifies the equations involved, leaving only the direct transmission term $L^0_r$ in Equation~\ref{eq:fullformintegralpacked}. This implies that the only noticeable effect is absorption, since $\sigma_t = \sigma_a$. Moreover, to define glass we need to define an interface, that in general is a specular interface defined by a relative index of refraction $\eta$. This is a good approximation for clear polished glass as the one we render in Contribution~\ref{sec:glass}. We discuss in contribution~\ref{sec:juice} how to include a diffuse term in the interface, since the glass in this case was scratched. We can easily render glass in a path tracing environment using the technique in in Section~\ref{sec:volumept}, leaving out the random walk and including the direct transmission contribution.
 
 \subsection{The BRDF}
