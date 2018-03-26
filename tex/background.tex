@@ -493,15 +493,16 @@ Where $d_e$ is called extrapolation distance, $A(\eta)$ is a term that accounts 
 
 As we have seen, the complexity of the dipole greatly changes depending on how good the approximation is. The standard dipole, given its pure dependency on $r$, can be approximated quite efficiently, especially as a series of gaussian convolutions. The drawback of these dipole is that directional effects are lost, giving often an overly blurred result. In our contribution~\ref{sec:interactivedirsss} we will see how do we manage to create a interactive rendering technique that can handle the directional effects introduced by the directional dipole.
 
-\section{Non-scattering media}
+\section{Non-participating media}
 \label{sec:brdftheory}
 In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application than the BSSRDF.   
 
-\subsection{Glass}
+\subsection{Transparent media}
 \label{sec:glassdescr}
 Multiple of our contributions make use of glass, in particular Contribution~\ref{sec:glass} and Contribution~\ref{sec:juice}. In this particular contribution, we describe glass as a non-scattering media, i.e. where $\sigma_s = 0$. This greatly simplifies the equations involved, leaving only the direct transmission term $L^0_r$ in Equation~\ref{eq:fullformintegralpacked}. This implies that the only noticeable effect is absorption, since $\sigma_t = \sigma_a$. Moreover, to define glass we need to define an interface, that in general is a specular interface defined by a relative index of refraction $\eta$. This is a good approximation for clear polished glass as the one we render in Contribution~\ref{sec:glass}. We discuss in contribution~\ref{sec:juice} how to include a diffuse term in the interface, since the glass in this case was scratched. We can easily render glass in a path tracing environment using the technique in in Section~\ref{sec:volumept}, leaving out the random walk and including the direct transmission contribution.
 
-\subsection{The BRDF}
+\subsection{Opaque media}
+\subsubsection{The BRDF}
 \label{sec:brdfsec}
 \begin{figure}
 \centering
@@ -541,7 +542,7 @@ f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_
 \end{equation*}
 From the reflectance equation above, we can see why BRDFs are usually employed in real time applications, since BRDF require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). We then use BRDFs in our Contributions~\ref{sec:glass},~\ref{sec:srt}~and~\ref{sec:vrbrdf} where the focus is not specific to scattering media. In applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
 
-\subsection{Empirical BRDFs}
+\subsubsection{Empirical BRDFs}
 \label{sec:empiricalbrdf}
 \begin{figure}
 \centering
