@@ -55,6 +55,7 @@ A first insight is that if the scene is carefully set and calibrated, a comparis
 Our proof of concept in Contribution~\ref{sec:juice} is dual. First, it tells us that it is important to validate renderings with photographs, to ensure that the rendering matches the appearance in the real world. Secondly, it tells us that to have multiple parameters tested or estimated, depending on the application, we need fast rendering. We discuss the first aspect in the rest of this section, referring to the next section for a more complete discussion on fast rendering of scattering materials. In our Contribution~\ref{sec:glass}, we strive to improve upon the previous results of comparing rendering with images, for a slightly different application. In this case, we are comparing images of glass objects. As it is true for scattering materials, the appearance of glass objects (see Section~\ref{sec:glassdescr}) is greatly influenced by the surrounding scene, making the scene estimation arguably even more important for this application. We use a full pipeline to accurately estimate the scene, scan glass objects with CT scanners and place them in the scene for final rendering. Our main contribution of this work is actually the pipeline, that allows researchers to compare pictures and renderings of glass objects, getting a quantitative comparison at the end. Some results are in Figure~\ref{fig:glasscomparison}. This ability of qualitatively compare images and rendering allows to further improve existing techniques in acquisition, rendering and reconstruction. As another goal of our improved reconstruction results, we can estimate material properties much more accurately than our  results in Contribution~\ref{sec:juice} and in Figure~\ref{fig:juicecomparisondetail}. We measure both the relative index of refraction $\eta$ and the spectral absorption coefficient $\sigma_a$ for each of the glass objects, as we can see in Figure~\ref{fig:glasscomparisongraph}, where we show the results for the spectral components of the estiamted $\sigma_a$. Note that each point of the graph is a rendering, further proving the point to use fast rendering to generate a great number of images to estimate the material properties. Since we want accuracy, we need to use unbiased path tracing, that we accelerate using the GPU and execute at lower resolutions to achieve fast and accurate rendering of these images. In this particular case, our renderings are accurate enough for parameter estimation after a few minutes. 
 
 \section{Interactive rendering of scattering media}
+\label{sec:interactivedirssscontribution}
 %
 \begin{figure}[t]
 \begin{tabular}{@{}c@{}c@{}c@{}c@{}}
@@ -96,7 +97,7 @@ As another contribution of our technique, we leverage our scattered radiosity ma
 To sum up, the take away home message of this technique is that improved physical models, such as the directional dipole, sometimes do not allow us to reuse previous work. So, we need to develop new techniques to achieve interactive result, so that we can include these more accurate effects. Moreover, the benefits of caching data in this case become particularly apparent, since they allow us to recycle the stored radiosity for another technique to use. 
 
 \section{Interactive stable ray tracing}
-
+\label{sec:srtcontribution}
 \begin{figure}[t]
 \begin{tabular}{@{}c@{}c@{}@{}c@{}}
 	 \includegraphics[width=0.32\textwidth]{figures/ss_2x_rect_370_300_300_300_frame_211.png} &
@@ -128,6 +129,7 @@ Finally, another advantage of this technique, in particular in a photorealistic 
 A particular application where the stable ray tracing caching scheme would be particularly useful is virtual reality. Because of the close vicinity of the eye to the display and the perception system in our eyes, temporal stability issues are particularly obvious. Unfortunately, given the real time requirements for virtual reality this technique is not applicable at the moment.
 
 \section{Applying interactive photorealistic techniques}
+\label{sec:vrbrfcontribution}
 \begin{figure}[t]
 \centering
 \begin{tabular}{@{}c@{}c@{}}
