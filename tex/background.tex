@@ -495,7 +495,7 @@ As we have seen, the complexity of the dipole greatly changes depending on how g
 
 \section{Non-participating media}
 \label{sec:brdftheory}
-In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real time application than the BSSRDF.   
+In this section, we will introduce some simplifications to the scattering theory introduced in Section~\ref{sec:scatteringtheory}. We introduce the description of the BRDF, a reflectance function far more widespread in real-time application than the BSSRDF.   
 
 \subsection{Transparent media}
 \label{sec:glassdescr}
@@ -540,7 +540,7 @@ On the other hand, Helmholtz reciprocity gives
 \begin{equation*}
 f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\mathbf{x}, \vec{\omega}_o,  \vec{\omega}_i).
 \end{equation*}
-From the reflectance equation above, we can see why BRDFs are usually employed in real time applications, since BRDF require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). We then use BRDFs in our Contributions~\ref{sec:glass},~\ref{sec:srt}~and~\ref{sec:vrbrdf} where the focus is not specific to scattering media. In applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
+From the reflectance equation above, we can see why BRDFs are usually employed in real-time applications, since BRDF require one less integral to solve (compare Equations~\ref{eq:brdfintegral} and~\ref{eq:bssrdfintegral}). We then use BRDFs in our Contributions~\ref{sec:glass},~\ref{sec:srt}~and~\ref{sec:vrbrdf} where the focus is not specific to scattering media. In applications such as games we may have a finite number of point and directional lights, which simplifies the integral in Equation~\ref{eq:brdfintegral} to a sum over all the lights.
 
 \subsubsection{Empirical BRDFs}
 \label{sec:empiricalbrdf}
@@ -597,7 +597,7 @@ Once the fragments are generated, they need to be stored on the image plane. Not
 
 This is only a simplified view of the full graphics pipeline, that, allows tessellation (domain and hull shaders), geometry manipulation (geometry shaders) or writing back into a vertex stream (transform feedback). There are also shaders that are completely detached from the graphics pipeline (compute shaders), allowing to perform tasks in parallel on the GPU that are not directly related to a graphics task. 
 
-Rasterization is extensively used in game development and real time applications, given its high speed and predictability. However, it is not particularly well suited for propagating light across a scene, making it difficult to achieve complex optical effects, why these often require ad-hoc solutions.
+Rasterization is extensively used in game development and real-time applications, given its high speed and predictability. However, it is not particularly well suited for propagating light across a scene, making it difficult to achieve complex optical effects, why these often require ad-hoc solutions.
 
 \subsection{Ray tracing}
 \label{sec:raytracing}
