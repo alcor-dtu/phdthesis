@@ -153,11 +153,11 @@ We assume a non emissive body ($L_e(\x_o, \vomega_o) = 0$). In our case, we have
 L(\x_p \rightarrow \y) = \alpha \Phi_t(\mathbf{x}_p) p(\vomega_p \cdot \vomega_{21}, g) \, ,
 \]
 %
-the three point scattering function corresponding to the bidirectional transmittance distribution function (BTDF) of a perfectly smooth surface:
+the three point scattering function corresponding to the bidirectional transmittance distribution function (BTDF) of a perfectly smooth surface~\cite{pharr17}:
 %
 \begin{eqnarray*}
 f(\x_p \rightarrow \y \rightarrow \z) & = & T_{21}(\eta, \vomega_o) \frac{\delta(\vomega_o - \vomega_t)}{|\vomega_{21}\cdot\vec{n}_o|} \, , \\
-\vomega_t & = & \eta^{-1}(|\vomega_{21}\cdot\vec{n}_o|\vec{n}_o - \vomega_{21}) - \vec{n}_o \sqrt{1 - \eta^{-2}(1 - (\vomega_{21}\cdot\vec{n}_o)^2)} \, ,
+\vomega_t & = & \eta^{-1}(\vomega_{21} - (\vomega_{21}\cdot\vec{n}_o)\vec{n}_o) + \vec{n}_o \sqrt{1 - \eta^{-2}(1 - (\vomega_{21}\cdot\vec{n}_o)^2)} \, ,
 \end{eqnarray*}
 %
 the geometry term:
@@ -172,7 +172,7 @@ and the generic visibility term:
 V(\x_p \leftrightarrow \y) = V'(\x_p \leftrightarrow \y) \exp\left(-\int_0^{\|\y - \x\|} \sigma_t\left(\x_p + t \vomega_{21}\right) dt\right) \, .
 \]
 %
-Here, $T_{21} = 1 - R_{21}$ is the Fresnel transmittance at the point of emergence, and one should note that $T_{21}(\eta^{-1}, -\vomega_{21}) = T_{21}(\eta, \vomega_o)$.
+Here, $T_{21} = 1 - R_{21}$ is the Fresnel transmittance at the point of emergence, and one should note that $T_{21}(\eta^{-1}, -\vomega_{21}) = T_{21}(\eta, \vomega_o)$. In addition, we disregard (de)compression of solid angle in the BTDF, as we consider light incident and emergent in the same medium only, so the compression cancels out upon emergence.
 
 In our configuration of a semi infinite plane, the binary visibility function $V'(\x_p \leftrightarrow \y)$ is always one (i.e., it is always possible to connect to the emergent point). Since we have a homogenous medium, we can rewrite $V$ as the beam transmittance:
 %
@@ -234,4 +234,4 @@ Note that we used $\Phi(\x_i, \vomega_i) = 1$.
 
 
 
-\end{document}
+\end{document} 

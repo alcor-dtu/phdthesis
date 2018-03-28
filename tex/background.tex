@@ -28,7 +28,7 @@ We now consider an infinitesimal surface area element $dA$ that receives light, 
 \begin{equation*}
 E(\mathbf{x}) = \frac{d \Phi}{d A}  \siunit{\watt \per \square \metre}.
 \end{equation*}
-If the flux is emitted by the surface, we use the name \emph{radiosity} and define it with the symbol $B$.
+If the flux is emitted by the surface, we use the name \emph{radiant exitance} and define it with the symbol $M$.
 The most simple irradiance is the one emitted by an isotropic point light. In this case, the irradiance at a distance $R$ from the point light is 
 \begin{equation*}
 E = \frac{\Phi}{4 \pi R^2} \siunit{\watt \per \square \metre}.
@@ -94,7 +94,7 @@ Traditionally, light traveling a medium is subject to four processes: absorption
 \end{equation*} 
 Emission describes how some form of energy (like heat) is becoming radiant energy.
 
-\textbf{Absorption} is the dual effect of emission, where photons are absorbed by the material, and generally being transformed from radiant energy into heat energy. On the opposite hand of emission, the loss due to absorption is proportional to the radiance at the point $L$. The \emph{absorption coefficient} $\sigma_a(\mathbf{x}, \vec{\omega})  \siunitnospace{\per \metre} $ describes the amount of photons absorbed per unit traveled within the medium. In formulas,
+\textbf{Absorption} is the dual effect of emission, where photons are absorbed by the material, and generally being transformed from radiant energy into heat energy. On the opposite hand of emission, the loss due to absorption is proportional to the radiance at the point $L$. The \emph{absorption coefficient} $\sigma_a(\mathbf{x}, \vec{\omega})  \siunitnospace{\per \metre} $ describes the amount of absorption per unit traveled within the medium. In formulas,
 \begin{equation*}
 \vec{\omega} \cdot \nabla L(\mathbf{x}, \vec{\omega}) = - \sigma_a(\mathbf{x}, \vec{\omega}) L(\mathbf{x}, \vec{\omega}) \siunit{\watt \per \cubic \metre \per \steradian}.
  \end{equation*}
@@ -165,9 +165,9 @@ S(\mathbf{x}_o, \vec{\omega}_o, \mathbf{x}_i, \vec{\omega}_i)  \siunit{\per \squ
 
 \subsection{Connecting BSSRDFs and the radiative transfer equation}
 
-Given the above definition of BSSRDF (Equation~\ref{eq:bssrdf}), one may wonder how the BSSRDF is related to any scattering process at all, since it simply describes a relationship between an incoming and an outgoing radiometric quantity. In this section, starting from the definition of the BSSRDF, we will derive the local integro-differential form of the radiative transfer Equation~\ref{eq:rte}, to show how the BSSRDF fits nicely as a mathematical description of an underlying scattering process. Most of this derivation comes from Preisendorfer~\cite{Preisendorfer1965,Preisendorfer76}, where the BSSRDF is called \emph{scattering function}.
+Given the above definition of BSSRDF (Equation~\ref{eq:bssrdf}), one may wonder how the BSSRDF is related to any scattering process at all, since it simply describes a relationship between an incoming and an outgoing radiometric quantity. In this section, starting from the definition of the BSSRDF, we will derive the local integro-differential form of the radiative transfer Equation~\ref{eq:rte}, to show how the BSSRDF fits nicely as a mathematical description of an underlying scattering process. Most of this derivation comes from~\citet{Preisendorfer1965,Preisendorfer76}, where the BSSRDF is called \emph{scattering function}.
 
-To show this relationship, we to define some mathematical operators. A operator in our context maps a function into another function, as does this  $\operator{Q}$ to integrate over an hemisphere:
+To show this relationship, we define some mathematical operators. An operator in our context maps a function into another function, as does this  $\operator{Q}$ to integrate over an hemisphere:
 \begin{equation*}
 \operator{Q} = \int_\Omega [\ \ ] d\omega.
 \end{equation*}
@@ -326,7 +326,7 @@ We can bring this process to infinity by defining the two quantities:
 \begin{equation*}
 L = \sum_{j=0}^\infty L^j,\ \ \ \ \operator{S} = \sum_{j=0}^\infty \operator{S}^j.
 \end{equation*}
-In this particular case, we define $\operator{S}^0 = \operator{I}$, where $\operator{I}$, the identity operator, is a functional for which $f \operator{I} = f$ for every choice of $f$.
+In this particular case, we define $\operator{S}^0 = \operator{I}$, where $\operator{I}$, is the identity operator for which $f \operator{I} = f$ for every choice of $f$.
 That leads to the formulation:
 \begin{equation}
 \label{eq:funcform}
@@ -337,6 +337,10 @@ It is simple to prove that this formulation satisfies the integral form of the r
 \begin{split}
 L &= L^0 \operator{S} \\
 &= L^0 \left(\operator{I} + \operator{S}^1 + \sum_{j=2}^\infty \operator{S}^j \right) \\
+\end{split}
+\end{equation*}
+\begin{equation*}
+\begin{split}
 &= L^0 \left( \operator{I} + \operator{S}^1 + \sum_{l=1}^\infty \operator{S}^{l+1} \right) \\
 &= L^0 \left( \operator{I} + \left( \operator{I} + \sum_{l=1}^\infty \operator{S}^l \right) \operator{S}^1 \right)  \\
 &= L^0 \left( \operator{I} + \operator{S} \operator{S}^1 \right)  \\
@@ -346,7 +350,7 @@ L &= L^0 + L \operator{S}^1,   \\
 \end{equation*}
 where the last equation corresponds to the integral form of the radiative transfer equation in Equation~\ref{eq:integralformrte}.
 
-Note that, since the solution of the radiance must be unique, the above calculated $L$ in functional form corresponds to the radiance $L$ calculated from Equation~\ref{eq:bssrdfintegral}. This tells us that the calculating the outgoing radiance through the BSSRDF is the same as integrating the radiance across all the possible paths within the material. This fundamental connections justifies comparing BSSRDF renderings, an approximation of equation~\ref{eq:bssrdfintegral}, with volume path tracing, in itself an approximation of Equation~\ref{eq:funcform}.
+Note that, since the solution of the radiance must be unique, the above calculated $L$ in functional form corresponds to the radiance $L$ calculated from Equation~\ref{eq:bssrdfintegral}. This tells us that calculating the outgoing radiance through the BSSRDF is the same as integrating the radiance across all the possible paths within the material. This fundamental connection justifies comparing BSSRDF renderings, an approximation of equation~\ref{eq:bssrdfintegral}, with volume path tracing, in itself an approximation of Equation~\ref{eq:funcform}.
 
 \subsection{Rendering scattering media}
 \label{sec:renderingscattering}
@@ -405,7 +409,7 @@ Plugging it in~\ref{eq:lrintermediate} we get the form
 \begin{equation*}
 \hat{L}_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \sum_{q=1}^M \alpha L(\mathbf{x}_o - s_p, \vec{\omega}, \vec{\omega}'_q),
 \end{equation*}
-where $\alpha = \sigma_s / \sigma_t = \sigma_s / (\sigma_s + \sigma_a)  $ is called the \emph{single scattering albedo}. Note that $0 < \alpha < 1$.  Finally, we can introduce an additional importance sampling. We introduce a scattering probability $\text{pdf}_s = \alpha$. We decide then if we want to either scatter of absorb the photon, using russian roulette~\cite{Arvo1990}. If we decide to absorb the photon, we simply terminate the path. With this procedure in place , we get our final formulation
+where $\alpha = \sigma_s / \sigma_t = \sigma_s / (\sigma_s + \sigma_a)  $ is called the \emph{single scattering albedo}. Note that $0 < \alpha < 1$.  Finally, we can introduce an additional importance sampling. We introduce a scattering probability $\text{pdf}_s = \alpha$. We decide then if we want to either scatter of absorb the photon, using Russian roulette~\cite{Arvo1990}. If we decide to absorb the photon, we simply terminate the path. With this procedure in place , we get our final formulation
 \begin{equation*}
 \hat{L}_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N \sum_{q=1}^M\alpha \frac{L(\mathbf{x}_o - s_p, \vec{\omega}'_q)} {\text{pdf}_s} = \sum_{p=1}^N\sum_{q=1}^M L(\mathbf{x}_o - s_p, \vec{\omega}'_q). 
 \end{equation*}
@@ -432,7 +436,7 @@ As before, we define operators to simplify notation:
 \begin{equation*}
 \operator{G} = \int_{4\pi} [\ \ ] d\omega, \ \ \ \vec{\operator{G}} = \int_{4\pi} [\ \ ] \vec{\omega} d\omega.
 \end{equation*}
-In radiative transport, we use spherical harmonics to simplify radiance~\cite{Eason1978}:
+In radiative transport, we use spherical harmonics to simplify radiance~\cite{Case1967}:
 \begin{equation*}
 L(\mathbf{x}, \vec{\omega}) = \frac{1}{4\pi}\phi(\mathbf{x}) + \frac{3}{4\pi} \vec{\omega} \cdot \mathbf{E}(\mathbf{x}),
 \end{equation*}
@@ -544,17 +548,6 @@ From the reflectance equation above, we can see why BRDFs are usually employed i
 
 \subsubsection{Empirical BRDFs}
 \label{sec:empiricalbrdf}
-\begin{figure}
-\centering
-\begin{tabular}{@{}c@{\hskip 1em}c@{}}
-\def\svgwidth{0.45\textwidth}\input{figures/brdf_representation_simple.pdf_tex} &  \def\svgwidth{0.45\textwidth}\input{figures/brdf_representation_merl.pdf_tex} \\
-Polar representation &  Rusinkiewicz representation \\
-$f_r(\theta_i, \phi_i, \theta_o, \phi_o)$ &  $f_r(\theta_h, \phi_h, \theta_d, \phi_d)$ \\
-\end{tabular}
-\caption{Different representations for BRDFs. To the left, standard representation using polar coordinates. To the right, the representation from~\cite{Rusinkiewicz1998}. } 
-\label{fig:brdfrepr}
-\end{figure}
-
 Given the low dimensionality of the BRDF, it is possible to actually measure and tabulate it, so that it can be used in future renderings. We use tabulated BRDFs multiple times in our Contributions~\ref{sec:glass} and~\ref{sec:vrbrdf}, given that they allows us to easily achieve a photorealistic look. If we assume a non-spatially varying BRDF (dropping the dependency from $\mathbf{x}_o$ in Equation~\ref{eq:brdf}) and expressing each vector $\vec{\omega}$ in terms of its polar angles $\theta, \phi$, we obtain a four dimensional function:
 \begin{equation*}
 f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_i, \phi_i, \theta_o, \phi_o).
@@ -572,6 +565,16 @@ where there is usually a strong peak due to reflection, or \emph{specular highli
 f_r(\mathbf{x}, \vec{\omega}_i,  \vec{\omega}_o) = f_r(\theta_h, \phi_h, \theta_d, \phi_d),
 \end{equation*}
 where $\theta_h, \phi_h$ are the spherical coordinates of $\vec{\omega}_h$, and where $\theta_d, \phi_d$ are the spherical coordinates of $\vec{\omega}_i$ rotated so that $\vec{\omega}_h$ matches the reference frame of $\vec{n}$. In this case,  isotropic materials can be described by dropping the dependency on $\phi_d$, i.e. the overall rotation of the system around the normal.
+\begin{figure}
+\centering
+\begin{tabular}{@{}c@{\hskip 1em}c@{}}
+\def\svgwidth{0.45\textwidth}\input{figures/brdf_representation_simple.pdf_tex} &  \def\svgwidth{0.45\textwidth}\input{figures/brdf_representation_merl.pdf_tex} \\
+Polar representation &  Rusinkiewicz representation \\
+$f_r(\theta_i, \phi_i, \theta_o, \phi_o)$ &  $f_r(\theta_h, \phi_h, \theta_d, \phi_d)$ \\
+\end{tabular}
+\caption{Different representations for BRDFs. To the left, standard representation using polar coordinates. To the right, the representation from~\cite{Rusinkiewicz1998}. } 
+\label{fig:brdfrepr}
+\end{figure}
 
 After we have chosen our representation, we can pack our isotropic BRDF in a 3D data structure. Note that similar packing representations exist also for BSSRDFs~\cite{Donner2009}, but the high dimensionality of the BSSRDF (5 up to 14 dimensions) renders these representations somewhat less practical. See the note in Appendix~\ref{sec:bssrdfnote} for a derivation on how to compute a simulated empirical BSSRDF. 
 
@@ -591,9 +594,7 @@ In the previous sections, we introduced theory and algorithms for rendering phys
 
 The first of the two techniques is rasterization. In this technique, some rendering primitives, triangles, are scanned one by one and then drawn on the screen. One example of algorithms used to transform triangles into pixel-size elements (or fragments) is scanline rendering~\cite{Wylie1967}, though it depends on the GPU vendor. By its nature, rasterization is highly parallelizable, since every primitive can be drawn in parallel. On modern graphics cards, the rasterization process is performed in hardware as part of the \emph{graphics pipeline}, a highly fine tuned sequence of steps, both hardware and software, to render triangles efficiently. A simplified version of the pipeline is illustrated in Figure~\ref{fig:rasterpipeline}. The pipeline is composed of programmable parts (called \emph{shaders}) and hardware parts, that are only controllable through state flags. The core rasterization process, transforming primitives into fragments, is executed in parallel by a specified hardware unit. 
 
-Let us describe the life of a single triangle through the pipeline. Once the CPU issues the command to draw some triangles, a \emph{draw call} (Figure~\ref{fig:rasterpipeline}, a), the pipeline starts on the GPU. For each of the three vertices composing a triangle, we independently execute a programmable part, called the \emph{vertex shader}, that allows operation such as model and perspective transformation (Figure~\ref{fig:rasterpipeline}, b). Once the vertices have been processed, the primitive is assembled and then processed by the hardware rasterizer, generating a certain number of fragments  (Figure~\ref{fig:rasterpipeline}, c). For each fragment, we execute another programmable shader, the \emph{fragment shader}. This stage needs to output the final color of the fragment, so light interaction is usually added at this stage (Figure~\ref{fig:rasterpipeline}, d). Multiple attributes can be passed in between vertex and fragment shader, which will be interpolated using the triangle's barycentric coordinates. This allows interpolation of attributes, such as normal and texture coordinates, across the triangle, leading to a more accurate appearance. 
-
-Once the fragments are generated, they need to be stored on the image plane. Note that multiple fragments can land on the same pixel, and that the order of landing of the fragments is not defined, since the full pipeline is entirely asynchronous. So, modern GPUs use another hardware unit, the Render OutPut unit (ROP, Figure~\ref{fig:rasterpipeline}, e) to determine how to store the fragments in the final image. This unit usually can perform depth test (via a Z-buffer) or blend the fragments, allowing us to obtain a consistent result across invocations.
+Let us describe the life of a single triangle through the pipeline. Once the CPU issues the command to draw some triangles, a \emph{draw call} (Figure~\ref{fig:rasterpipeline}, a), the pipeline starts on the GPU. For each of the three vertices composing a triangle, we independently execute a programmable part, called the \emph{vertex shader}, that allows operation such as model and perspective transformation (Figure~\ref{fig:rasterpipeline}, b). Once the vertices have been processed, the primitive is assembled and then processed by the hardware rasterizer, generating a certain number of fragments  (Figure~\ref{fig:rasterpipeline}, c). For each fragment, we execute another programmable shader, the \emph{fragment shader}. This stage needs to output the final color of the fragment, so light interaction is usually added at this stage (Figure~\ref{fig:rasterpipeline}, d). Multiple attributes can be passed in between vertex and fragment shader, which will be interpolated using the triangle's barycentric coordinates. This allows interpolation of attributes, such as normal and texture coordinates, across the triangle, leading to a more accurate appearance. Once the fragments are generated, they need to be stored on the image plane. Note that multiple fragments can land on the same pixel, and that the order of landing of the fragments is not defined, since the full pipeline is entirely asynchronous. So, modern GPUs use another hardware unit, the Render OutPut unit (ROP, Figure~\ref{fig:rasterpipeline}, e) to determine how to store the fragments in the final image. This unit usually can perform depth test (via a Z-buffer) or blend the fragments, allowing us to obtain a consistent result across invocations.
 
 This is only a simplified view of the full graphics pipeline, that, allows tessellation (domain and hull shaders), geometry manipulation (geometry shaders) or writing back into a vertex stream (transform feedback). There are also shaders that are completely detached from the graphics pipeline (compute shaders), allowing to perform tasks in parallel on the GPU that are not directly related to a graphics task. 
 
@@ -609,13 +610,13 @@ Rasterization is extensively used in game development and real-time applications
 \label{fig:ray_tracing}
 \end{figure}
 
-We start this section by describing \emph{ray casting}, that can be considered the dual technique to rasterization. In rasterization, we match each triangle to its final position on the screen. In ray casting, we do the opposite: for each pixel on the screen, we find the corresponding triangles that land within that pixel. This equates to \emph{shooting} a ray through the pixel, and intersecting it though the scene geometry. Once the hit point is found, attributes can be generated and the point shaded as in a fragment shader. 
+We start this section by describing \emph{ray casting}, that can be considered the dual technique to rasterization. In rasterization, we match each triangle to its final position on the screen. In ray casting, we do the opposite: for each pixel on the screen, we find the corresponding triangles that land within that pixel. This equates to \emph{shooting} a ray through the pixel, and intersecting it though the scene geometry. Once the hit point is found, attributes can be generated and the point shaded as in a fragment shader. \\[1em]
 
-We note that, once the data structure is established, we can trace rays from any point to another in the scene. So ray tracing describes this process of querying a data structure to generate intersection points. Depending on the algorithm used, ray tracing can be used as a base of multiple rendering algorithms, such as the volume path tracing we illustrated in Section~\ref{sec:renderingscattering}. One of the first ray tracing algorithms was proposed by~\citet{Whitted1980}.
+We note that, once the data structure is established, we can trace rays from any point to another in the scene. So ray tracing describes this process of querying a data structure to generate intersection points. Depending on the algorithm used, ray tracing can be used as a base of multiple rendering algorithms, such as the volume path tracing we illustrated in Section~\ref{sec:renderingscattering}. One of the first ray tracing algorithms was proposed by~\citet{Appel1968}.
 
 For the purpose of this thesis, we focus on GPU ray tracers. Modern GPU ray tracers build a tree data structure to efficiently lookup intersections. The most commonly used data structure is a \emph{bounding volume hierarchy}, or BVH. In a BVH, each of the primitives (usually triangles, but custom primitives such as spheres, cubes or quadrilaterals are possible) is enclosed in a bounding box. The various bounding boxes are then arranged in a tree data structure for fast lookup. Once a ray is traced, it is first inexpensively tested against the bounding boxes. For the bounding boxes that are hit, an expensive intersection test is performed to check for a hit. Depending on the shading algorithm, a callback can be issued at every encountered intersection (\emph{any hit}), or at the intersection closest to the camera (\emph{closest hit}). The process to trace a single ray in a two dimensional example is illustrated in Figure~\ref{fig:ray_tracing}. 
 
-Many challenges need to be solved to obtain an efficient GPU ray tracer. The first challenge is recursion. In the case of an algorithm such as path tracing, a probabilistic recursive ray tracing call is performed at the closest hit. So, an efficient ray tracer needs to keep track of the state at each intersection, generically though a recursion stack (OptiX~\cite{Parker2010} is such an example, where the stack is built automatically at the instruction level). The second challenge is on how to manage the data structure if the geometry of the material changes, through deformation or animation. Simple rigid transformations can be handled relatively inexpensively by the BVH, tough more complicated operations need to be done if  changes are performed at the single primitive level. Modern ray tracing techniques such as the TRBVH~\cite{Karras2013} can rebuild part of the BVH on the fly without excessive memory consumption. 
+Many challenges need to be solved to obtain an efficient GPU ray tracer. The first challenge is recursion. In the case of an algorithm such as path tracing, a probabilistic recursive ray tracing call is performed at the closest hit. So, an efficient ray tracer needs to keep track of the state at each intersection, generically though a recursion stack (OptiX~\cite{Parker2010} is such an example, where the stack is built automatically at the instruction level). The second challenge is on how to manage the data structure if the geometry of the material changes, through deformation or animation. Simple rigid transformations can be handled relatively inexpensively by the BVH, though more complicated operations need to be done if  changes are performed at the single primitive level. Modern ray tracing techniques such as the TRBVH~\cite{Karras2013} can rebuild part of the BVH on the fly without excessive memory consumption. 
 
 Given its state as a "natural" solution to light transport and its ability to model complex optical effects, ray tracing is commonly employed in the movie industry. Moreover, ray tracing scales better to scenes with a huge amount of triangles, such as in animated movies or virtual effects scenes. On the other hand, ray tracing is limited in the game developers community, due to smaller scenes and increased memory and lookup costs. Moreover, algorithms such as path tracing tend to give a noisier result, that is not acceptable in game applications. 
 

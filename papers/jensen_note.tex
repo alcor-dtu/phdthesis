@@ -123,12 +123,8 @@ $$
 \label{eq:id1}
 \end{equation}
 $$
-\sphere{\omegavec [ \omegavec \cdot \nablavec(\omegavec \cdot \mathbf{A})]}{} = 0 
+\sphere{\omegavec [ \omegavec \cdot \nablavec(\omegavec \cdot \mathbf{A})]}{} = 0
 $$
-\begin{equation}
-\sphere{ (\omegavec \cdot \mathbf{A}) (\omegavec \cdot \mathbf{B})}{} = \frac{4 \pi}{3} \mathbf{A}\cdot\mathbf{B} \, .
-\label{eq:id2}
-\end{equation}
 We first multiply into parentheses in the equation above:
 \begin{multline*}
 \frac{1}{4\pi} \omegavec \cdot \nablavec \xfunc{\phi} + \frac{3}{4\pi} \omegavec \cdot \nablavec (\omegavec \cdot \xvecfunc{E})
@@ -136,7 +132,7 @@ We first multiply into parentheses in the equation above:
  \\+ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec', \omegavec)  \omegavec' \cdot \xvecfunc{E}}{\omega'}
  + \xomegafunc{q} \, .
 \end{multline*}
-Now, we multiply each term by $\omegavec$ and integrate over the sphere. Take all the terms separately, we have
+Now, we multiply each term by $\omegavec$ and integrate over the sphere. Taking all the terms separately, we have
 $$
 \sphere{\frac{1}{4\pi} \omegavec \cdot \nablavec \xfunc{\phi}\omegavec}{} = \frac{1}{4\pi} \frac{4\pi}{3} \nablavec \xfunc{\phi} = \frac{\nablavec \xfunc{\phi}}{3}
 $$
@@ -158,7 +154,7 @@ $$
 $$
 \sphere{ \xomegafunc{q} \omegavec}{} =  \sourceonex \, ,
 $$
-Passage $(*)$ is a bit more delicate as it requires a spherical harmonics expansion of the phase function, as well as the assumption that the phase function depends only on the cosine between the two vectors ($p(\omegavec', \omegavec) = p(\omegavec' \cdot \omegavec)$). For the interested reader, we derive the complete solution at the end of this chapter (Section~\ref{sec:furtherderiv}). Putting everything together:
+Passage $(*)$ is a bit more delicate as it requires the assumption that the phase function is rotationally symmetric, which means that it depends only on the cosine between the two direction vector arguments ($p(\omegavec', \omegavec) = p(\omegavec' \cdot \omegavec)$). For the interested reader, we further discuss this result at the end of this section (Section~\ref{sec:furtherderiv}). Putting everything together:
 $$
 \frac{\nablavec \xfunc{\phi}}{3} + 0 = 0 -\extinction \xvecfunc{E} + 0 + g \scattering  \xvecfunc{E} + \sourceonex
 $$
@@ -185,41 +181,43 @@ which is the diffusion equation as it appears in the work of Jensen et al.~\cite
 
 \subsection{Phase function approximation}
 \label{sec:furtherderiv}
-We have assumed   that $p$ depends only on the cosine of the two vectors so that $p(\omegavec', \omegavec) = p(\omegavec' \cdot \omegavec) = p(\omegavec' \cdot \omegavec)$. As before, we want to simplify our function using spherical harmonics:
+Assuming that $p$ is rotationally symmetric so that $p(\omegavec', \omegavec) = p(\omegavec' \cdot \omegavec) = p(\omegavec' \cdot \omegavec)$, we can it in Legendre polynomials:
 $$
-p(\omegavec' \cdot \omegavec) \approx \sum_{n = 0}^{1} \frac{2n+1}{4\pi} p_{n}( \omegavec' \cdot \omegavec) \sum_{m = -n}^{n}  P_{n,m}(\omegavec' \cdot \omegavec) \,.
+p(\omegavec' \cdot \omegavec) = \sum_{n = 0}^{\infty} \frac{2n+1}{4\pi} p_{n} P_n(\omegavec' \cdot \omegavec) \,,
 $$
-Where $p_n$ is the $n$-th order projection. $P$ are the Legendre polynomials in spherical coordinates. Through the addition theorem and the regularity of spherical harmonics, we can deduce the following two identities:
+where $p_n$ are the expansion coefficients and $P_n$ are the Legendre polynomials. Since
 $$
-P_{0,0}(\omegavec' \cdot \omegavec) = 1, \ \ \ \sum_{m = -1}^{1}  P_{1,m}(\omegavec' \cdot \omegavec) = \omegavec' \cdot \omegavec.
+P_0(\omegavec' \cdot \omegavec) = 1, \quad P_1(\omegavec' \cdot \omegavec) = \omegavec' \cdot \omegavec  \, ,
 $$
- We can easily calculate:
+we have
 $$
 p_0 = \sphere{p(\omegavec' \cdot \omegavec) P_{0,0}(\omegavec' \cdot \omegavec)}{} = 1,
 $$
-and the other projection:
 $$
-p_1 = \sum_{m = -1}^{1} \sphere{p(\omegavec' \cdot \omegavec) Y_{1,m}(\omegavec' \cdot \omegavec)}{} = \sphere{p(\omegavec' \cdot \omegavec) \omegavec' \cdot \omegavec}{} =  g.
+p_1 = \sphere{p(\omegavec' \cdot \omegavec) P_1(\omegavec' \cdot \omegavec)}{} = \sphere{p(\omegavec' \cdot \omegavec) (\omegavec' \cdot \omegavec)}{} = g \, .
 $$
-Putting it all together, we get the final approximation:
+Inserting and truncating to second order ($P_1$), we get the approximation:
 $$
-p(\omegavec' \cdot \omegavec) \approx \frac{1 + 3g (\omegavec' \cdot \omegavec)}{4\pi} 
+p(\omegavec' \cdot \omegavec) \approx \frac{1 + 3g (\omegavec' \cdot \omegavec)}{4\pi}
 .$$
-Let us plug it in passage (*):
+Let us plug it into passage $(*)$:
 \begin{equation*}
 \begin{split}
-&\sphere{ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec', \omegavec)  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} \approx  \\
-&\approx \sphere{ \frac{3}{4\pi} \scattering  \sphere { \frac{1 + 3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} = \\
+&\sphere{ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec', \omegavec)  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} \\
+&\approx \sphere{ \frac{3}{4\pi} \scattering  \sphere { \frac{1 + 3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} \\
 &= \sphere{ \frac{3}{4\pi} \scattering  \left[ \sphere { \frac{1}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} + \sphere { \frac{3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \right] \omegavec}{} .
 \end{split}
 \end{equation*}
-Now the first integral within the square parenthesis is zero, given that $\mathbf{E}$ is independent of $\omegavec'$. The second integral within the parenthesis can be solved with the fourth identity in Equation~\ref{eq:id2}.
+Now, the first integral within the square parenthesis is zero, given that $\mathbf{E}$ is independent of $\omegavec'$. The second integral within the parenthesis can be solved using the following identity:
+$$
+\sphere{ (\omegavec \cdot \mathbf{A}) (\omegavec \cdot \mathbf{B})}{} = \frac{4 \pi}{3} \mathbf{A}\cdot\mathbf{B} \, .
+$$
+With this, we have
 \begin{equation*}
 \begin{split}
-&\sphere{ \frac{3}{4\pi} \scattering  \left[ \sphere { \frac{1}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} + \sphere { \frac{3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \right] \omegavec}{}  =  \\
-&= \sphere{ \frac{3}{4\pi} \scattering  \left[ 0 + \frac{4 \pi}{3} \frac{3g (\omegavec \cdot  \xvecfunc{E})}{4\pi}  \right] \omegavec}{}  = \\
-&=  \frac{3 g}{4\pi} \scattering \sphere{  (\omegavec \cdot \xvecfunc{E}) \omegavec}{}  = \\
-&= g \scattering  \xvecfunc{E},
+&\sphere{ \frac{3}{4\pi} \scattering  \left[ \sphere { \frac{1}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} + \sphere { \frac{3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \right] \omegavec}{} \\
+&= \sphere{ \frac{3}{4\pi} \scattering  \left[ 0 + \frac{4 \pi}{3} \frac{3g (\omegavec \cdot  \xvecfunc{E})}{4\pi}  \right] \omegavec}{} \\
+&=  \frac{3 g}{4\pi} \scattering \sphere{  (\omegavec \cdot \xvecfunc{E}) \omegavec}{}  = g \scattering  \xvecfunc{E},
 \end{split}
 \end{equation*}
 which is the expected result.
@@ -391,7 +389,7 @@ $$
 $$
 \sourceonex = 0 \, ,
 $$
-where $\Theta(z)$ is the Heaviside step function, which is 1 for $z \geq 0$ and otherwise 0. Inserting in the solution based on Green's function with $\mathbf{r}' = (x', y', z')$:
+where $\Theta(z)$ is the Heaviside step function, which is 1 for $z \geq 0$ and  0 otherwise. Inserting in the solution based on Green's function with $\mathbf{r}' = (x', y', z')$:
 $$
 \xfunc{\phi} = \frac{1}{4 \pi} \iiint_{\mathbb{R}^3} \frac{e^{-\transmission \|\mathbf{x} - \mathbf{r}' \|}}{\|\mathbf{x} - \mathbf{r}' \|} \left(   \frac{\Phi_i \redsca \delta(x') \delta(y') \Theta(z') e^{-\redext z'}}{D} \right) d^3 \mathbf{r}'
 $$
@@ -399,15 +397,14 @@ and applying the deltas:
 $$
 \xfunc{\phi} = \frac{\Phi_i}{4 \pi D} \int_{0}^{+\infty} \frac{e^{-\transmission \|\mathbf{x} - z' \vec{n}_s \|}}{\|\mathbf{x} - z' \vec{n}_s  \|} \left(  \redsca e^{-\redext z'} \right) dz' \, .
 $$
-Considering positions $\mathbf{x}$ in $xy$-plane far from the origin and the exponential attenuation with increasing $z'$, we use the assumption $\|\mathbf{x} - z' \vec{n}_s \| \approx \|\mathbf{x}\| = r$ and get
+Considering positions $\mathbf{x}$ in the $xy$-plane far from the origin and the exponential attenuation with increasing $z'$, we use the assumption $\|\mathbf{x} - z' \vec{n}_s \| \approx \|\mathbf{x}\| = r$ and get
 $$
 \xfunc{\phi} = \frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r} \redsca \int_{0}^{+\infty} e^{-\redext z'} dz' = \frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r} \frac{\redsca}{\redext} = \alpha' \frac{\Phi_i}{4 \pi D} \frac{e^{-\transmission r}}{r} \, ,
 $$
-where $\alpha' = \frac{\redsca}{\redext}$ is the reduced albedo. Thus, we get the monopole solution for a ray source of normal incidence:
+where $\alpha' = \frac{\redsca}{\redext}$ is the reduced scattering albedo. Thus, we get the monopole solution for a ray source of normal incidence:
 \begin{equation} \label{eq:monopoint}
-\xfunc{\phi} = \frac{\Phi}{4 \pi D} \frac{e^{-\transmission r}}{r} \, ,
+\xfunc{\phi} = \frac{\Phi}{4 \pi D} \frac{e^{-\transmission r}}{r} \qquad \text{with $\Phi = \alpha' \Phi_i$.}
 \end{equation}
-where $\Phi = \alpha' \Phi_i$.
 
 \subsection{Ray source solution}
 
@@ -495,7 +492,7 @@ Then
     \right).
 \end{eqnarray*}
 
-In a highly scattering medium, $\absorption \ll \redscaEddington$. For $g \ne 1$ this will imply and $\absorption \ll \transmission \ll \redscaEddington$, and, hence
+In a highly scattering medium, $\absorption \ll \redscaEddington$. For $g \ne 1$ and $\absorption \ll \transmission \ll \redscaEddington$, this will imply
 \begin{equation*}
     \frac{1}{\redextEddington - \transmission \cos \theta} =
     \frac{1}{\redscaEddington} \left(1 +
