@@ -1,4 +1,10 @@
 \chapter{Summary (Danish)}
 \begin{otherlanguage}{danish}
+Interaktive renderingsapplikationer bruges i stigende grad til mange af de ting vi bruger i dagligdagen. Foruden at være brugt i underholdsningsindustrien, så bruges det også til produktdesign og produktion, hvor det især er brugbart til at forudsige udseendet af objekter fremstillet af komplekse materialer. Disse områder kræver ofte at tingene går hurtigt og derfor at applikationerne er interaktive og giver brugeren øjeblikkelig feedback. 
 
+I denne afhandling fokuserer vi på at løse problemstillingen ved at udvikle nye interaktive fotorealistiske renderingsteknikker, der udnytter parrallelberegningerne på en Graphics Processing Units (GPU) til effektivt at lave renderinger baseret på the fysiske love. Disse teknikker bygger på caching or filtrerings metoder, for at kunne genbruge data på tværs af rum eller tid. 
+
+Vi giver insigt i forskellige områder af computergrafik, bl.a. scene rekonstruktion, materiale parameter estimering, effektive datastructurer samt fysisk baseret renderingsmodeller. Vores mål er udforske de forskellige kompromier og afvejninger, der er nødvendige for at opnå nøjagtige fotorelistiske renderinger. Mere specifikt bidrager vi med to metoder: Den første omhandler hurtig rendering af halvgennemsigtige materialer, hvor man tager højde for retningsbestemte effekter i forhold til subsurface scattering. Den anden metode forbedrer temporal stabilitet i interaktiv raytracing ved at bruge hurtigt reprojektion, som kan anvendes ovenpå allerede eksisterende renderings algoritmer. Derudover har vi udviklet en innovativ validerings pipeline, med det formål at sammenligne eksisterende renderinger og rekonstruktions metoder med billeder fra den virkelige verden. 
+
+Med disse bidrag viser vi, hvordan det er muligt at bruge caching metoder til effektivt at forbedre eksisterende metoder til at håndtere mere komplekse optiske effekter og stadig overholde de tidsbegrænsninger der er i et interaktivt renderings miljø.
 \end{otherlanguage}
