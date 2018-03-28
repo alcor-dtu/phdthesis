@@ -42,7 +42,8 @@ We now discuss three more detailed use cases in which there is a demand for impr
 %
 \begin{figure}
 \centering
-	 \includegraphics[width=\textwidth]{figures/photorealistic_diagram.png}  \\
+\def\svgwidth{1.1\textwidth}
+\input{figures/photorealistic_diagram_clouds.pdf_tex}
 \caption{Visualizing the time-accuracy graph, showing the  different application fields.} 
 \label{fig:main_diagram}
 \end{figure}
@@ -81,17 +82,19 @@ As games vary for gameplay, environment and style, photorealistic rendering can 
         every node/.style={anchor=south west,inner sep=0pt},
       ]   
      \node (figmain) at (0,0)
-       {\includegraphics[width=\textwidth]{figures/photorealistic_diagram_bw}};
-      \node (fig0) at (0.6\textwidth,0.45\textwidth)
-       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/ao17_reassembly}};
-      \node (fig1) at (0.27\textwidth,0.32\textwidth)
-       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/dirsss_tvcj16}};
-      \node (fig2) at (0.5\textwidth,0.4\textwidth)
-       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/mam}};
-      \node (fig3) at (0.25\textwidth,0.2\textwidth)
-       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/srt}};
-      \node (fig4) at (0.1\textwidth,0.3\textwidth)
-       {\includegraphics[width=0.15\textwidth]{figures/thumbnails/vr_showcase_brdf}};
+       {\def\svgwidth{1.1\textwidth}
+		\input{figures/photorealistic_diagram_clouds_bw.pdf_tex}
+};
+      \node (fig0) at (0.68\textwidth,0.5\textwidth)
+       {\includegraphics[width=0.17\textwidth]{figures/thumbnails/ao17_reassembly}};
+      \node (fig1) at (0.31\textwidth,0.36\textwidth)
+       {\includegraphics[width=0.17\textwidth]{figures/thumbnails/dirsss_tvcj16}};
+      \node (fig2) at (0.55\textwidth,0.43\textwidth)
+       {\includegraphics[width=0.17\textwidth]{figures/thumbnails/mam}};
+      \node (fig3) at (0.29\textwidth,0.22\textwidth)
+       {\includegraphics[width=0.17\textwidth]{figures/thumbnails/srt}};
+      \node (fig4) at (0.12\textwidth,0.3\textwidth)
+       {\includegraphics[width=0.17\textwidth]{figures/thumbnails/vr_showcase_brdf}};
 \node[above = -0.25cm of fig0] {\colorbox{white}{\ref{sec:glass}}};
 \node[above = -0.25cm of fig1] {\colorbox{white}{\ref{sec:interactivedirsss}}};
 \node[above = -0.25cm of fig2] {\colorbox{white}{\ref{sec:juice}}};
