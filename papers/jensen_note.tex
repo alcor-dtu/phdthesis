@@ -79,7 +79,7 @@ To get the diffusion approximation, we approximate radiance using a second order
 $$
 \xomegafunc{L} \approx \sum_{n = 0}^{1} \sum_{m = -n}^{n} L_{n,m}(\mathbf{x}) Y_{n,m}(\omegavec) \, ,
 $$
-where $Y_{n,m}(\omegavec)$ are normalized spherical harmonics basis functions,
+where $Y_{n,m}(\omegavec)$ are normalized real-valued spherical harmonics basis functions,
 %\footnote{\url{https://www.cs.dartmouth.edu/~wjarosz/publications/dissertation/appendixB.pdf}},
 and $L_{n,m}(\mathbf{x})$ is the projection of $L$ against the $n,m$ basis function:
 $$
@@ -149,7 +149,7 @@ $$
 \sphere{\scattering \frac{\xfunc{\phi}}{4\pi} \sphere {p(\omegavec', \omegavec)}{\omega'} \omegavec}{} = \scattering \frac{\xfunc{\phi}}{4\pi} \sphere{\omegavec}{} = 0
 $$
 $$
-\sphere{ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec', \omegavec)  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} \stackrel{(*)}{\approx} g \scattering  \xvecfunc{E}
+\sphere{ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec', \omegavec)  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} \stackrel{(*)}{=} g \scattering  \xvecfunc{E}
 $$
 $$
 \sphere{ \xomegafunc{q} \omegavec}{} =  \sourceonex \, ,
@@ -179,9 +179,9 @@ D \nabla^2 \xfunc{\phi} = \absorption \xfunc{\phi} - \sourcezerox + 3 D \nablave
 \end{equation}
 which is the diffusion equation as it appears in the work of Jensen et al.~\cite{jensen01}.
 
-\subsection{Phase function approximation}
+\subsection{Rotationally symmetric phase function}
 \label{sec:furtherderiv}
-Assuming that $p$ is rotationally symmetric so that $p(\omegavec', \omegavec) = p(\omegavec' \cdot \omegavec) = p(\omegavec' \cdot \omegavec)$, we can it in Legendre polynomials:
+Assuming that $p$ is rotationally symmetric so that $p(\omegavec', \omegavec) = p(\omegavec' \cdot \omegavec)$, we can expand it in Legendre polynomials:
 $$
 p(\omegavec' \cdot \omegavec) = \sum_{n = 0}^{\infty} \frac{2n+1}{4\pi} p_{n} P_n(\omegavec' \cdot \omegavec) \,,
 $$
@@ -191,33 +191,26 @@ P_0(\omegavec' \cdot \omegavec) = 1, \quad P_1(\omegavec' \cdot \omegavec) = \om
 $$
 we have
 $$
-p_0 = \sphere{p(\omegavec' \cdot \omegavec) P_{0,0}(\omegavec' \cdot \omegavec)}{} = 1,
+p_0 = \sphere{p(\omegavec' \cdot \omegavec) P_0(\omegavec' \cdot \omegavec)}{} = 1,
 $$
 $$
 p_1 = \sphere{p(\omegavec' \cdot \omegavec) P_1(\omegavec' \cdot \omegavec)}{} = \sphere{p(\omegavec' \cdot \omegavec) (\omegavec' \cdot \omegavec)}{} = g \, .
 $$
-Inserting and truncating to second order ($P_1$), we get the approximation:
+In addition, the orthogonality relations for Legendre polynomials are
 $$
-p(\omegavec' \cdot \omegavec) \approx \frac{1 + 3g (\omegavec' \cdot \omegavec)}{4\pi}
-.$$
-Let us plug it into passage $(*)$:
+\sphere{P_n(\omegavec' \cdot \omegavec)P_m(\omegavec' \cdot \omegavec)}{\omega'} = \left\{\begin{array}{c@{\quad,\quad}l}\displaystyle\frac{4\pi}{2n+1} & \text{for $n=m$} \\[2ex] 0 & \text{otherwise} \, . \end{array} \right.
+$$
+Noting that in spherical harmonics with $\omegavec$ as the local $z$-axis:
+\begin{eqnarray*}
+\omega_x' & = & -\sqrt{\frac{4\pi}{3}}Y_{1,1}(\omegavec') \\
+\omega_y' & = & -\sqrt{\frac{4\pi}{3}}Y_{1,-1}(\omegavec') \\
+\omega_z' & = & \sqrt{\frac{4\pi}{3}}Y_{1,0}(\omegavec') = P_1(\omegavec' \cdot \omegavec) \, ,
+\end{eqnarray*}
+and that integration over $\omega_y'$ and $\omega_z'$ are zero, the expansion of the phase function combined with the orthogonality of the Legendre polynomials leave us with
 \begin{equation*}
 \begin{split}
 &\sphere{ \frac{3}{4\pi} \scattering  \sphere {p(\omegavec', \omegavec)  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} \\
-&\approx \sphere{ \frac{3}{4\pi} \scattering  \sphere { \frac{1 + 3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \omegavec}{} \\
-&= \sphere{ \frac{3}{4\pi} \scattering  \left[ \sphere { \frac{1}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} + \sphere { \frac{3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \right] \omegavec}{} .
-\end{split}
-\end{equation*}
-Now, the first integral within the square parenthesis is zero, given that $\mathbf{E}$ is independent of $\omegavec'$. The second integral within the parenthesis can be solved using the following identity:
-$$
-\sphere{ (\omegavec \cdot \mathbf{A}) (\omegavec \cdot \mathbf{B})}{} = \frac{4 \pi}{3} \mathbf{A}\cdot\mathbf{B} \, .
-$$
-With this, we have
-\begin{equation*}
-\begin{split}
-&\sphere{ \frac{3}{4\pi} \scattering  \left[ \sphere { \frac{1}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} + \sphere { \frac{3g (\omegavec' \cdot \omegavec)}{4\pi}  \omegavec' \cdot \xvecfunc{E}}{\omega'} \right] \omegavec}{} \\
-&= \sphere{ \frac{3}{4\pi} \scattering  \left[ 0 + \frac{4 \pi}{3} \frac{3g (\omegavec \cdot  \xvecfunc{E})}{4\pi}  \right] \omegavec}{} \\
-&=  \frac{3 g}{4\pi} \scattering \sphere{  (\omegavec \cdot \xvecfunc{E}) \omegavec}{}  = g \scattering  \xvecfunc{E},
+&= \sphere{ \frac{3}{4\pi} \scattering \frac{3}{4\pi}g \left(\frac{4\pi}{3}\omegavec\cdot\xvecfunc{E}\right) \omegavec}{} = g \scattering  \xvecfunc{E} \, ,
 \end{split}
 \end{equation*}
 which is the expected result.
@@ -325,7 +318,7 @@ A = \frac{\frac{1 + R_0}{1 - R_0} + \cos^3\theta_c}{1 - \cos^2\theta_c} = \frac{
 $$
 
 \subsection{Approximating the corrective factor}
-
+\label{sec:approxc}
 Assuming separability, we can rewrite the $I_-$ term in Equation~\ref{eq:diffb} as:
 $$
  \lowerhemisphere{R(\eta, \omegavec) L(x_s, \omegavec) (-\omegavec \cdot \vec{n}_s)}{} \approx \lowerhemisphere{R(\eta, \omegavec)  (-\omegavec \cdot \vec{n}_s)}{} \lowerhemisphere{L(x_s, \omegavec) (-\omegavec \cdot \vec{n}_s)}{}
@@ -665,11 +658,11 @@ Thus, we can find the monopole BSSRDF for this configuration:
 $$
 S_d(\mathbf{x}_i, \mathbf{x}_o)  = \frac{1}{4\cphi(1/\eta)} \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} \left[ \cphi(\eta) \frac{r^2}{D} + \cE(\eta) (1 + \transmission r) (\mathbf{x}_o - \mathbf{x}_i) \cdot \vec{n}_o \right] \, ,
 $$
-where we used $\Phi_i = T_{12} L_i(\mathbf{x}_i, \omegavec_i)$. This is the monopole version of the better dipole from Eugene d'Eon~\cite{deon12}. To get a monopole version of the standard dipole~\cite{farrell92,jensen01}, we further approximate the above expression using $\cphi(1/\eta) \approx 1/4$, $\cphi(\eta) \approx 0$, and $\cE(\eta) \approx 1$:
+where we used $\Phi_i = T_{12} L_i(\mathbf{x}_i, \omegavec_i)$. This is the monopole version of the better dipole from Eugene d'Eon~\cite{deon12}. To get a monopole version of the standard dipole~\cite{farrell92,jensen01}, we further approximate the above expression. First, we disregard Fresnel effects ($\eta=1$), which implies $\cphi(1/\eta) \approx 1/4$, and $\cE(\eta) \approx 1$. Moreover, on imposing boundary conditions to get to the standard dipole, we get $A=1$ (see Section~\ref{sec:approxc}), which implies that the $\cphi(\eta)$ terms in the equation above cancel out. So, we can further assume $\cphi(\eta) = 0$ to obtain the final formula:
 $$
-S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} (1 + \transmission r) \mathbf{x} \cdot \vec{n}_o
+S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} (1 + \transmission r) \mathbf{x} \cdot \vec{n}_o,
 $$
-This is the monopole version of the standard dipole.
+which is the monopole version of the standard dipole.
 
 \subsection{Directional monopole BSSRDF}
 
