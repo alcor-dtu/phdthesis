@@ -658,7 +658,7 @@ Thus, we can find the monopole BSSRDF for this configuration:
 $$
 S_d(\mathbf{x}_i, \mathbf{x}_o)  = \frac{1}{4\cphi(1/\eta)} \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} \left[ \cphi(\eta) \frac{r^2}{D} + \cE(\eta) (1 + \transmission r) (\mathbf{x}_o - \mathbf{x}_i) \cdot \vec{n}_o \right] \, ,
 $$
-where we used $\Phi_i = T_{12} L_i(\mathbf{x}_i, \omegavec_i)$. This is the monopole version of the better dipole from Eugene d'Eon~\cite{deon12}. To get a monopole version of the standard dipole~\cite{farrell92,jensen01}, we further approximate the above expression. First, we disregard Fresnel effects ($\eta=1$), which implies $\cphi(1/\eta) \approx 1/4$, and $\cE(\eta) \approx 1$. Moreover, on imposing boundary conditions to get to the standard dipole, we get $A=1$ (see Section~\ref{sec:approxc}), which implies that the $\cphi(\eta)$ terms in the equation above cancel out. So, we can further assume $\cphi(\eta) = 0$ to obtain the final formula:
+where we used $\Phi_i = T_{12} L_i(\mathbf{x}_i, \omegavec_i)$. This is the monopole version of the better dipole from Eugene d'Eon~\cite{deon12}. To get a monopole version of the standard dipole~\cite{farrell92,jensen01}, we further approximate the above expression by disregarding Fresnel effects ($\eta=1$). This implies $\cphi(1/\eta) \approx 1/4$, and $\cE(\eta) \approx 1$. Moreover, on imposing boundary conditions to get to the standard dipole, we get $A=1$ (see Section~\ref{sec:approxc}), which implies that the $\cphi(\eta)$ terms in the equation above cancel out. So, we can further assume $\cphi(\eta) = 0$ to obtain the final formula:
 $$
 S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} (1 + \transmission r) \mathbf{x} \cdot \vec{n}_o,
 $$
