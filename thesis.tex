@@ -49,6 +49,7 @@
 \newcommand{\operator}[1] {\mathcal{#1}}
 \newcommand{\opa} {\mathcal{Z}}
 \renewcommand{\floatpagefraction}{1.}%
+
 %
 %==================================================================================================
 % THESIS PROPERTIES (Modifiy these fields with your details)
@@ -82,6 +83,7 @@
 %--------------------
 \frontmatter
 \thispagestyle{empty}
+\pagenumbering{roman}                               %Set frontmatter numbering style
 \begin{flushright}
 \vspace*{3cm}
 \begin{CJK}{UTF8}{min}七転び八起き.\end{CJK} \\
@@ -89,7 +91,9 @@
 - Japanese proverb
 \end{flushright}
 \clearpage
-\pagenumbering{roman}                               %Set frontmatter numbering style
+\markboth{}{}    
+\phantom{a}
+\clearpage
 \input{tex/summaryuk}                                   %English summary of Thesis
 \markboth{}{}                                       %Set headings (left)(right)
 \input{tex/summarydk}                      

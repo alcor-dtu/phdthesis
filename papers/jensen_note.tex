@@ -7,7 +7,7 @@
 \usepackage{hyperref}
 
 \title{Derivation of standard and directional dipole quantities}
-\date{September 2017}
+\date{March 2018}
 \author{Alessandro Dal Corso \\ Technical University of Denmark \and Jeppe Revall Frisvad \\ Technical University of Denmark
 \and Thomas Kim Kjeldsen \\ The Alexandra Institute
 }
@@ -91,11 +91,11 @@ L_{0,0}(\mathbf{x}) Y_{0,0}(\omegavec) = \sphere{\sqrt{\frac{1}{4\pi}} \xomegafu
 $$
 As for the other basis functions, we use the Cartesian form. We have
 $$
-L_{-1,1}(\mathbf{x}) Y_{-1,1}(\omegavec) = \omega_x \sphere{\sqrt{\frac{3}{4\pi}} \omega_x \xomegafunc{L}}{} \, \sqrt{\frac{3}{4\pi}} = \frac{3}{4\pi} \omega_x {E}_x(\mathbf{x}) \, ,
+L_{1,-1}(\mathbf{x}) Y_{1,-1}(\omegavec) = \omega_x \sphere{\sqrt{\frac{3}{4\pi}} \omega_x \xomegafunc{L}}{} \, \sqrt{\frac{3}{4\pi}} = \frac{3}{4\pi} \omega_x {E}_x(\mathbf{x}) \, ,
 $$
 where the $x$ subscript indicates the first component. Similarly, we obtain
 $$
-L_{0,1}(\mathbf{x}) Y_{0,1}(\omegavec) = \frac{3}{4\pi} \omega_z {E}_z(\mathbf{x})
+L_{1,0}(\mathbf{x}) Y_{1,0}(\omegavec) = \frac{3}{4\pi} \omega_z {E}_z(\mathbf{x})
 $$
 $$
 L_{1,1}(\mathbf{x}) Y_{1,1}(\omegavec) = \frac{3}{4\pi} \omega_y {E}_y(\mathbf{x}) \, .
@@ -191,7 +191,7 @@ P_0(\omegavec' \cdot \omegavec) = 1, \quad P_1(\omegavec' \cdot \omegavec) = \om
 $$
 we have
 $$
-p_0 = \sphere{p(\omegavec' \cdot \omegavec) P_0(\omegavec' \cdot \omegavec)}{} = 1,
+p_0 = \sphere{p(\omegavec' \cdot \omegavec) P_0(\omegavec' \cdot \omegavec)}{} = 1 \, ,
 $$
 $$
 p_1 = \sphere{p(\omegavec' \cdot \omegavec) P_1(\omegavec' \cdot \omegavec)}{} = \sphere{p(\omegavec' \cdot \omegavec) (\omegavec' \cdot \omegavec)}{} = g \, .
@@ -216,7 +216,7 @@ and that integration over $\omega_x'$ and $\omega_y'$ are zero, the expansion of
 which is the expected result.
 \section{Boundary condition}
 
-In the case of a scattering medium in a finite region of space, we impose the classic boundary condition that the net inward flux on each surface point $\mathbf{x}_s$ with (inward) normal $\vec{n}_s$ is zero:
+In the case of a scattering medium in a half-space, we impose the classic boundary condition that the net inward flux on each surface point $\mathbf{x}_s$ with (inward) normal $\vec{n}_s$ is zero:
 $$
 \hemisphere{L(\mathbf{x}_s, \omegavec) (\omegavec \cdot \vec{n}_s)}{} = 0 \, .
 $$
@@ -318,7 +318,7 @@ A = \frac{\frac{1 + R_0}{1 - R_0} + \cos^3\theta_c}{1 - \cos^2\theta_c} = \frac{
 $$
 
 \subsection{Approximating the corrective factor}
-\label{sec:approxc}
+
 Assuming separability, we can rewrite the $I_-$ term in Equation~\ref{eq:diffb} as:
 $$
  \lowerhemisphere{R(\eta, \omegavec) L(x_s, \omegavec) (-\omegavec \cdot \vec{n}_s)}{} \approx \lowerhemisphere{R(\eta, \omegavec)  (-\omegavec \cdot \vec{n}_s)}{} \lowerhemisphere{L(x_s, \omegavec) (-\omegavec \cdot \vec{n}_s)}{}
@@ -658,11 +658,11 @@ Thus, we can find the monopole BSSRDF for this configuration:
 $$
 S_d(\mathbf{x}_i, \mathbf{x}_o)  = \frac{1}{4\cphi(1/\eta)} \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} \left[ \cphi(\eta) \frac{r^2}{D} + \cE(\eta) (1 + \transmission r) (\mathbf{x}_o - \mathbf{x}_i) \cdot \vec{n}_o \right] \, ,
 $$
-where we used $\Phi_i = T_{12} L_i(\mathbf{x}_i, \omegavec_i)$. This is the monopole version of the better dipole from Eugene d'Eon~\cite{deon12}. To get a monopole version of the standard dipole~\cite{farrell92,jensen01}, we further approximate the above expression by disregarding Fresnel effects ($\eta=1$). This implies $\cphi(1/\eta) \approx 1/4$, and $\cE(\eta) \approx 1$. Moreover, on imposing boundary conditions to get to the standard dipole, we get $A=1$ (see Section~\ref{sec:approxc}), which implies that the $\cphi(\eta)$ terms in the equation above cancel out. So, we can further assume $\cphi(\eta) = 0$ to obtain the final formula:
+where we used $\Phi_i = T_{12} L_i(\mathbf{x}_i, \omegavec_i)$. This is the monopole version of the better dipole from Eugene d'Eon~\cite{deon12}. To get a monopole version of the standard dipole~\cite{farrell92,jensen01}, we further approximate the above expression using $\cphi(1/\eta) \approx 1/4$, $\cphi(\eta) \approx 0$, and $\cE(\eta) \approx 1$:
 $$
-S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} (1 + \transmission r) \mathbf{x} \cdot \vec{n}_o,
+S_d(\mathbf{x}_i, \mathbf{x}_o)  =  \frac{\alpha'}{4 \pi^2} \frac{e^{-\transmission r}}{r^3} (1 + \transmission r) \mathbf{x} \cdot \vec{n}_o
 $$
-which is the monopole version of the standard dipole.
+This is the monopole version of the standard dipole.
 
 \subsection{Directional monopole BSSRDF}
 
