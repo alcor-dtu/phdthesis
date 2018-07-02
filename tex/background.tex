@@ -139,10 +139,10 @@ Let us first consider a surface $A$ illuminated by a light, as in Figure~\ref{fi
 \label{eq:bssrdf}
 d L(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) = S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) d \Phi_i(\mathbf{x}_i, \vec{\omega}_i)  \siunit{\watt \per \square \metre \per \steradian}.
 \end{equation}
-The factor $S$, dependent on the surface, is called \emph{bidirectional scattering-surface reflectance distribution function}, or BSSRDF for short~\cite{Nicodemus1977}. The units for the BSSRDF are $\siunitnospace{\per \square \metre \per \steradian}$. From the definition of BSSRDF and flux, we obtain right away the reflected radiance equation~\cite{Jensen2001}:
+The factor $S$, dependent on the surface, is called \emph{bidirectional scattering-surface reflectance distribution function}, or BSSRDF for short~\cite{Nicodemus1977}. The units for the BSSRDF are $\siunitnospace{\per \square \metre \per \steradian}$. From the definition of BSSRDF and flux, we obtain right away the reflected radiance equation:
 \begin{equation}
 \label{eq:bssrdfintegral}
-L(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_{\Omega^+} S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d {\omega}_i  \siunit{\watt \per \square \metre \per \steradian}.
+L(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_{\Omega^+} S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i)  d {\omega}_i d A_i  \siunit{\watt \per \square \metre \per \steradian}.
 \end{equation}
 Note that we did not assume anything about the material, deriving the BSSRDF from purely radiometric quantities. The BSSRDF can be seen as a global formulation of scattering processes within the material.
 
@@ -154,7 +154,7 @@ L_o(\mathbf{x}, \vec{\omega}) = L_e(\mathbf{x}, \vec{\omega}) + L(\mathbf{x}, \v
 This equation gives the so called extended form of the rendering equation ~\cite{Jensen2001}. Given the physical nature of the BSSRDF, we can impose conservation of energy, so that the reflected light never increases:
 \begin{equation}
 \label{eq:bssrdfconservation}
-0 \leq \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega}_i) d A_i d \vec{\omega}_i \leq 1 \siunit{-}.
+0 \leq \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) (\vec{n}_i \cdot \vec{\omega}_i)  d {\omega}_i d A_i \leq 1 \siunit{-}.
 \end{equation}
 Moreover, the BSSRDF respects the Stokes-Helmholtz reciprocity principle~\cite{stokes_2009,Chandrasekhar1958}:
 \begin{equation}
@@ -394,7 +394,7 @@ We evaluate $L^0(\mathbf{x}_t, \vec{\omega})$ by continuing the path outside the
 \begin{equation*}
 L_r^*(\mathbf{x}_o, \vec{\omega}) = \int_0^r \sigma_s \int_{4\pi} L(\mathbf{x}', \vec{\omega}') p(\mathbf{x}', \vec{\omega}', \vec{\omega})  d\omega' T_{s}(\mathbf{x}', -\vec{\omega})  ds.
 \end{equation*}
-Note that $\mathbf{x}' = \mathbf{x}_o - s \vec{\omega} = \mathbf{x}_t + r' \vec{\omega}$. Now we can write the Monte Carlo estimator sampling both integrals at the same time:
+Note that $\mathbf{x}' = \mathbf{x}_o - s \vec{\omega} = \mathbf{x}_t + r' \vec{\omega}$. Now we can write the Monte Carlo estimator sampling both integrals:
 \begin{equation}
 \label{eq:lrintermediate}
 \hat{L}_r^*(\mathbf{x}_o, \vec{\omega}) = \sum_{p=1}^N\sum_{q=1}^M \frac{\sigma_s L(\mathbf{x}_o - s_p, \vec{\omega}, \vec{\omega}'_q) p(\mathbf{x}_o - s_p, \vec{\omega}, \vec{\omega}'_q, \vec{\omega}) \exp(-\sigma_t s_p)}{\text{pdf}(s_p) \text{pdf}(\vec{\omega}'_q)}.

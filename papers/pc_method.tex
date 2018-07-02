@@ -40,7 +40,7 @@ A triangle in a triangle mesh may have a different normal for each vertex. In th
 
 Theoretically, we solve the equation of reflected radiance for BSSRDFs:
 \begin{equation*}
-L_r(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i) d{A} d\omega_i \, ,
+L_r(\mathbf{x}_o, \vec{\omega}_o) = \int_A \int_\Omega S(\mathbf{x}_i, \vec{\omega}_i, \mathbf{x}_o, \vec{\omega}_o) L_i(\mathbf{x}_i, \vec{\omega}_i) (\vec{n}_i \cdot \vec{\omega}_i)  d\omega_i d{A} \, ,
 \end{equation*}
 where $L_i$ and $L_r$ are incident and reflected radiance, $S$ is the BSSRDF, $A$ is the surface area of the object represented by the triangle mesh, and $\Omega$ is the hemisphere around the surface normal $\vec{n}_i$ at the surface position $\mathbf{x}_i$. We now solve the integral using Monte Carlo integration with importance sampling. Taking $M$ surface position samples for the area integral and $N$ direction samples for the direction integral, we have
 \begin{eqnarray}
